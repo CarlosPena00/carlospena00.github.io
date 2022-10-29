@@ -10,8 +10,8 @@ order: 1
 <div class="profile">
     <img class="avatar" src="https://avatars.githubusercontent.com/u/14184997">
     <div class="profiletext">
-    I am a researcher, with master's degree in Computer Science from the Informatics Center of the Federal University of Pernambuco (CIn, UFPE). 
-    <br><br>
+    I am a researcher, with master's degree in Computer Science from the Informatics Center of the Federal University of Pernambuco (CIn, UFPE).
+    <br>
     I aim to create custom solutions with machine/deep learning and computer vision, focusing on solving customer pain points.
     <br><br>
     <span class="contact">
@@ -49,7 +49,7 @@ order: 1
     <li>Python</li>
     <li>C/C++</li>
     <li>SQL</li>
-    <li>Git</li>    
+    <li>Git</li>
     <li>Machine and Deep Learning</li>
     <li>Computer Vision</li>
     <li>3D Priting</li>
@@ -66,7 +66,7 @@ order: 1
 <h1>Papers</h1>
 <div class="paper">
     <div class="imgfield">
-        <img src="assets/images/segs.png" alt="image">
+        <img class="img-paper" src="assets/images/segs.png" alt="image">
     </div>
     <div class="col">
         <h3><a class="text-link" href="https://doi.org/10.1109/IJCNN55064.2022.9892717" target="_blank">An Ensemble Learning Method for Segmentation Fusion</a></h3>
@@ -78,7 +78,7 @@ order: 1
 
 <div class="paper">
     <div>
-        <img src="assets/images/rc-coach.jpg" alt="image">
+        <img class="img-paper" src="assets/images/rc-coach.jpg" alt="image">
     </div>
     <div class="col">
         <h3><a class="text-link" href="https://ieeexplore.ieee.org/abstract/document/9307069" target="_blank">An analysis of Reinforcement Learning applied to Coach task in IEEE Very Small Size Soccer</a></h3>

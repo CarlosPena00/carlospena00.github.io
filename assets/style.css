@@ -12,7 +12,7 @@
 }
 
 
-img {
+.img-paper {
     width: 33.33%;
     max-width: 200px;
     margin: 3px;
@@ -23,7 +23,7 @@ img {
 }
 
 .profile {
-    height: 150px;
+    height: 100px;
 }
 
 .avatar {
@@ -130,7 +130,7 @@ header .logo a {
 
     header,
     .navigation {
-        flex-direction: column;
+        flex-direction: space-evenly;
         align-items: stretch;
         margin: 0;
         padding: 0;
