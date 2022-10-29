@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Carlos Pena</title>
+    <link rel="stylesheet" type="text/css" href="{{ '/assets/style.css' | relative_url }}">
+</head>
+
+<body>
+
+    <header>
+        <span class="logo"><a href="{{ site.baseurl }}">Carlos Pena</a></span>
+        <ul class="navigation">
+            {% assign sorted = site.pages | sort: 'order' %}
+            {% for page in sorted %}
+            {% if page.title %}
+            <li><a href="{{ site.baseurl }}{{ page.url }}">{{ page.title }}</a></li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+    </header>
+
+    <content>
+        {{ content }}
+    </content>
+
+</body>
+
+</html>

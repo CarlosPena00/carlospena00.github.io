@@ -1,0 +1,156 @@
+.paper {
+
+    height: 150px;
+    padding: 10px;
+    margin-bottom: 1px;
+}
+
+.col {
+    /* float: right; */
+    height: 100px;
+    max-width: 700px;
+}
+
+
+img {
+    width: 33.33%;
+    max-width: 200px;
+    margin: 3px;
+    padding-right: 20px;
+    float: left;
+    vertical-align: top;
+    background-color: lightgray;
+}
+
+.profile {
+    height: 150px;
+}
+
+.avatar {
+    width: 15%;
+    max-width: 100px;
+    min-width: 50px;
+
+    max-height: 150px;
+    margin: 3px;
+    margin-left: 10px;
+    padding: 5px;
+    float: left;
+    border-radius: 50%;
+}
+
+
+body {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    width: 100%;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+}
+
+header .logo {
+    flex-grow: 3;
+    margin-left: 10%;
+}
+
+header ul.navigation {
+    display: flex;
+    flex-grow: 2;
+    justify-content: space-around;
+}
+
+content {
+    width: 80%;
+    padding: 20px;
+}
+
+header,
+content {
+    box-sizing: border-box;
+    /* inner padding */
+}
+
+/* styling */
+body {
+    font-family: Helvetica, Arial;
+}
+
+header {
+    background-color: gray;
+}
+
+.logo {
+    font-size: 24px;
+}
+
+header ul.navigation {
+    list-style: none;
+}
+
+content {
+    background-color: lightgray;
+    font-size: 0.9em;
+}
+
+header .logo a {
+    color: white;
+    text-decoration: none;
+}
+
+.navigation a {
+    text-decoration: none;
+    color: white;
+    padding: 10px;
+    display: block;
+}
+
+.navigation a:hover {
+    background-color: black;
+}
+
+
+/* smaller screens */
+@media all and (max-width: 500px) {
+    body {
+        font-size: 1.2em;
+    }
+
+    header .logo {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    header,
+    .navigation {
+        flex-direction: column;
+        align-items: stretch;
+        margin: 0;
+        padding: 0;
+    }
+
+    header .logo {
+        margin: 0;
+        padding: 10px;
+    }
+
+    header .logo,
+    .navigation li {
+        text-align: center;
+    }
+
+    content {
+        width: 100%;
+    }
+
+    .navigation a {
+        border-top: 1px white solid;
+    }
+}
