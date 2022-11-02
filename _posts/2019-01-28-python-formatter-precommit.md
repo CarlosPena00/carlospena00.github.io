@@ -6,15 +6,14 @@ date: 2019-01-28
 ---
 
 # Summary
-```sh
-conda install -c conda-forge pip -y
-conda install -c conda-forge pre-commit -y
-conda install -c conda-forge flake8 -y
-conda install -c conda-forge black -y
+
+```py
+$ conda install -c conda-forge pip pre-commit flake8 black -y
 ```
 
+
 # Flake8 and Black
-```sh
+```py
 conda install -c conda-forge flake8 -y
 conda install -c conda-forge black -y
 ```
@@ -89,10 +88,10 @@ repos:
     -   id: black
 ```
 
-```
-pre-commit install
-git add .
-git commit -m "."
+```py
+$ pre-commit install
+$ git add .
+$ git commit -m "."
 ```
 
-<img src="../../../assets/images/precommit.jpg" alt="image" width="80%">
+<img src="../../../assets/images/precommit.jpg" alt="image" width="100%">
