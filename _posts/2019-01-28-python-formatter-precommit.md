@@ -69,8 +69,8 @@ array = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
 # [Pre-commit](https://pre-commit.com/#install)
 - [Hooks](https://pre-commit.com/hooks.html)
 
-```sh
-conda install -c conda-forge pre-commit -y
+```py
+$ conda install -c conda-forge pre-commit -y
 ```
 create a file `.pre-commit-config.yaml`
 
@@ -95,3 +95,9 @@ $ git commit -m "."
 ```
 
 <img src="../../../assets/images/precommit.jpg" alt="image" width="100%">
+
+Problem?
+
+```py
+$ git commit --no-verify
+```

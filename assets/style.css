@@ -1,25 +1,43 @@
+.project-list {
+    margin-right: 6%;
+    text-align: justify;
+}
+
 .paper {
-
     height: 150px;
-    padding: 10px;
-    margin-bottom: 1px;
+    padding: 0px 10px 0px 0px;
+    margin-bottom: 20px;
 }
 
-.col {
-    /* float: right; */
-    height: 100px;
-    max-width: 700px;
+.paper-img-col {
+    width: 100%;
 }
 
+.paper-text-col {
+    padding-top: 2px;
+    height: 150px;
+    margin-right: 5%;
+    text-align: justify;
+}
 
 .img-paper {
-    width: 33.33%;
+    width: 33%;
     max-width: 200px;
-    margin: 3px;
+    max-height: 200px;
+    margin: 10px 10px 10px 5px;
     padding-right: 20px;
-    float: left;
+
     vertical-align: top;
-    background-color: lightgray;
+    float: left;
+
+}
+
+.profiletext {
+    margin-left: 20%;
+    margin-right: 10%;
+    text-align: justify;
+    font-size: 16px;
+    height: 100px;
 }
 
 .profile {
@@ -30,7 +48,6 @@
     width: 15%;
     max-width: 100px;
     min-width: 50px;
-
     max-height: 150px;
     margin: 3px;
     margin-left: 10px;
@@ -56,7 +73,7 @@ header {
 }
 
 header .logo {
-    flex-grow: 3;
+    flex-grow: 5;
     margin-left: 10%;
 }
 
@@ -64,6 +81,7 @@ header ul.navigation {
     display: flex;
     flex-grow: 2;
     justify-content: space-around;
+    margin-right: 10%;
 }
 
 content {
@@ -87,7 +105,7 @@ header {
 }
 
 .logo {
-    font-size: 24px;
+    font-size: 30px;
 }
 
 header ul.navigation {
@@ -96,7 +114,8 @@ header ul.navigation {
 
 content {
     background-color: lightgray;
-    font-size: 0.9em;
+    font-size: 1em;
+    padding-bottom: 100px;
 }
 
 header .logo a {

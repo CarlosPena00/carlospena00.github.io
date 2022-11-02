@@ -10,9 +10,7 @@ order: 1
 <div class="profile">
     <img class="avatar" src="https://avatars.githubusercontent.com/u/14184997">
     <div class="profiletext">
-    I am a researcher, with master's degree in Computer Science from the Informatics Center of the Federal University of Pernambuco (CIn, UFPE).
-    <br>
-    I aim to create custom solutions with machine/deep learning and computer vision, focusing on solving customer pain points.
+    I am a researcher with a master's degree in Computer Science from the Informatics Center (Centro de Informatica - CIn) of the Federal University of Pernambuco (UFPE). I aim to create custom solutions with machine/deep learning and computer vision, focusing on solving customer pain points.
     <br><br>
     <span class="contact">
         E-mail:
@@ -58,17 +56,18 @@ order: 1
 </div>
 
 
-<h1 id="Projects">Main Projects</h1>
-  <ul>
-    <li><a href="https://robocin.com.br/">Co-founder of RobôCIn - UFPE</a>, a research group in Centro de Informática of UFPE, that uses robotics to solve problems (exited in 2021).</li>
+<h1>Main Projects</h1>
+  <ul class="project-list">
+    <li ><a href="https://robocin.com.br/">Co-founder of RobôCIn - UFPE</a>, a research group in Centro de Informática of UFPE, that uses robotics to solve problems (exited in 2021).</li>
   </ul>
 
 <h1>Papers</h1>
+
 <div class="paper">
-    <div class="imgfield">
+    <div class="paper-img-col">
         <img class="img-paper" src="assets/images/segs.png" alt="image">
     </div>
-    <div class="col">
+    <div class="paper-text-col">
         <h3><a class="text-link" href="https://doi.org/10.1109/IJCNN55064.2022.9892717" target="_blank">An Ensemble Learning Method for Segmentation Fusion</a></h3>
         <div><strong><span>Carlos H. C. Pena; Tsang Ing Ren; Pedro D. Marrero Fernandez; Fidel A. Guerrero-Peña; Alexandre Cunha</span></strong></div>
         <div><strong class="date">2022</strong>, International Joint Conference on Neural Networks (<strong>IJCNN</strong>)</div>
@@ -76,16 +75,20 @@ order: 1
 </div>
 
 
+
 <div class="paper">
-    <div>
+    <div class="paper-img-col">
         <img class="img-paper" src="assets/images/rc-coach.jpg" alt="image">
     </div>
-    <div class="col">
+    <div class="paper-text-col">
         <h3><a class="text-link" href="https://ieeexplore.ieee.org/abstract/document/9307069" target="_blank">An analysis of Reinforcement Learning applied to Coach task in IEEE Very Small Size Soccer</a></h3>
         <div><strong><span>Carlos H. C. Pena, M. G. Machado, M. S. Barris, J. D. P. Silva, L. D. Maciel, T. Ing Ren, E. N. S. Barros, <b>P. H. M. Braga</b> and H. F. Bassani</span></strong></div>
         <div><strong class="date">2020</strong>, Proceedings of the Latin American Robotics Symposium (<strong>LARS</strong>)</div>
     </div>
 </div>
+
+
+
 
 </content>
 </body>
