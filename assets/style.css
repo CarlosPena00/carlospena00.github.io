@@ -4,18 +4,16 @@
 }
 
 .paper {
-    height: 150px;
-    padding: 0px 10px 0px 0px;
+    min-height: 150px;
+    height: fit-content;
+    padding: 0px 12px 0px 0px;
     margin-bottom: 20px;
 }
 
-.paper-img-col {
-    width: 100%;
-}
 
 .paper-text-col {
     padding-top: 2px;
-    height: 150px;
+    height: fit-content;
     margin-right: 5%;
     text-align: justify;
 }
@@ -23,34 +21,33 @@
 .img-paper {
     width: 33%;
     max-width: 200px;
-    max-height: 200px;
     margin: 10px 10px 10px 5px;
     padding-right: 20px;
 
     vertical-align: top;
     float: left;
-
 }
 
 .profiletext {
-    margin-left: 20%;
     margin-right: 10%;
     text-align: justify;
     font-size: 16px;
-    height: 100px;
+    height: fit-content;
 }
 
 .profile {
-    height: 100px;
+    height: fit-content;
+    overflow: auto;
 }
 
 .avatar {
-    width: 15%;
+    width: 20%;
     max-width: 100px;
     min-width: 50px;
     max-height: 150px;
     margin: 3px;
-    margin-left: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
     padding: 5px;
     float: left;
     border-radius: 50%;
@@ -67,7 +64,7 @@ body {
 
 header {
     width: 100%;
-    padding: 5px;
+    padding: 0px 5px 0px 5px;
     display: flex;
     align-items: center;
 }
@@ -78,8 +75,9 @@ header .logo {
 }
 
 header ul.navigation {
+    font-size: 20px;
     display: flex;
-    flex-grow: 2;
+    flex-grow: 1;
     justify-content: space-around;
     margin-right: 10%;
 }
