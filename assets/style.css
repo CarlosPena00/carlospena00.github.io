@@ -63,7 +63,8 @@ body {
 }
 
 header {
-    width: 100%;
+    width: 80%;
+    max-width: 1000px;
     padding: 0px 5px 0px 5px;
     display: flex;
     align-items: center;
@@ -84,6 +85,7 @@ header ul.navigation {
 
 content {
     width: 80%;
+    max-width: 1000px;
     padding: 20px;
 }
 
@@ -134,9 +136,13 @@ header .logo a {
 
 
 /* smaller screens */
-@media all and (max-width: 500px) {
+@media all and (max-width: 600px) {
     body {
         font-size: 1.2em;
+    }
+
+    header {
+        width: 100%;
     }
 
     header .logo {
