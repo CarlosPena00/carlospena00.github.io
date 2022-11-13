@@ -63,7 +63,7 @@ body {
 }
 
 header {
-    width: 80%;
+    width: 90%;
     max-width: 1000px;
     padding: 0px 5px 0px 5px;
     display: flex;
@@ -72,11 +72,11 @@ header {
 
 header .logo {
     flex-grow: 5;
-    margin-left: 10%;
+    margin-left: 50px;
 }
 
 header ul.navigation {
-    font-size: 20px;
+    font-size: 1.4em;
     display: flex;
     flex-grow: 1;
     justify-content: space-around;
@@ -84,7 +84,7 @@ header ul.navigation {
 }
 
 content {
-    width: 80%;
+    width: 90%;
     max-width: 1000px;
     padding: 20px;
 }
@@ -136,7 +136,7 @@ header .logo a {
 
 
 /* smaller screens */
-@media all and (max-width: 600px) {
+@media all and (max-width: 800px) {
     body {
         font-size: 1.2em;
     }
@@ -146,14 +146,12 @@ header .logo a {
     }
 
     header .logo {
-        display: flex;
         flex-direction: column;
         justify-content: space-between;
     }
 
     header,
     .navigation {
-        flex-direction: space-evenly;
         align-items: stretch;
         margin: 0;
         padding: 0;
