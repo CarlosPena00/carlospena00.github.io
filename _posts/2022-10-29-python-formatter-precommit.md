@@ -2,7 +2,7 @@
 layout: post
 title: Python Auto Formatter and Pre-commit
 author: Carlos Pena
-date: 2019-01-28
+date: 2022-10-29
 ---
 
 # Summary
