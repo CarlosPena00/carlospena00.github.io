@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Git Rebase
+title: "Git: Squash old commits (rebase -i)"
 author: Carlos Pena
 date: 2022-11-06
 ---
