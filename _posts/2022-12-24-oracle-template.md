@@ -177,3 +177,18 @@ WHERE ID=1
 
 # TCL – Transaction Control Language
 Commit, rollback
+
+# PL/SQL
+
+## Cursor
+```SQL
+DECLARE
+    weighted_sum NUMBER:=0;
+    CURSOR my_cur IS SELECT * FROM my_table;
+BEGIN
+    FOR cur IN my_cur LOOP
+        weighted_sum := weighted_sum + (cur.col_num0 * cur.col_num1);
+    END LOOP;
+    dbms_output.put_line( 'weighted_sum ' || weighted_sum);
+END;
+```
