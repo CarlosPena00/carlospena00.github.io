@@ -88,7 +88,7 @@ SELECT plus_three(2) FROM dual;
 ```
 
 ## Procedure
-```SQL
+```sql
 CREATE OR REPLACE PROCEDURE update_to_alpha_square
     (target_id IN NUMBER, alpha IN NUMBER)
 IS
@@ -110,7 +110,7 @@ exec update_to_alpha_square(target_id=>3, alpha=>9)
 ```
 ## Procedure (with output parameter)
 
-```SQL
+```sql
 -- With Output parameter
 
 CREATE OR REPLACE PROCEDURE calc_alpha_square (alpha IN NUMBER, alpha_square OUT NUMBER)
@@ -138,7 +138,7 @@ Insert, Update, Delete, ...
 
 ## INSERT INTO
 
-```SQL
+```sql
 INSERT INTO my_table
     (id, col_num0, col_num1, col_char)
 VALUES
@@ -160,7 +160,7 @@ FROM my_table;
 ```
 ## Update
 
-```SQL
+```sql
 UPDATE my_table
   SET col_num0=0, col_char='updated'
 WHERE
@@ -169,7 +169,7 @@ WHERE
 
 ## Delete
 
-```SQL
+```sql
 DELETE FROM my_table
 WHERE ID=1
 -- Warning: the WHERE is `optional`
@@ -181,7 +181,7 @@ Commit, rollback
 # PL/SQL
 
 ## Cursor
-```SQL
+```sql
 DECLARE
     weighted_sum NUMBER:=0;
     CURSOR my_cur IS SELECT * FROM my_table;
