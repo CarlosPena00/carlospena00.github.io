@@ -136,5 +136,44 @@ Select
 # DML – Data Manipulation Language
 Insert, Update, Delete, ...
 
+## INSERT INTO
+
+```SQL
+INSERT INTO my_table
+    (id, col_num0, col_num1, col_char)
+VALUES
+    (1, 10, 100, 'First Table');
+
+-- With Select (direct values from dual)
+INSERT INTO my_table
+    (id, col_num0, col_num1, col_char)
+SELECT 2, 20, 200, 'First Table' FROM DUAL UNION
+SELECT 3, 30, 300, 'First Table' FROM DUAL
+
+-- With Select (from other table)
+INSERT INTO my_other_table
+    (id, col_num0, col_num1, col_char)
+SELECT
+    id+100, col_num0*2, col_num1*col_num1, 'other table'
+FROM my_table;
+
+```
+## Update
+
+```SQL
+UPDATE my_table
+  SET col_num0=0, col_char='updated'
+WHERE
+    ID >= 2
+```
+
+## Delete
+
+```SQL
+DELETE FROM my_table
+WHERE ID=1
+-- Warning: the WHERE is `optional`
+```
+
 # TCL – Transaction Control Language
 Commit, rollback
