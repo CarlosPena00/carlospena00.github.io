@@ -192,3 +192,26 @@ BEGIN
     dbms_output.put_line( 'weighted_sum ' || weighted_sum);
 END;
 ```
+
+## Trigger
+
+```sql
+CREATE OR REPLACE TRIGGER my_trigger
+BEFORE -- options: BEFORE | AFTER | INSTEAD OF
+UPDATE -- options: INSERT [OR] | UPDATE [OR] | DELETE
+-- optional: OF [column]
+ON my_table
+-- REFERENCING OLD AS old_values NEW AS new_values -- optional
+FOR EACH ROW -- optional
+--WHEN (id > 100) -- only if `FOR EACH ROW`
+DECLARE
+BEGIN
+    dbms_output.put_line('Update my_table::col_char: ' || chr(10));
+    dbms_output.put_line(chr(9)||'OLD.col_char: ' || :old.col_num0);
+    dbms_output.put_line(chr(9)||'NEW.col_char: ' || :new.col_num0);
+    :new.col_num0 := :new.col_num0 * 2;
+    dbms_output.put_line(chr(9)||'final value: ' || :new.col_num0);
+END;
+-- chr(9) == '\t'
+-- chr(10) == '\n'
+```
