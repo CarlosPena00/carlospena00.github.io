@@ -56,6 +56,11 @@ CREATE TABLE my_other_table AS
 (SELECT * FROM MY_TABLE);
 
 ```
+## Drop Table
+
+```sql
+DROP TABLE my_table;
+```
 ## Anonymous block
 
 ```sql
