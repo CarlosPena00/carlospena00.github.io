@@ -1,5 +1,5 @@
 .project-list {
-    margin-right: 6%;
+    margin-right: 5%;
     text-align: justify;
 }
 
@@ -12,7 +12,6 @@
 
 
 .paper-text-col {
-    padding-top: 2px;
     height: fit-content;
     margin-right: 5%;
     text-align: justify;
@@ -21,15 +20,14 @@
 .img-paper {
     width: 33%;
     max-width: 200px;
-    margin: 10px 10px 10px 5px;
-    padding-right: 20px;
-
+    margin: 0px 10px 2px 5px;
+    padding-right: 10px;
     vertical-align: top;
     float: left;
 }
 
 .profiletext {
-    margin-right: 10%;
+    margin-right: 5%;
     text-align: justify;
     font-size: 16px;
     height: fit-content;
@@ -41,13 +39,11 @@
 }
 
 .avatar {
-    width: 20%;
-    max-width: 100px;
+    width: 30%;
+    max-width: 120px;
     min-width: 50px;
     max-height: 150px;
-    margin: 3px;
-    margin-left: 20px;
-    margin-right: 20px;
+    margin-right: 15px;
     padding: 5px;
     float: left;
     border-radius: 50%;
@@ -64,6 +60,7 @@ body {
 }
 
 header {
+    font-size: 2.4em;
     width: 90%;
     max-width: 1000px;
     padding: 0px 5px 0px 5px;
@@ -73,15 +70,14 @@ header {
 
 header .logo {
     flex-grow: 5;
-    margin-left: 50px;
+    margin-left: 20px;
 }
 
 header ul.navigation {
-    font-size: 1.4em;
     display: flex;
     flex-grow: 1;
     justify-content: space-around;
-    margin-right: 10%;
+    margin: 0;
 }
 
 content {
@@ -103,10 +99,6 @@ body {
 
 header {
     background-color: gray;
-}
-
-.logo {
-    font-size: 30px;
 }
 
 header ul.navigation {
@@ -137,7 +129,7 @@ header .logo a {
 
 
 /* smaller screens */
-@media all and (max-width: 800px) {
+@media screen and (max-width: 900px) {
     body {
         font-size: 1.2em;
     }
@@ -165,7 +157,13 @@ header .logo a {
 
     header .logo,
     .navigation li {
-        text-align: center;
+        text-align: left;
+    }
+
+    .profiletext,
+    .project-list,
+    .paper-text-col {
+        margin-right: 0;
     }
 
     content {
@@ -174,6 +172,16 @@ header .logo a {
 
     .navigation a {
         border-top: 1px white solid;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    body {
+        font-size: 1.2em;
+    }
+
+    header {
+        font-size: 1.5em;
     }
 }
 
