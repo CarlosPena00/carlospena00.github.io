@@ -192,6 +192,7 @@ header .logo a {
 .highlight pre {
     background-color: #272822;
     padding: 5px;
+    overflow-x: auto;
 }
 
 .highlight .hll {
