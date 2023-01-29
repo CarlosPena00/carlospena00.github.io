@@ -10,15 +10,17 @@
 <body>
 
     <header>
-        <span class="logo"><a href="/">Carlos Pena</a></span>
-        <ul class="navigation">
-            {% assign sorted = site.pages | sort: 'order' %}
-            {% for page in sorted %}
-            {% if page.title %}
-            <li><a href="{{ site.baseurl }}{{ page.url }}">{{ page.title }}</a></li>
-            {% endif %}
-            {% endfor %}
-        </ul>
+        <nav>
+            <span class="logo"><a href="/">Carlos Pena</a></span>
+            <ul class="navigation">
+                {% assign sorted = site.pages | sort: 'order' %}
+                {% for page in sorted %}
+                {% if page.title != 'Home' %}
+                <li><a href="{{ site.baseurl }}{{ page.url }}">{{ page.title }}</a></li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </nav>
     </header>
 
     {{ content }}
