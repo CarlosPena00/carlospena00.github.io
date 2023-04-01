@@ -23,12 +23,12 @@ Create a connection on [SQL Developer](https://www.oracle.com/database/sqldevelo
 
 ```sql
 sql developer (new connection):
-	username: system
-	password: <PASS>
-	Conn type: Basic
-		hostname: localhost
-		port: 1521
-		SID: xe
+    username: system
+    password: <PASS>
+    Conn type: Basic
+        hostname: localhost
+        port: 1521
+        SID: xe
 ```
 
 # Misc
@@ -37,10 +37,9 @@ SET SERVEROUTPUT ON;
 exec DBMS_OUTPUT.PUT_LINE('this is a print ' || 'function');
 ```
 
-
 # DDL – Data Definition Language
 
-## Create Table
+## Create
 
 ```sql
 CREATE TABLE my_table(
@@ -55,11 +54,15 @@ CREATE TABLE my_table(
 CREATE TABLE my_other_table AS
 (SELECT * FROM MY_TABLE);
 
+CREATE UNIQUE INDEX col_char ON my_table(col_char);
+CREATE INDEX index_num ON my_table(col_num0, col_num1);
 ```
-## Drop Table
+## Drop
 
 ```sql
 DROP TABLE my_table;
+
+DROP INDEX index_id;
 ```
 
 # DQL – Data Query Language
@@ -220,3 +223,49 @@ END;
 -- chr(9) == '\t'
 -- chr(10) == '\n'
 ```
+
+---
+
+# Index And Explain Plan ![icon](../../../assets/images/sql_explain_plan.png) (F10)
+
+Create and populate a dummy table. In which we will evaluate the performance of the query
+
+```sql
+SELECT x2 FROM table_pow WHERE x = VALUE
+```
+
+```sql
+CREATE TABLE table_pow(
+    x NUMBER,
+    x2 NUMBER
+);
+
+
+BEGIN
+  FOR x IN 0..1000000
+  LOOP
+    INSERT INTO table_pow (x, x2)
+    SELECT x, power(x, 2) FROM DUAL;
+  END LOOP;
+END;
+```
+
+<p float='left'>
+<img  src="../../../assets/images/sql_explain_full.png" alt="image">
+</p>
+
+With index:
+
+```sql
+CREATE INDEX index_x ON table_pow(x);
+```
+
+<p float='left'>
+<img  src="../../../assets/images/sql_explain_index.png" alt="image">
+</p>
+
+Note that with the index the option changed from "FULL" to "RANGE SCAN", and with that, the drop in cardinality and cost.
+
+<p float='left'>
+<img  src="../../../assets/images/sql_explain_index_unique.png" alt="image">
+</p>
