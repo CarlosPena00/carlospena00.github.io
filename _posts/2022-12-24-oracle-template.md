@@ -269,3 +269,38 @@ Note that with the index the option changed from "FULL" to "RANGE SCAN", and wit
 <p float='left'>
 <img  src="../../../assets/images/sql_explain_index_unique.png" alt="image">
 </p>
+
+# Built-in Functions
+Instead of create a list of elements with `SELECT * UNION ALL`. We could use the native functions of sys (`sys.odcinumberlist`, `sys.odcivarchar2list`, ...).
+
+As an example, this procedure that adds the values ​​(number) of the list `my_number` only if the value of the same index of the list `my_chars` is equal to `U`.
+
+```sql
+CREATE OR REPLACE PROCEDURE sum_array_if_mychar_is_U(
+    my_numbers IN sys.odcinumberlist,
+    my_chars IN sys.odcivarchar2list,
+    sum_out OUT NUMBER
+)
+IS
+BEGIN
+    sum_out := 0;
+    FOR i IN 1..my_numbers.count LOOP
+        IF my_chars(i) = 'U' THEN
+            sum_out := sum_out + my_numbers(i);
+        END IF;
+    END LOOP;
+END;
+```
+### call example
+
+```sql
+DECLARE
+    my_numbers sys.odcinumberlist := sys.odcinumberlist(10, 20, 30, 40, 50);
+    my_chars sys.odcivarchar2list := sys.odcivarchar2list('A', 'U', 'I', 'O', 'U');
+    sum_out NUMBER;
+BEGIN
+    sum_array_if_mychar_is_U(my_numbers, my_chars, sum_out);
+    dbms_output.put_line('Sum of my_numbers values where my_chars is "U": ' || sum_out);
+    -- 70
+END;
+```
