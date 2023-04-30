@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "SQL Oracle: Template (Under Dev)"
+title: "SQL Oracle: TL;DR"
 author: Carlos Pena
 date: 2022-12-24
 ---
@@ -65,9 +65,6 @@ DROP TABLE my_table;
 DROP INDEX index_id;
 ```
 
-# DQL – Data Query Language
-Select
-
 # DML – Data Manipulation Language
 
 ## INSERT INTO
@@ -108,9 +105,6 @@ DELETE FROM my_table
 WHERE ID=1
 -- Warning: the WHERE is `optional`
 ```
-
-# TCL – Transaction Control Language
-Commit, rollback
 
 # PL/SQL
 
