@@ -298,3 +298,100 @@ BEGIN
     -- 70
 END;
 ```
+
+---
+
+# Materialized View
+
+Create a Toy table and a procedure to populate it
+```sql
+DROP TABLE my_random_table;
+CREATE TABLE my_random_table(
+    id NUMBER NOT NULL,
+    x NUMBER
+);
+
+CREATE OR REPLACE PROCEDURE populate_gaussian (
+    p_id         IN NUMBER,
+    p_num_rows   IN NUMBER,
+    p_mean       IN NUMBER
+) IS
+BEGIN
+    FOR i IN 1..p_num_rows LOOP
+        INSERT INTO my_random_table (id, x)
+        VALUES (p_id, DBMS_RANDOM.normal + p_mean);
+    END LOOP;
+    COMMIT;
+END;
+
+
+exec populate_gaussian(1, 10, 1);
+exec populate_gaussian(2, 100, 2);
+exec populate_gaussian(3, 1000, 3);
+exec populate_gaussian(4, 10000, 4);
+exec populate_gaussian(5, 100000, 5);
+
+select * from my_random_table;
+```
+
+### Create a materialized view
+
+```sql
+DROP MATERIALIZED VIEW my_average_materialized_view;
+CREATE MATERIALIZED VIEW my_average_materialized_view
+REFRESH COMPLETE -- FAST (incremental refresh), COMPLETE (recompute all data)
+ON DEMAND -- ON DEMAND, ON COMMIT, or NEVER:
+AS
+    SELECT
+        count(*) AS counts,
+        id,
+        avg(x) AS mean,
+        SUM(COS(x)*COS(x) + SIN(x)*SIN(x)) AS slow_count
+    FROM my_random_table
+    GROUP BY id;
+
+-- Materialized views are not eligible for fast refresh if the defining query
+-- contains an analytic function or the XMLTable function.
+select * from my_average_materialized_view order by id;
+```
+
+### Refresh:
+
+```sql
+exec populate_gaussian(-1, 10, -1);
+
+select * from my_average_materialized_view order by id;
+-- not updated
+
+exec DBMS_MVIEW.refresh('my_average_materialized_view');
+
+select * from my_average_materialized_view order by id;
+-- up to date
+
+-- If a high load is inserted into the table, the refresh may take more time;
+-- however, it will not block read operations.
+exec populate_gaussian(-2, 1000000, -2);
+exec DBMS_MVIEW.refresh('my_average_materialized_view');
+-- Other connection in parallel
+select * from my_average_materialized_view order by id;
+```
+
+### Create a JOB to update it every 15 minutes
+```sql
+exec DBMS_SCHEDULER.DROP_JOB(job_name => '"SYSTEM"."REFRESH_MV_JOB"');
+BEGIN
+  DBMS_SCHEDULER.create_job (
+    job_name        => 'REFRESH_MV_JOB',
+    job_type        => 'PLSQL_BLOCK',
+    job_action      => 'BEGIN DBMS_MVIEW.refresh(''my_average_materialized_view'', method => ''C''); END;',
+    start_date      => SYSTIMESTAMP,
+    repeat_interval => 'FREQ=MINUTELY; INTERVAL=15',
+    enabled         => TRUE
+  );
+END;
+
+exec populate_gaussian(-4, 1000000, -4);
+
+-- Disable the scheduler
+exec DBMS_SCHEDULER.disable(name=>'"SYSTEM"."REFRESH_MV_JOB"', force => TRUE);
+```
