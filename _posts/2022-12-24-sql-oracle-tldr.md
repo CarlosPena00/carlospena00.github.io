@@ -56,6 +56,10 @@ CREATE TABLE my_other_table AS
 
 CREATE UNIQUE INDEX col_char ON my_table(col_char);
 CREATE INDEX index_num ON my_table(col_num0, col_num1);
+
+-- Compute statistics (useful after large changes)
+ANALYZE TABLE my_table COMPUTE STATISTICS;
+
 ```
 ## Drop
 
