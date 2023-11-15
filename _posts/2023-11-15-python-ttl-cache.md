@@ -99,6 +99,9 @@ pip install redis[hiredis]
 If the cache hit (aka result is not None) return the cached response. Otherwise, execute select into the database and store in redis with a ttl
 
 ```py
+import redis
+client_redis = redis.Redis(host='localhost', port=6379, decode_responses=True)
+
 def redis_sql(query: str, ttl_s: int=10) -> dict[str, Any]:
     result = client_redis.json().get(query)
     if result is not None:
