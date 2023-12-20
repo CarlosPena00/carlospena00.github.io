@@ -400,7 +400,7 @@ exec populate_gaussian(-4, 1000000, -4);
 exec DBMS_SCHEDULER.disable(name=>'"SYSTEM"."REFRESH_MV_JOB"', force => TRUE);
 ```
 
-### Full text search
+## Full text search
 
 ```sql
 DROP TABLE documents;
@@ -421,13 +421,13 @@ VALUES (2, 'Oracle Text allows full-text search capabilities in Oracle.');
 INSERT INTO documents (doc_id, text_content)
 VALUES (3, 'The indexing process helps in faster search operations.');
 INSERT INTO documents (doc_id, text_content)
-VALUES    (4, 'Oracle Database is a powerful relational database management system.');
+VALUES (4, 'Oracle Database is a powerful relational database management system.');
 INSERT INTO documents (doc_id, text_content)
-VALUES    (5, 'Text indexing improves search performance significantly.');
+VALUES (5, 'Text indexing improves search performance significantly.');
 INSERT INTO documents (doc_id, text_content)
-VALUES    (6, 'Full-text search enables users to find information efficiently.');
+VALUES (6, 'Full-text search enables users to find information efficiently.');
 INSERT INTO documents (doc_id, text_content)
-VALUES    (7, 'ORACLE Database is a powerful relational database management system.');
+VALUES (7, 'ORACLE Database is a powerful relational database management system.');
 
 -- More dummy data
 -- DROP SEQUENCE doc_id_seq;
@@ -457,20 +457,22 @@ BEGIN
 END;
 ```
 
-#### Comparasion
-
-- I believe that `cost` is not the best way to measure the performance of a query, I will update it with other metrics
+### Comparasion
 
 ```sql
--- Unoptimized (Cost 682, ± 90ms)
+-- Unoptimized (Cost 682)
 SELECT count(*)
 FROM documents d
 WHERE upper(text_content) LIKE '%RAA%'
+-- Test with random strings
+-- 96.0 ms ± 0.99 ms per loop (mean ± std. dev. of 10 runs, 7 loops each)
 
--- With Index (Cost 4, ± 20ms)
+-- With Index (Cost 4)
 SELECT count(*)
 FROM documents d
 WHERE CONTAINS(text_content, 'RAA') > 0;
+-- Test with random strings
+-- 15.9 ms ± 1.38 ms per loop (mean ± std. dev. of 10 runs, 7 loops each)
 ```
 
 It supports logical operations (AND, OR, ...)
