@@ -399,3 +399,88 @@ exec populate_gaussian(-4, 1000000, -4);
 -- Disable the scheduler
 exec DBMS_SCHEDULER.disable(name=>'"SYSTEM"."REFRESH_MV_JOB"', force => TRUE);
 ```
+
+### Full text search
+
+```sql
+DROP TABLE documents;
+CREATE TABLE documents (
+    doc_id NUMBER PRIMARY KEY,
+    text_content VARCHAR2(200)
+);
+
+-- Custom index for text scan
+CREATE INDEX text_content_idx ON documents(text_content) INDEXTYPE IS CTXSYS.CONTEXT;
+
+-- Add dummy data
+INSERT INTO documents (doc_id, text_content)
+VALUES (1, 'This is a sample document containing some text.');
+INSERT INTO documents (doc_id, text_content)
+VALUES (2, 'Oracle Text allows full-text search capabilities in Oracle.');
+INSERT INTO documents (doc_id, text_content)
+VALUES (3, 'The indexing process helps in faster search operations.');
+INSERT INTO documents (doc_id, text_content)
+VALUES    (4, 'Oracle Database is a powerful relational database management system.');
+INSERT INTO documents (doc_id, text_content)
+VALUES    (5, 'Text indexing improves search performance significantly.');
+INSERT INTO documents (doc_id, text_content)
+VALUES    (6, 'Full-text search enables users to find information efficiently.');
+INSERT INTO documents (doc_id, text_content)
+VALUES    (7, 'ORACLE Database is a powerful relational database management system.');
+
+-- More dummy data
+-- DROP SEQUENCE doc_id_seq;
+CREATE SEQUENCE doc_id_seq START WITH 8 INCREMENT BY 1;
+
+DECLARE
+    random_text VARCHAR2(100);
+BEGIN
+    FOR i IN 1..1000000 LOOP
+        random_text := DBMS_RANDOM.STRING('U', 3) || ' ' || DBMS_RANDOM.STRING('U', 3); -- Generating [A-Z]{3} [A-Z]{3}
+        INSERT INTO documents (doc_id, text_content)
+        VALUES (doc_id_seq.NEXTVAL, random_text);
+    END LOOP;
+    COMMIT;
+END;
+
+```
+
+In Oracle Text, after creating the index, it needs to be synchronized to ensure that
+the indexed data matches the current state of the table.
+
+-  Synchronize the index using the CTX_DDL.SYNC_INDEX procedure.
+
+```sql
+BEGIN
+    CTX_DDL.SYNC_INDEX('text_content_idx');
+END;
+```
+
+#### Comparasion
+
+- I believe that `cost` is not the best way to measure the performance of a query, I will update it with other metrics
+
+```sql
+-- Unoptimized (Cost 682, ± 90ms)
+SELECT count(*)
+FROM documents d
+WHERE upper(text_content) LIKE '%RAA%'
+
+-- With Index (Cost 4, ± 20ms)
+SELECT count(*)
+FROM documents d
+WHERE CONTAINS(text_content, 'RAA') > 0;
+```
+
+It supports logical operations (AND, OR, ...)
+
+```sql
+SELECT d.*
+FROM documents d
+WHERE CONTAINS(text_content, 'AAA OR BBB') > 0;
+
+SELECT d.*
+FROM documents d
+WHERE CONTAINS(text_content, 'AAA') > 0
+    AND CONTAINS(TEXT_CONTENT, 'LZF') = 0; -- not
+```
