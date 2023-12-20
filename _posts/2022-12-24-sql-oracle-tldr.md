@@ -410,6 +410,7 @@ CREATE TABLE documents (
 );
 
 -- Custom index for text scan
+-- Supported type: VARCHAR2, CHAR, CLOB, BLOB, BFILE.
 CREATE INDEX text_content_idx ON documents(text_content) INDEXTYPE IS CTXSYS.CONTEXT;
 
 -- Add dummy data
