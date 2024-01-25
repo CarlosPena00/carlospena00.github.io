@@ -121,3 +121,49 @@ where
 	numeric '100' <@ numrange(start_num, end_num, '[]');
 -- COST 385.91 - 13086.03 -- Bitmap Heap Scan (idx_example_table_range_gist)
 ```
+
+# Trigger
+
+- Example: Add a field to an existing table
+
+```sql
+-- Dummy table with some data
+create temporary table example_table (
+    alfa int,
+    beta int
+);
+
+insert into example_table values(1, 2);
+insert into example_table values(10, 30);
+insert into example_table values(10, 10);
+insert into example_table values(10, 0);
+select * from example_table;
+```
+
+```sql
+-- Add third column `gamma` that will hold the value of `alfa` + `beta`
+alter table example_table
+add column gamma int;
+
+-- Create trigger to calculate `gamma` for new data
+create or replace function calculate_gamma()
+returns trigger as $$
+begin
+    new.gamma := new.alfa + new.beta;
+    return new;
+end;
+$$ language plpgsql;
+
+create trigger trigger_calculate_gamma
+before insert on example_table
+for each row
+execute function calculate_gamma();
+
+insert into example_table values(0, 0);
+insert into example_table values(1, 1);
+-- will work, but the old values will continue with null values of gamma
+
+update example_table
+set gamma = alfa + beta;
+-- update all rows
+```
