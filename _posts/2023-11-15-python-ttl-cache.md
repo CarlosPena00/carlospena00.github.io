@@ -99,6 +99,7 @@ pip install redis[hiredis]
 If the cache hit (aka result is not None) return the cached response. Otherwise, execute select into the database and store in redis with a ttl
 
 ```py
+from typing import Any
 import redis
 from redis.commands.json.path import Path
 
@@ -131,6 +132,16 @@ Run it after cache
 ```py
 cached_sql(query_slow)
 # 174 ms ± 37 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+```
+
+- We can reduce the number of roundtrips by using Redis pipeline.
+
+```py
+pipe = client_redis.pipeline()
+pipe.get("my_key")
+pipe.get("my_key2")
+pipe.expire("my_key", 10)
+pipe.execute() # One roundtrip with 2 gets and one "expire"
 ```
 
 ### Conclusion
