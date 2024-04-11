@@ -9,7 +9,7 @@ date: 2024-04-06
 
 The seccomp add a significant overhead, add `-security-opt seccomp=unconfined` into docker.
 
-```Dockerfile
+```py
 version: '3'
 
 services:
@@ -31,3 +31,4 @@ pip install jupyterlab_execute_time
 pip install black isort jupyterlab-code-formatter
 
 ipython kernel install --user --name=<env_name>
+```
