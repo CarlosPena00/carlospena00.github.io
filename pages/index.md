@@ -33,7 +33,7 @@ order: 1
 
   <h1 id="work-experience">Work Experience</h1>
   <ul>
-    <li><strong>Jul 2021 - Present</strong> Senior System Analystat FCx Labs.</li>
+    <li><strong>Jul 2021 - Present</strong> Senior System Analyst at FCx Labs.</li>
     <li><strong>Mar 2020 - Jun 2021</strong> R&amp;D Engineer and master’s fellow at NCR Tech / OKI Brasil.</li>
     <li><strong>Jun 2018 - Feb 2020</strong> Intern at OKI Brasil Lab, UFPE.</li>
   </ul>
