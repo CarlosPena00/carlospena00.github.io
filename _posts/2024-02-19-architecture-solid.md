@@ -9,6 +9,9 @@ The idea of ​​this article is not to explain SOLID, but rather to show examp
 
 ## Single Responsibility Principle (SRP):
 
+- A module should be responsible to one, and only one, actor. - Martin, Robert C.
+
+
 ## Open/Closed Principle (OCP):
 
 ## Liskov Substitution Principle (LSP):
