@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "SQL Postgres: TL;DR"
+title: "DB: SQL Postgres: TL;DR"
 author: Carlos Pena
 date: 2023-05-01
 ---

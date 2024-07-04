@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "SQL Oracle: TL;DR"
+title: "DB: SQL Oracle: TL;DR"
 author: Carlos Pena
 date: 2022-12-24
 ---

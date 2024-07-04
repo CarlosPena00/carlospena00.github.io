@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "SQLNo MongoDB: TL;DR"
+title: "DB: NoSQL MongoDB: TL;DR"
 author: Carlos Pena
 date: 2024-07-04
 ---
