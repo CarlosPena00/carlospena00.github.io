@@ -103,7 +103,7 @@ collection.delete_many({"age": {"$lt": 18}})
 
 ## Query
 
-```sql
+```py
 for doc in collection.find({"name": "Carlos Pena"}):
     print(doc)
 
@@ -128,6 +128,96 @@ for _ in collection.find({"age": {"$eq": 10_000}}):
     pass
 # WO Index: 260 ms ± 01.3 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 # W  Index: 232 μs ± 14.6 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+```
+# Text Search
+
+```py
+# Setup
+import random
+import string
+
+import pymongo
+from pymongo import MongoClient
+
+# Data
+client = MongoClient("localhost", 27017)
+db = client["mydatabase"]
+collection = db["text_search_collection"]
+collection.insert_many(
+    [
+        {
+            "first_name": "".join(random.sample(string.ascii_letters, k=10)),
+            "last_name": "".join(random.sample(string.ascii_letters, k=10)),
+            "age": random.randint(0, 100),
+        }
+        for _ in range(1_000_000)
+    ]
+)
+```
+## Text Index
+
+```py
+collection.create_index({"first_name": pymongo.TEXT})
+# Text search only works using the $text query operator.
+# Warning: One Text Index Per Collection
+
+for doc in collection.find({"first_name": {"$regex": "^AabB.*"}}):  # or "^AabB"
+    print(doc)
+# Wo Index: 442 ms ± 6.41 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+# W  Index: 294 μs ± 29.9 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+
+
+for doc in collection.find({"first_name": {"$regex": ".*AabB.*"}}):  # or "AabB"
+    print(doc)
+# W/Wo Index: 442 ms ± 6.41 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+# Cannot use index if prefix is unknown
+
+# Regex case insensitive
+collection.create_index({"first_name": pymongo.ASCENDING, "strength": 2})
+# Case-insensitive indexes typically *do not* improve performance for $regex queries
+for doc in collection.find({"first_name": {"$regex": "^AabB", "$options": "i"}}):
+    print(doc)
+# Wo Index: 433 ms ± 8.69 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+
+for doc in collection.find({"first_name": "bgGDTVwJnm"}):
+    print(doc)
+# collection.create_index({"first_name": pymongo.TEXT})
+# Wo Index: 289 ms ± 1.6 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+# W  Index: 290 ms ± 2.3 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+# index not used as it is not a $regex; we need to create another index
+collection.create_index({"first_name": pymongo.ASCENDING})
+# W  Index: 269 μs ± 58.3 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+```
+
+## Text Index with multiple fields
+
+```py
+collection.create_index({"first_name": pymongo.TEXT, "last_name": pymongo.TEXT})
+# Text search only works using the $text query operator.
+# Warning: One Text Index Per Collection
+collection.insert_many(
+    [
+        {
+            "first_name": "Carlos Henrique",
+            "last_name": "Pena, Carlos",
+            "age": 28,
+        },
+        {
+            "first_name": "Carlos Henrique",
+            "last_name": "Caloete Pena",
+            "age": 28,
+        },
+        {
+            "first_name": "Henrique",
+            "last_name": "Pena, Carlos",
+            "age": 28,
+        },
+    ]
+)
+for doc in collection.find({"$text": {"$search": "Carlos"}}):
+    print(doc)
+# 323 μs ± 63.8 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+# Matches the three doc
 ```
 
 # Embedding vs Referencing
