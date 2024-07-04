@@ -217,7 +217,154 @@ collection.insert_many(
 for doc in collection.find({"$text": {"$search": "Carlos"}}):
     print(doc)
 # 323 μs ± 63.8 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
-# Matches the three doc
+# Matches the three docs
+```
+---
+
+# Embedding vs Referencing Pt 1: Theory
+
+- Embedding:
+  - Single operation to: retrieve data; Update/delete
+  - Data duplication; large documents
+  - Used when data is acessed together frequently
+    - One-to-One, One-to-Many (when many is small)
+- Referencing:
+  - No duplication; smaller documents
+  - Require to join data
+  - Used when data is not always needed when acessing the document:
+    - many-to-many, one-to-many (when many is large/unbounded)
+  - You (the code) need to maintain data consistency and avoid redundancy.
+
+Exemple: Products (1) vs (N) Reviews
+
+## Embedding "One" Side
+
+```json
+{
+    "SKU": 4000,
+    "Title": "Digital Microwave Oven 220v",
+    "Price": 102.00,
+    "reviews": [
+        {"user": "Carlos", "text": "Ok."},
+        {"user": "Henrique", "text": "Not good"},
+        {"user": "Gabriel", "text": "Expensive"},
+    ]
+}
 ```
 
-# Embedding vs Referencing
+## Embedding "Many/N" Side
+
+```json
+{
+    "user": "Carlos",
+    "text": "Ok.",
+    "product": {
+        "SKU": 4000,
+        "Title": "Digital Microwave Oven 220v",
+        "Price": 102.00,
+    }
+}
+{
+    "user": "Henrique",
+    "text": "Not good",
+    "product": {
+        "SKU": 4000,
+        "Title": "Digital Microwave Oven 220v",
+        "Price": 102.00,
+    }
+}
+{
+    "user": "Gabriel",
+    "text": "Expensive",
+    "product": {
+        "SKU": 4000,
+        "Title": "Digital Microwave Oven 220v",
+        "Price": 102.00,
+    }
+}
+```
+
+## Referencing "One" Side
+
+```json
+{
+    "SKU": 4000,
+    "Title": "Digital Microwave Oven 220v",
+    "Price": 102.00,
+    "reviews": [111, 589, 999]
+}
+{
+    "id": 111,
+    "user": "Carlos",
+    "text": "Ok."
+}
+{
+    "id": 589,
+    "user": "Henrique",
+    "text": "Not good"
+}
+{
+    "id": 999,
+    "user": "Gabriel",
+    "text": "Expensive"
+}
+```
+
+## Referencing "Many/N" Side
+
+```json
+{
+    "id": 1024,
+    "SKU": 4000,
+    "Title": "Digital Microwave Oven 220v",
+    "Price": 102.00,
+}
+{
+    "product_id": 1024,
+    "user": "Carlos",
+    "text": "Ok."
+}
+{
+    "product_id": 1024,
+    "user": "Henrique",
+    "text": "Not good",
+}
+{
+    "product_id": 1024,
+    "user": "Gabriel",
+    "text": "Expensive",
+}
+```
+
+
+## Referencing many-to-many
+
+```json
+{
+    "id": 1024,
+    "SKU": 4000,
+    "Title": "Digital Microwave Oven 220v",
+    "Price": 102.00,
+    "reviews": [100, 200, 300]
+}
+{
+    "id": 100,
+    "product_id": 1024,
+    "user": "Carlos",
+    "text": "Ok."
+}
+{
+    "id": 200,
+    "product_id": 1024,
+    "user": "Henrique",
+    "text": "Not good",
+}
+{
+    "id": 300,
+    "product_id": 1024,
+    "user": "Gabriel",
+    "text": "Expensive",
+}
+```
+
+---
