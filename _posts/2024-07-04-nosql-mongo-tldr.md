@@ -548,3 +548,71 @@ for result in results:
 ```
 
 # Explain Plan
+
+```py
+# Populate
+from random import randint, uniform
+from faker import Faker
+
+# Insert reviews in batches to avoid memory issues
+batch_size = 1000
+num_products = 10000
+num_reviews = 100000
+fake = Faker()
+
+# Reviews
+fake_reviews = []
+for i in range(0, num_reviews):
+    review = {
+        "_id": i,
+        "reviewer": fake.name(),
+        "rating": randint(1, 5),
+        "comment": fake.sentence(nb_words=10),
+    }
+    fake_reviews.append(review)
+for i in range(0, len(fake_reviews), batch_size):
+    reviews.insert_many(fake_reviews[i : i + batch_size])
+
+# Catalog
+products = []
+for i in range(0, num_products):
+    num_product_reviews = randint(0, 20)
+    product_review_ids = [randint(1, num_reviews) for _ in range(num_product_reviews)]
+    product = {
+        "_id": i,
+        "title": fake.catch_phrase(),
+        "price": round(uniform(10, 1000), 2),
+        "review_ids": product_review_ids,
+    }
+    products.append(product)
+
+for i in range(0, len(products), batch_size):
+    catalog.insert_many(products[i : i + batch_size])
+```
+
+```py
+# Dummy query
+catalog.find({"price": {"$lt": 11}}).explain()
+```
+
+| Without Index                                      | With Index                                         |
+| -------------------------------------------------- | -------------------------------------------------- |
+| ![](../../../assets/images/mongo_explain_slow.png) | ![](../../../assets/images/mongo_explain_fast.png) |
+
+- For more complex queries, such as multiple-documents, the ".explain" may fail; In these cases we can use the `pymongoexplain` lib
+
+
+```py
+from pymongoexplain import ExplainableCollection
+pipeline = [
+    {
+        "$lookup": {
+            "from": "reviews",  # "catalog c" (ommited) Join "reviews r"
+            "localField": "review_ids",  # On (c.review_ids = r._id)
+            "foreignField": "_id",
+            "as": "reviews",  # select foo as reviews, *
+        }
+    }
+]
+pprint(ExplainableCollection(catalog).aggregate(pipeline))
+```
