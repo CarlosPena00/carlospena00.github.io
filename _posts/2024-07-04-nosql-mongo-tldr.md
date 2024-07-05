@@ -556,6 +556,7 @@ catalog.aggregate(pipeline)
 ```py
 results = catalog.aggregate(                 # From "catalog c"
     [
+        {"$match": {"price": {"$gt": 10.70, "$lt": 11}}},
         {
             "$lookup": {
                 "from": "reviews",           # Join "reviews r"
@@ -572,7 +573,7 @@ for result in results:
 
 {
     "_id": ObjectId("6687c337d7dc1ee1b75d15aa"),
-    "price": 1000.5,
+    "price": 10.75,
     "review_ids": [1, 6],
     "reviews": [
         {"_id": 1, "comment": "Great Notebook!", "rating": 5, "reviewer": "Alice"},
@@ -582,9 +583,64 @@ for result in results:
     "title": "Notebook",
 }
 {
-    "_id": ObjectId("6687c337d7dc1ee1b75d15ab"),
-    "price": 699.0,
-    "review_ids": [3, 4],
+    ...
+}
+```
+
+- $Unwind
+
+Deconstructs an array field from the input documents to output a document for each element.
+Each output document is the input document with the value of the array field replaced by the element.
+
+```js
+// From:
+{ "_id" : 1, "item" : "Shirt", "sizes": [ "S", "M", "L"] }
+// To:
+{ _id: 1, item: 'Shirt', sizes: 'S' },
+{ _id: 1, item: 'Shirt', sizes: 'M' },
+{ _id: 1, item: 'Shirt', sizes: 'L' },
+```
+
+```py
+results = catalog.aggregate(                 # From "catalog c"
+    [
+        {"$match": {"price": {"$gt": 10.70, "$lt": 11}}},
+        {
+            "$lookup": {
+                "from": "reviews",           # Join "reviews r"
+                "localField": "review_ids",  # On (c.review_ids = r._id)
+                "foreignField": "_id",
+                "as": "reviews",             # select foo as reviews, c.* (kinda)
+            }
+        },
+        {"$unwind": "$reviews"},
+    ]
+)
+
+for result in results:
+    pprint(result)
+
+{
+    "_id": ObjectId("6687c337d7dc1ee1b75d15aa"),
+    "price": 10.75,
+    "review_ids": [1, 6],
+    "reviews": {"_id": 6, "comment": "Solid build quality.", "rating": 4, "reviewer": "Frank"},
+    "sku": 1,
+    "title": "Notebook",
+}
+{
+    "_id": ObjectId("6687c337d7dc1ee1b75d15aa"),
+    "price": 10.75,
+    "review_ids": [1, 6],
+    "reviews": {"_id": 1, "comment": "Great Notebook!", "rating": 5, "reviewer": "Alice"},
+    "sku": 1,
+    "title": "Notebook",
+}
+{
+...
+}
+```
+
     "reviews": [
         {"_id": 3, "comment": "Very nice phone.", "rating": 4, "reviewer": "Charlie"},
         {"_id": 4, "comment": "Average battery life.", "rating": 3, "reviewer": "Dave"},
