@@ -368,3 +368,127 @@ Exemple: Products (1) vs (N) Reviews
 ```
 
 ---
+
+# Embedding vs Referencing Pt 2: Python
+
+## Embedding (One side)
+```py
+catalog = db["catalog"]
+
+products = [
+    {
+        "sku": 4,
+        "title": "Notebook",
+        "price": 1000.50,
+        "reviews": [
+            {
+                "review_id": 1,
+                "reviewer": "Alice",
+                "rating": 5,
+                "comment": "Great Notebook!",
+            },
+            {
+                "review_id": 2,
+                "reviewer": "Bob",
+                "rating": 4,
+                "comment": "Good value for money.",
+            },
+        ],
+    },
+    {
+        "sku": 103,
+        "title": "Smartphone",
+        "price": 699.00,
+        "reviews": [
+            {
+                "review_id": 3,
+                "reviewer": "Charlie",
+                "rating": 4,
+                "comment": "Very nice phone.",
+            },
+            {
+                "review_id": 4,
+                "reviewer": "Dave",
+                "rating": 3,
+                "comment": "Average battery life.",
+            },
+        ],
+    },
+]
+catalog.insert_many(products)
+
+catalog.find_one({"sku": 4})
+
+# Update new review
+new_review = {
+    "review_id": 5,
+    "reviewer": "Eve",
+    "rating": 5,
+    "comment": "Excellent performance.",
+}
+catalog.update_one({"sku": 4}, {"$push": {"reviews": new_review}})
+# UpdateResult({'n': 1, 'nModified': 1, 'ok': 1.0, 'updatedExisting': True}, acknowledged=True); Updated
+# UpdateResult({'n': 0, 'nModified': 0, 'ok': 1.0, 'updatedExisting': False}, acknowledged=True); Not found
+
+# Delete review
+catalog.update_one({"sku": 103}, {"$pull": {"reviews": {"review_id": 4}}})
+# UpdateResult({'n': 1, 'nModified': 1, 'ok': 1.0, 'updatedExisting': True}, acknowledged=True) # Removed
+# UpdateResult({'n': 1, 'nModified': 0, 'ok': 1.0, 'updatedExisting': True}, acknowledged=True) # Product found, but review not
+# UpdateResult({'n': 0, 'nModified': 0, 'ok': 1.0, 'updatedExisting': False}, acknowledged=True) # Product not found
+ ```
+
+## Referencing (One side)
+
+```py
+db.products.drop()
+db.reviews.drop()
+
+catalog = db["catalog"]
+reviews = db["reviews"]
+
+products = [
+    {"sku": 1, "title": "Notebook", "price": 1000.50, "review_ids": [1, 2]},
+    {"sku": 2, "title": "Smartphone", "price": 699.00, "review_ids": [3, 4]},
+]
+user_reviews = [
+    {"_id": 1, "reviewer": "Alice", "rating": 5, "comment": "Great Notebook!"},
+    {"_id": 2, "reviewer": "Bob", "rating": 4, "comment": "Good value for money."},
+    {"_id": 3, "reviewer": "Charlie", "rating": 4, "comment": "Very nice phone."},
+    {"_id": 4, "reviewer": "Dave", "rating": 3, "comment": "Average battery life."},
+    {"_id": 5, "reviewer": "Eve", "rating": 5, "comment": "Excellent performance."},
+]
+
+reviews.insert_many(user_reviews)
+catalog.insert_many(products)
+
+# Find reviews of a product
+product = catalog.find_one({"sku": 1})
+# assert product is not None
+reviews.find({"_id": {"$in": product["review_ids"]}})
+for r in reviews.find({"_id": {"$in": product["review_ids"]}}):
+    pprint(r)
+
+
+# Add new review (update catalog)
+new_review = {
+    "_id": 6,
+    "reviewer": "Frank",
+    "rating": 4,
+    "comment": "Solid build quality.",
+}
+reviews.insert_one(new_review)
+catalog.update_one({"sku": 1}, {"$push": {"review_ids": new_review["_id"]}})
+
+
+# Delete a review (update catalog)
+reviews.delete_one({"_id": 2})
+products_with_deleted_review = catalog.find({"review_ids": 2})
+for p in products_with_deleted_review:
+    # If `_id` is not specified, mongodb will generated automatically on insert
+    r = catalog.update_one({"_id": p["_id"]}, {"$pull": {"review_ids": 2}})
+
+```
+
+# Operations: $lookup, $unwind, ...
+
+# Explain Plan
