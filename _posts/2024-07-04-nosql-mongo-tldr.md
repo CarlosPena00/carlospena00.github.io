@@ -491,6 +491,53 @@ for p in products_with_deleted_review:
 
 # Operations: $lookup, $unwind, ...
 
+- $Match
+
+```py
+pipeline = [
+    {
+        "$match": {
+            "$or": [
+                {"price": {"$gt": 10.70, "$lt": 11}},
+                # Do not exists review_ids[1]; aka len(review_ids) <= 1
+                {
+                    "$and": [
+                        {"review_ids.1": {"$exists": False}},
+                        {"price": {"$gte": 999.55}},
+                    ]
+                },
+            ]
+        }
+    }
+]
+catalog.aggregate(pipeline)
+{ # 10.70 < price < 11
+    "_id": 1510,
+    "price": 10.76,
+    "review_ids": [38904, ..., 67487],
+    "title": "Universal demand-driven moratorium",
+}
+{ # 10.70 < price < 11
+    "_id": 8601,
+    "price": 10.95,
+    "review_ids": [20853, ..., 30405],
+    "title": "Multi-lateral upward-trending moderator",
+}
+{ # (999.55 <= price) and (len(review_ids) <= 1)
+    "_id": 3562,
+    "price": 999.76,
+    "review_ids": [55444],
+    "title": "Visionary incremental installation",
+}
+{ # (999.55 <= price) and (len(review_ids) <= 1)
+    "_id": 583,
+    "price": 999.89,
+    "review_ids": [],
+    "title": "Quality-focused system-worthy customer loyalty",
+}
+
+```
+
 - $Lookup (left join)
 
 ```js
