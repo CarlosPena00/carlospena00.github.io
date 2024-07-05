@@ -491,4 +491,60 @@ for p in products_with_deleted_review:
 
 # Operations: $lookup, $unwind, ...
 
+- $Lookup (left join)
+
+```js
+// Syntax
+{
+   $lookup:
+     {
+       from: <collection to join>,
+       localField: <field from the input documents>,
+       foreignField: <field from the documents of the "from" collection>,
+       as: <output array field>
+     }
+}
+```
+
+```py
+results = catalog.aggregate(                 # From "catalog c"
+    [
+        {
+            "$lookup": {
+                "from": "reviews",           # Join "reviews r"
+                "localField": "review_ids",  # On (c.review_ids = r._id)
+                "foreignField": "_id",
+                "as": "reviews",             # select foo as reviews, c.* (kinda)
+            }
+        }
+    ]
+)
+
+for result in results:
+    pprint(result)
+
+{
+    "_id": ObjectId("6687c337d7dc1ee1b75d15aa"),
+    "price": 1000.5,
+    "review_ids": [1, 6],
+    "reviews": [
+        {"_id": 1, "comment": "Great Notebook!", "rating": 5, "reviewer": "Alice"},
+        {"_id": 6, "comment": "Solid build quality.", "rating": 4, "reviewer": "Frank"},
+    ],
+    "sku": 1,
+    "title": "Notebook",
+}
+{
+    "_id": ObjectId("6687c337d7dc1ee1b75d15ab"),
+    "price": 699.0,
+    "review_ids": [3, 4],
+    "reviews": [
+        {"_id": 3, "comment": "Very nice phone.", "rating": 4, "reviewer": "Charlie"},
+        {"_id": 4, "comment": "Average battery life.", "rating": 3, "reviewer": "Dave"},
+    ],
+    "sku": 2,
+    "title": "Smartphone",
+}
+```
+
 # Explain Plan
