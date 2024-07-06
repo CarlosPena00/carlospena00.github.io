@@ -594,7 +594,7 @@ Each output document is the input document with the value of the array field rep
 
 ```js
 // From:
-{ "_id" : 1, "item" : "Shirt", "sizes": [ "S", "M", "L"] }
+{ _id : 1, item : 'Shirt', sizes: ['S', 'M', 'L'] }
 // To:
 { _id: 1, item: 'Shirt', sizes: 'S' },
 { _id: 1, item: 'Shirt', sizes: 'M' },
@@ -641,14 +641,71 @@ for result in results:
 }
 ```
 
-    "reviews": [
-        {"_id": 3, "comment": "Very nice phone.", "rating": 4, "reviewer": "Charlie"},
-        {"_id": 4, "comment": "Average battery life.", "rating": 3, "reviewer": "Dave"},
-    ],
-    "sku": 2,
-    "title": "Smartphone",
+- $Group
+
+```js
+{
+ $group:
+   {
+     _id: <expression>,
+     <field1>: { <accumulator1> : <expression1> },
+     ...
+   }
 }
+// $avg, $bottom, $bottomN, $count, $first, $last,
+// $max, $median, $minN, $stdDevPop, $sum, $top, ...
 ```
+
+Give a list of products:
+1. 10.70 < Price < 11.00
+2. Reviews with rating from 2 to 4
+
+```py
+
+results = catalog.aggregate(  # From "catalog c"
+    [
+        {"$match": {"price": {"$gt": 10.70, "$lt": 11}}},
+        {
+            "$lookup": {
+                "from": "reviews",  # Join "reviews r"
+                "localField": "review_ids",  # On (c.review_ids = r._id)
+                "foreignField": "_id",
+                "as": "reviews",  # select foo as reviews, c.* (kinda)
+            }
+        },
+        {"$unwind": "$reviews"},
+        # reviews with score from 2 to 4
+        {"$match": {"reviews.rating": {"$gte": 2, "$lte": 4}}},
+        {
+            "$group": {
+                "_id": "$_id",
+                "title": {"$first": "$title"},
+                "price": {"$first": "$price"},
+                "review_ids": {"$first": "$review_ids"},
+                "reviews": {"$push": "$reviews"},
+                # Average of reviews with score from 2 to 4
+                "reviews_avg": {"$avg": "$reviews.rating"},
+                "reviews_count": {"$count": {}},
+            }
+        },
+    ]
+)
+for r in results:
+    pprint(r)
+
+{
+    "_id": ObjectId("6687c337d7dc1ee1b75d15aa"),
+    "price": 10.75,
+    "review_ids": [1, 6],
+    "reviews": [{"_id": 6, "comment": "Solid build quality.", "rating": 4, "reviewer": "Frank"}],
+    "sku": 1,
+    "title": "Notebook",
+    "reviews_avg": 4
+    "reviews_count": 1
+}
+...
+```
+
 
 # Explain Plan
 
