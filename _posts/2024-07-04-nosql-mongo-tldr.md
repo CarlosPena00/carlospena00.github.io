@@ -706,6 +706,88 @@ for r in results:
 ...
 ```
 
+- $sort
+
+```js
+{ $sort: { <field1>: <sort order>, <field2>: <sort order> ... } }
+```
+Sort results by:
+- Score: DESC
+- _ID: ASC
+
+```py
+results = catalog.aggregate(  # From "catalog c"
+    [
+        {"$match": {"price": {"$gt": 10.70, "$lt": 11}}},
+        {
+            "$lookup": {
+                "from": "reviews",  # Join "reviews r"
+                "localField": "review_ids",  # On (c.review_ids = r._id)
+                "foreignField": "_id",
+                "as": "reviews",  # select foo as reviews, c.* (kinda)
+            }
+        },
+        {"$unwind": "$reviews"},
+        {"$sort": {"reviews.rating": -1, "reviews._id": 1}},
+        {
+            "$group": {
+                "_id": "$_id",
+                "title": {"$first": "$title"},
+                "price": {"$first": "$price"},
+                "review_ids": {"$first": "$review_ids"},
+                "reviews": {"$push": "$reviews"},
+                # Average of reviews with score from 2 to 4
+                "reviews_avg": {"$avg": "$reviews.rating"},
+                "reviews_count": {"$count": {}},
+            }
+        },
+    ]
+)
+...
+
+{
+    "reviews": [
+        {
+            "_id": 31468,
+            "comment": "Still political newspaper tend those degree " "practice.",
+            "rating": 5,
+            "reviewer": "Angela Garcia DVM",
+        },
+        {
+            "_id": 37503,
+            "comment": "Nearly including reason any throughout rest.",
+            "rating": 5,
+            "reviewer": "Wendy Estes",
+        },
+        {
+            "_id": 190,
+            "comment": "Within ground site start although information sign "
+            "product hold middle determine.",
+            "rating": 4,
+            "reviewer": "Susan Gamble",
+        },
+        {
+            "_id": 18932,
+            "comment": "Husband through structure glass fill real smile.",
+            "rating": 4,
+            "reviewer": "Desiree Ramirez",
+        },
+        {
+            "_id": 25235,
+            "comment": "Collection music person magazine fill blood similar " "again.",
+            "rating": 4,
+            "reviewer": "Jeffrey Yu",
+        }
+        ...
+    ],
+    "reviews_avg": 2.6875,
+    "reviews_count": 16,
+    "title": "Universal demand-driven moratorium",
+}
+
+
+```
+
 
 # Explain Plan
 
