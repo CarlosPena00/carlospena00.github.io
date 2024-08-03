@@ -49,21 +49,19 @@ def custom_convert_str_to_int(my_str: str) -> int | None:
 ```
 
 4. Run check/test
-```py
+
+```js
 mypy name_file.py
 ruff name_file.py
-# or pre-commit run --all-files
+// or pre-commit run --all-files
 pytest name_file.py
-...
 ```
 
 ## Task 2: Calculate total price with tax
 
-Sometimes, due to N factors, the function has parts that we don't control/can't reproduce. For example, an external IO request, or some calculation that involves randomness.
-Also, due to the current code architecture, testing in a "traditional" way would be very complicated.
-In these cases we can use unittest.mock to patch the functions and mock the inputs.
-
-- In this example we will assume that the tax will be dynamic, where this value will come from an IO call (sql call)
+Sometimes, due to N factors, certain parts of a function are uncontrollable or non-reproducible.
+Examples include external I/O requests or calculations involving randomness. Additionally, the current code architecture makes traditional testing methods complex.
+In such scenarios, we can use `unittest.mock` to patch functions and mock inputs. In this example, we'll assume the tax is dynamic, fetched via an I/O operation (e.g., an SQL query). The final price is calculated using the following equation:
 
 > total_price_with_tax = (price_un * (1 + federal_tax + state_tax)) * quantity
 
