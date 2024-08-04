@@ -50,8 +50,7 @@ curl --cacert http_ca.crt -u elastic:mypass https://localhost:9200
 es = Elasticsearch('https://localhost:9200', basic_auth=("elastic", "mypass"), ca_certs="http_ca.crt")
 es.ping()
 ```
-
-# Add data to an index
+# Index
 
 ```py
 # Dummy Data
@@ -79,8 +78,57 @@ documents = [
 },
 ...
 """
+```
+
+```py
+# Index Settings, in which we set the Analyzer, Synonym, and Mappings
+index_settings = {
+    "settings": {
+        "analysis": {
+            "filter": {
+                "synonym_filter": {
+                    "type": "synonym",
+                    "synonyms": [
+                        "Carlinhos => Carlos",  # Carlos Exists
+                        "Hector => Heitor",  # Hector Exists
+                        "Maria => Mary",  # Both Exists
+                        "Ana, Anna",  # Both Exists
+                    ],
+                }
+            },
+            "analyzer": {
+                "custom_analyzer": {
+                    "type": "custom",
+                    "tokenizer": "standard",
+                    "filter": ["lowercase", "synonym_filter"],
+                }
+            },
+        }
+    },
+    "mappings": {
+        "properties": {
+            "name": {"type": "text", "analyzer": "custom_analyzer"},
+            "address": {"type": "text", "analyzer": "custom_analyzer"},
+            "age": {"type": "integer"},
+            "email": {"type": "text"},
+            "country": {"type": "keyword"},
+            "postal_code": {"type": "keyword"},
+        }
+    },
+}
+```
+## Synonyms
+
+## Analyzer
+
+## Mappings
+
+---
+
 
 # Slow Index
+
+```py
 for i, doc in enumerate(tqdm(documents)):
     res = es.index(index="prod_es_index", id=i+1, body=doc)
 # ~ 28min
@@ -135,10 +183,20 @@ for hit in res["hits"]["hits"]:
 
 ## TODO:
 
-- Search
-  - Filter
-- Mappings
+```js
+User Cases
+Install (kibana/Elastic) // OK
+Index:
+- Add data / bulk API // OK
 - Synonym
+- Types/Mappings (invert index, ...)
+- Token
+- Analyzers
+Search:
+- How to build query
 - Aggregation
-- DSL lib
-- Kibana
+- Filter
+- Analyze query
+DSL lib
+Kibana
+```
