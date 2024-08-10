@@ -176,7 +176,110 @@ for hit in res["hits"]["hits"]:
 {'name': 'Samuel Williams', 'address': '43330 Fowler Road Suite 239. Johnsonhaven, NC 10046', 'age': '18', 'email': 'david89@yahoo.com', 'country': 'Chad', 'postal_code': '73249'}
 {'name': 'Kathleen Lee', 'address': '54362 Eddie Key. Perryport, AK 50151', 'age': '18', 'email': 'lwalsh@hotmail.com', 'country': 'Kyrgyz Republic', 'postal_code': '81990'}
 {'name': 'David Scott', 'address': '44738 Harris Stream. Port Leroy, VA 29682', 'age': '18', 'email': 'howardcathy@joyce.biz', 'country': 'Svalbard & Jan Mayen Islands', 'postal_code': '77346'}
+```
+```py
+# Anna over 30 yo
+query = {
+    "query": {
+        "bool": {
+            "must": [
+                {"match": {"name": "Anna"}},
+                {"range": {"age": {"gt": 30}}},
+            ]
+        }
+    },
+    "size": 10,
+}
+
+res = es.search(index=index_name, body=query)
+for hit in res["hits"]["hits"]:
+    print(hit["_source"]["name"], hit["_source"]["age"])
+
+"""
+Anna Scott 78
+Anna Fitzgerald 84
+Ana Lopez 85 # synonyms
+Anna Campbell 76
 ...
+"""
+```
+```py
+# (Anna over 98 yo) or (Carlos aged 24)
+query = {
+    "query": {
+        "bool": {
+            "should": [
+                {
+                    "bool": {
+                        "must": [
+                            {"match": {"name": "Anna"}},
+                            {"range": {"age": {"gt": 98}}}
+                        ]
+                    }
+                },
+                {
+                    "bool": {
+                        "must": [
+                            {"match": {"name": "Carlos"}},
+                            {"term": {"age": 24}}
+                        ]
+                    }
+                }
+            ],
+            # At least one of the should conditions must match
+            "minimum_should_match": 1
+        }
+    }
+}
+
+res = es.search(index=index_name, body=query)
+for hit in res["hits"]["hits"]:
+    source = hit["_source"]
+    print(source["name"], source["age"])
+"""
+Ana Sutton 99
+Anna Ruiz 99
+Carlos Hardy 24
+Carlos Turner 24
+...
+"""
+```
+
+# Aggregation
+
+```py
+query = {
+    "query": {"match": {"name": "ANNA"}},
+    "size": 2,
+    "aggs": {"country": {"terms": {"field": "country"}}},
+}
+
+res = es.search(index=index_name, body=query)
+for hit in res["hits"]["hits"]:
+    print(hit["_source"])
+pprint(res["aggregations"])
+
+{'name': 'Anna Scott', 'address': '431 Aguilar Rue. Jenniferfort, MS 98932', 'age': '78', 'email': 'vrobinson@bailey.com', 'country': 'Georgia', 'postal_code': '55696'}
+{'name': 'Anna Miller', 'address': 'Unit 4447 Box 6636. DPO AA 84024', 'age': '09', 'email': 'dawsonsophia@gmail.com', 'country': 'Switzerland', 'postal_code': '95838'}
+# Although only two results are returned by the "size" parameter, the aggregaton considers all results that match the query.
+{'country': {'buckets': [{'doc_count': 5, 'key': 'British Virgin Islands'},
+                         {'doc_count': 5, 'key': 'Moldova'},
+                         {'doc_count': 4, 'key': 'Congo'},
+                         {'doc_count': 4, 'key': 'Czech Republic'},
+                         {'doc_count': 4, 'key': 'Guatemala'},
+                         {'doc_count': 4, 'key': 'Kiribati'},
+                         {'doc_count': 4, 'key': 'Mauritania'},
+                         {'doc_count': 4, 'key': 'Netherlands'},
+                         {'doc_count': 4, 'key': 'Peru'},
+                         {'doc_count': 4, 'key': 'Saint Helena'}],
+             'doc_count_error_upper_bound': 0,
+             'sum_other_doc_count': 245}}
+# Remember: Text fields are not optimised for operations that require per-document field data like aggregations and sorting
+# In this index "country" are "keyword" type
+
+# Remember: By default, the requests cache will only cache the results of search requests where size=0,
+# so it will not cache hits, but it will cache hits.total, aggregations, and suggestions.
+
 ```
 
 ---
