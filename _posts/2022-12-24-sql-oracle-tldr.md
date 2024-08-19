@@ -303,6 +303,40 @@ BEGIN
 END;
 ```
 
+## TO_DATE
+
+```sql
+SELECT TO_DATE('2024-08-19', 'YYYY-MM-DD') AS converted_date FROM dual;
+SELECT TO_DATE('2024-08-19 11:30:00', 'YYYY-MM-DD HH24:MI:SS') AS converted_date FROM dual;
+SELECT TO_DATE('19-AUG-2024', 'DD-MON-YYYY') AS converted_date FROM dual;
+```
+
+## TRUNC(DATE)
+
+- TRUNC(Date): truncates a date to a specific level of precision (e.g., day, month, year)
+
+```sql
+SELECT TRUNC(SYSDATE) AS truncated_date FROM dual;-- 2024-08-19 00:00:00.000
+SELECT TRUNC(SYSDATE, 'MM') AS truncated_date FROM dual; -- 2024-08-01 00:00:00.000
+SELECT TRUNC(SYSDATE, 'YYYY') AS truncated_date FROM dual; -- 2024-01-01 00:00:00.000
+```
+
+## Others Dates functions:
+
+```sql
+SELECT ADD_MONTHS(SYSDATE, 3) AS three_months_later FROM dual;
+SELECT LAST_DAY(SYSDATE) AS last_day_of_month FROM dual;
+SELECT NEXT_DAY(SYSDATE, 'MONDAY') AS next_monday FROM dual; -- date of the next specified weekday
+SELECT MONTHS_BETWEEN(TO_DATE('2024-12-31', 'YYYY-MM-DD'), SYSDATE) AS months_between FROM dual; -- float
+SELECT EXTRACT(YEAR FROM SYSDATE) AS current_year FROM dual; -- 2024
+SELECT EXTRACT(MONTH FROM SYSDATE) AS current_month FROM dual; -- 8
+SELECT SYSDATE + INTERVAL '10' DAY AS date_plus_10_days FROM dual; -- 2024-08-29 11:21:10.000
+SELECT SYSDATE + INTERVAL '10' MONTH AS date_plus_10_days FROM dual; -- 2025-06-19 11:21:10.000
+SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') AS date_as_string FROM dual; -- '2024-08-19 11:21:10.000'
+SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD') AS date_as_string FROM dual; -- '2024-08-19'
+```
+
+
 ---
 
 # Materialized View
