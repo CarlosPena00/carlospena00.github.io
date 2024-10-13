@@ -162,6 +162,107 @@ set gamma = alfa + beta;
 -- update all rows
 ```
 
+# Full-Text Search
+
+```sql
+create table if not exists documents (
+    id SERIAL PRIMARY KEY,
+    title TEXT,
+    content TEXT,
+    tsv_content tsvector null,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_tsv_content ON documents USING gin(tsv_content);
+
+-- Create a trigger to calculate tsv
+create or replace function calc_tsv()
+returns trigger as $$
+begin
+    new.tsv_content := to_tsvector('english', new.title || ' ' || new.content);
+    return new;
+end;
+$$ language plpgsql;
+
+create trigger trigger_calc_tsv
+before insert or update on documents
+for each row
+execute function calc_tsv();
+-- drop trigger trigger_calc_tsv on documents; 
+
+-- Sample from chatgpt :D
+INSERT INTO documents (title, content)
+VALUES
+('PostgreSQL Full-Text Search Guide', 'This guide covers how to perform full-text search in PostgreSQL. It includes creating tsvectors, tsqueries, and indexing.'),
+('Introduction to Database Indexing', 'Database indexing improves the speed of data retrieval operations on a table. This tutorial explains how indexes work in databases like PostgreSQL and MySQL.'),
+('Advanced Search Techniques', 'Learn how to implement advanced search techniques in PostgreSQL. This includes phrase search, prefix search, and ranking results by relevance.'),
+('What is SQL?', 'Structured Query Language, or SQL, is a standard programming language for managing relational databases. It is used to perform queries, update data, and more.'),
+('PostgreSQL vs MySQL: A Comparison', 'In this article, we compare PostgreSQL and MySQL in terms of performance, scalability, and support for advanced features like full-text search.'),
+('Building a REST API with FastAPI', 'This tutorial shows how to build a REST API using FastAPI, including endpoints for creating, reading, updating, and deleting data.'),
+('Data Engineering Best Practices', 'Data engineering involves building systems for collecting, storing, and analyzing data. This article discusses the best practices in data pipeline design, scalability, and optimization.'),
+('Python and SQL for Data Analysis', 'Learn how to combine Python with SQL for powerful data analysis. This tutorial covers using libraries like pandas and SQLAlchemy to query databases efficiently.'),
+('Understanding GIN Indexes in PostgreSQL', 'GIN indexes are essential for efficient full-text search in PostgreSQL. This guide explains how to create and use GIN indexes to speed up searches.'),
+('Optimizing Queries in PostgreSQL', 'Query optimization is key to improving database performance. This guide covers query planning, indexing strategies, and analyzing query performance.')
+('Introduction to Machine Learning', 'Machine learning is a field of artificial intelligence that uses statistical techniques to give computer systems the ability to learn from data. This article covers the basic concepts.'),
+('Supervised vs Unsupervised Learning', 'This document explains the key differences between supervised and unsupervised learning, with examples of common algorithms used in each approach.'),
+('Deep Learning for Image Recognition', 'Deep learning has revolutionized image recognition, enabling machines to achieve superhuman accuracy. This article discusses popular models like Convolutional Neural Networks (CNNs).'),
+('Building a Neural Network from Scratch', 'Learn how to build a neural network from scratch using Python. This tutorial walks through each step, including forward propagation, backpropagation, and gradient descent.'),
+('Natural Language Processing with Machine Learning', 'This document covers natural language processing (NLP) techniques and how machine learning models, such as recurrent neural networks (RNNs) and transformers, are applied to text data.'),
+('Implementing a Recommendation System', 'Recommendation systems use machine learning to provide personalized suggestions. This article explains collaborative filtering and content-based recommendation algorithms.'),
+('Transfer Learning in Deep Learning', 'Transfer learning allows models to leverage pre-trained weights from other tasks to solve new problems. This article explains how transfer learning works and its applications.'),
+('Reinforcement Learning: An Overview', 'Reinforcement learning is a type of machine learning where agents learn to make decisions by receiving rewards or penalties. This article explores Q-learning, policy gradients, and other RL techniques.'),
+('Training a Deep Learning Model with TensorFlow', 'TensorFlow is a popular open-source framework for training deep learning models. This guide covers setting up the environment, defining models, and training them on datasets.'),
+('Bias and Variance in Machine Learning Models', 'Understanding the tradeoff between bias and variance is critical for building accurate models. This article explains these concepts and how to address overfitting and underfitting.'),
+('Hyperparameter Tuning for Machine Learning Models', 'Hyperparameter tuning can significantly improve model performance. Learn about techniques like grid search, random search, and Bayesian optimization to find the best model parameters.'),
+('AI Ethics and Fairness in Machine Learning', 'As AI systems become more integrated into society, ensuring fairness and avoiding bias in machine learning models has become crucial. This article delves into the ethical challenges of AI development.');
+```
+
+### Search
+
+```sql
+-- Search for 'Machine' and 'System'
+SELECT id, title, ts_rank(d.tsv_content, to_tsquery('Machine & System')) AS rank
+FROM documents d
+WHERE d.tsv_content @@ to_tsquery('Machine & System')
+/* 
+    Introduction to Machine Learning
+    Implementing a Recommendation System
+    AI Ethics and Fairness in Machine Learning
+*/
+
+-- Search for 'Machine' and 'Learning' that are not together
+SELECT * FROM documents 
+WHERE tsv_content @@ to_tsquery('english', 'machine & learning')
+EXCEPT
+SELECT * FROM documents 
+WHERE tsv_content @@ to_tsquery('english', 'machine <-> learning') -- 'Machine' Near to 'Learning'
+/* 
+    1) Deep Learning for Image Recognition; Deep learning has revolutionized image recognition,
+    enabling machines to achieve superhuman accuracy. This article discusses popular models 
+    like Convolutional Neural Networks (CNNs).
+*/
+
+-- Search for 'Deep' and 'learning' and NOT 'machine'
+SELECT * FROM documents 
+WHERE tsv_content @@ to_tsquery('english', '!machine & learning & Deep')
+/*
+    Transfer Learning in Deep Learning
+    Training a Deep Learning Model with TensorFlow
+*/
+
+-- Search for all words starting with "Postg*"
+SELECT * FROM documents d
+WHERE d.tsv_content @@ to_tsquery('Postg:*')
+/*
+    PostgreSQL Full-Text Search Guide
+    PostgreSQL vs MySQL: A Comparison
+    Understanding GIN Indexes in PostgreSQL
+    Optimizing Queries in PostgreSQL
+    ...
+*/
+```
+
+
 ---
 
 # TL;DR Of A Curious Moon
