@@ -282,7 +282,7 @@ The idea of the post is to have a streamlined version of the teachings I had per
 
 In this section we will use docker-compose to run a local postgres instance, to start run:
 
-```bash
+```js
 docker compose up --remove-orphans [-d]
 ```
 
