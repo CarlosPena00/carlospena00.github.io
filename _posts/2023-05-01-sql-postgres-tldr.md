@@ -244,7 +244,7 @@ create trigger trigger_calc_tsv
 before insert or update on documents
 for each row
 execute function calc_tsv();
--- drop trigger trigger_calc_tsv on documents; 
+-- drop trigger trigger_calc_tsv on documents;
 
 -- Sample from chatgpt :D
 INSERT INTO documents (title, content)
@@ -280,26 +280,26 @@ VALUES
 SELECT id, title, ts_rank(d.tsv_content, to_tsquery('Machine & System')) AS rank
 FROM documents d
 WHERE d.tsv_content @@ to_tsquery('Machine & System')
-/* 
+/*
     Introduction to Machine Learning
     Implementing a Recommendation System
     AI Ethics and Fairness in Machine Learning
 */
 
 -- Search for 'Machine' and 'Learning' that are not together
-SELECT * FROM documents 
+SELECT * FROM documents
 WHERE tsv_content @@ to_tsquery('english', 'machine & learning')
 EXCEPT
-SELECT * FROM documents 
+SELECT * FROM documents
 WHERE tsv_content @@ to_tsquery('english', 'machine <-> learning') -- 'Machine' Near to 'Learning'
-/* 
+/*
     1) Deep Learning for Image Recognition; Deep learning has revolutionized image recognition,
-    enabling machines to achieve superhuman accuracy. This article discusses popular models 
+    enabling machines to achieve superhuman accuracy. This article discusses popular models
     like Convolutional Neural Networks (CNNs).
 */
 
 -- Search for 'Deep' and 'learning' and NOT 'machine'
-SELECT * FROM documents 
+SELECT * FROM documents
 WHERE tsv_content @@ to_tsquery('english', '!machine & learning & Deep')
 /*
     Transfer Learning in Deep Learning
