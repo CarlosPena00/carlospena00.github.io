@@ -54,11 +54,11 @@ Equivalent to MERGE.
 
 - ON CONFLICT (name): Specifies the unique constraint or index to check for conflicts.
 
-- DO: 
+- DO:
     - Update: Updates the selected columns based on `EXCLUDED` table;
         > EXCLUDED: A special table reference representing the values that were attempted to be inserted.
 
-    - Nothing: suppress the warning: 
+    - Nothing: suppress the warning:
         > SQL Error [23505]: ERROR: duplicate key value violates unique constraint "foo"
   Detail: Key (bar)=(val) already exists.
 
@@ -74,8 +74,7 @@ CREATE TEMPORARY TABLE chcp_users (
 INSERT INTO chcp_users (cpf, name, age)
 VALUES ('11122233345', 'Carlos Pena', 27)
 ON CONFLICT (cpf)
-
-DO UPDATE SET 
+DO UPDATE SET
 	name = EXCLUDED.name,
 	age = EXCLUDED.age;
 
@@ -85,7 +84,7 @@ select * from chcp_users
 INSERT INTO chcp_users (cpf, name, age)
 VALUES ('11122233345', 'Carlos H C Pena', 28)
 ON CONFLICT (cpf)
-DO UPDATE SET 
+DO UPDATE SET
 	name = EXCLUDED.name,
 	age = EXCLUDED.age;
 
@@ -96,12 +95,12 @@ select * from chcp_users
 INSERT INTO chcp_users (cpf, name, age)
 VALUES ('11122233345', 'AAAAAAAAA', -1)
 ON CONFLICT (cpf)
-DO nothing 
+DO nothing
 -- Updated Rows: 0 (error has been suppressed)
 
 select * from chcp_users
 -- 1	11122233345	Carlos H C Pena	28
-``` 
+```
 
 
 # Numrange index
