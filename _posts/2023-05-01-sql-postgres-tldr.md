@@ -318,6 +318,146 @@ WHERE d.tsv_content @@ to_tsquery('Postg:*')
 */
 ```
 
+---
+
+# Differential Updates
+
+For this example we will create three product tables: `prod_price`, `prod_stock`, `prod_info`
+and they will be summarized in the `prod_sumarização` table.
+
+
+```sql
+-- Create Data/Structure
+CREATE TABLE prod_price (
+    product_id INT NOT NULL,
+    store_id INT NOT NULL,
+    price NUMERIC(10, 2),
+    PRIMARY KEY (product_id, store_id)
+);
+
+INSERT INTO prod_price (product_id, store_id, price)
+VALUES
+    (1, 101, 19.99),
+    (1, 102, 10.00),
+    (1, 103, 20.00),
+    (1, 104, NULL),
+    (2, 101, NULL),
+    (2, 102, 29.99),
+    (2, 103, 29.99),
+    (3, 103, 14.49),
+    (4, 101, 9.99),
+    (4, 999, 9.99),
+    (5, 102, 39.99),
+    (999, 102, 39.99),
+    (999, 105, NULL);
+
+
+CREATE TABLE prod_stock (
+    product_id INT NOT NULL,
+    store_id INT NOT NULL,
+    stock INT NOT NULL,
+    PRIMARY KEY (product_id, store_id)
+);
+
+INSERT INTO prod_stock (product_id, store_id, stock)
+VALUES
+    (1, 101, 50),
+    (1, 102, 0),
+    (1, 103, 3),
+    (2, 101, 1),
+    (2, 102, 30),
+    (3, 103, 100),
+    (3, 104, 1),
+    (3, 105, 5),
+    (4, 101, 10),
+    (4, 888, 10),
+    (5, 102, 0);
+    (888, 102, 10);
+
+CREATE TABLE if not exists prod_info(
+    product_id INT PRIMARY KEY,
+    title TEXT NOT NULL,
+    tags TEXT[],
+    description TEXT
+);
+
+INSERT INTO prod_info (product_id, title, tags, description)
+VALUES
+    (1, 'Wireless Mouse', ARRAY['electronics', 'peripherals'], 'Compact and ergonomic design.'),
+    (2, 'Gaming Keyboard', ARRAY['electronics', 'gaming'], 'Mechanical keys with RGB lighting.'),
+    (3, 'USB-C Cable', ARRAY['electronics', 'accessories'], 'Durable and fast charging.'),
+    (4, 'Notebook Stand', ARRAY['office', 'ergonomics'], 'Adjustable aluminum stand for laptops.'),
+    (5, 'Noise Cancelling Headphones', ARRAY['electronics', 'audio'], 'Over-ear headphones with ANC.');
+
+
+CREATE TABLE prod_summarization (
+    product_id INT NOT NULL,
+    store_id INT NOT NULL,
+    price NUMERIC(10, 2),
+    stock INT,
+    title TEXT,
+    tags TEXT[],
+    description TEXT,
+    PRIMARY KEY (product_id, store_id)
+);
+
+-- Create a temporary table to help identify removed/added/changed items.
+create table temp_prod_summarization as table prod_summarization with no data;
+-- This temp table has no index/pk
+
+delete from temp_prod_summarization;
+
+-- Add data into a empty temp_prod_summarization
+insert into temp_prod_summarization
+	(product_id, store_id, price, stock, title, tags, description)
+SELECT
+    p.product_id,
+    p.store_id,
+    p.price,
+    s.stock,
+    i.title,
+    i.tags,
+    i.description
+FROM prod_price p
+JOIN prod_stock s
+    ON p.product_id = s.product_id AND p.store_id = s.store_id
+JOIN prod_info i
+    ON p.product_id = i.product_id
+where 1=1
+	and s.stock > 0
+	and p.price > 0  --and 'ergonomics'=any(i.tags)
+
+-- Add/Update data
+INSERT INTO prod_summarization (
+    product_id, store_id, price, stock, title, tags, description
+)
+SELECT
+    product_id, store_id, price, stock, title, tags, description
+FROM temp_prod_summarization
+ON CONFLICT (product_id, store_id)
+DO UPDATE SET
+    price = EXCLUDED.price,
+    stock = EXCLUDED.stock,
+    title = EXCLUDED.title,
+    tags = EXCLUDED.tags,
+    description = EXCLUDED.description
+WHERE prod_summarization.price <> EXCLUDED.price
+   OR prod_summarization.stock <> EXCLUDED.stock
+   OR prod_summarization.title <> EXCLUDED.title
+   OR prod_summarization.tags <> EXCLUDED.tags
+   OR prod_summarization.description <> EXCLUDED.description;
+
+-- Delete Data from prod_summarization
+DELETE FROM prod_summarization
+WHERE (product_id, store_id) NOT IN (
+    SELECT product_id, store_id FROM temp_prod_summarization
+);
+
+-- Remember to keep temp_prod_summarization empty
+delete from temp_prod_summarization;
+
+-- TODO: Test this strategy with more data
+```
 
 ---
 
