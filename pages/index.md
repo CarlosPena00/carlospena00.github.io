@@ -10,7 +10,7 @@ order: 1
 <div class="profile">
     <img class="avatar" src="https://avatars.githubusercontent.com/u/14184997">
     <div class="profiletext">
-    I am a researcher with a master's degree in Computer Science from the Informatics Center (Centro de Informatica - CIn) of the Federal University of Pernambuco (UFPE). I aim to create custom solutions with machine/deep learning and computer vision, focusing on solving customer pain points.
+    I am a passionate researcher, agile leader, and effective problem-solver with a Master's in Computer Science from the Informatics Center (CIn) at the Federal University of Pernambuco (UFPE). With deep expertise in machine learning, deep learning, and computer vision, I develop innovative, custom solutions that directly address customer pain points. I excel at bridging the gap between technical teams and stakeholders, ensuring clear communication and strategic alignment to drive impactful, data-driven results.
     <br><br>
     <a href="https://www.linkedin.com/in/chcp" target="_blank"><svg width="24" height="24" viewBox="0 0 24 24" ><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"></path></svg></a>
     <a href="https://github.com/CarlosPena00" target="_blank">
@@ -27,35 +27,37 @@ order: 1
 <div>
   <h1 id="education">Education</h1>
   <ul>
-    <li><strong>2020 - 2022</strong> Masters in Computer Science, Universidade Federal De Pernambuco (UFPE).</li>
+    <li><strong>2020 - 2022</strong> Masters in Computer Science, Universidade Federal De Pernambuco (UFPE) with GPA 4.0/4.0.</li>
+      <ul>
+      <li>Automatic panoptic segmentation of microscopic cells for cell counting and shape analysis.
+</li>
+      </ul>
     <li><strong>2014 - 2019</strong> Bachelors in Computer Engineering, Universidade Federal De Pernambuco (UFPE).</li>
   </ul>
 
   <h1 id="work-experience">Work Experience</h1>
   <ul>
-    <li><strong>Jul 2021 - Present</strong> Senior System Analyst at FCx Labs.</li>
-    <li><strong>Mar 2020 - Jun 2021</strong> R&amp;D Engineer and master’s fellow at NCR Tech / OKI Brasil.</li>
-    <li><strong>Jun 2018 - Feb 2020</strong> Intern at OKI Brasil Lab, UFPE.</li>
+    <li><strong>Jul 2021 - Present</strong> AI Specialist at FCx Labs. </li>
+      <ul>
+        <li> <strong>Lead</strong> two agile teams in the <strong>research and development of AI-driven and computer vision solutions</strong>. Oversee Scrum activities, including backlog refinement, code reviews, and strategic alignment with Product Owners. Play a key role in facilitating dialogue between developers and clients/POs, ensuring clear communication and focusing on generating tasks that directly address pain points and business needs. </li>
+        <li> <strong>Designed and implemented</strong> a Transport Management System (TMS-Shipping) capable of supporting 13K+ simultaneous users during peak events (e.g., Black Friday). The system operates 24/7, ensuring high availability and reliability. Integrated observability tools for real-time monitoring and performance optimization. Stack includes Oracle, PostgreSQL, Redis, and AWS services (ECR, EKS, S3). </li>
+        <li> Created a custom <strong>product search engine</strong> with ElasticSearch, optimizing the e-commerce conversion rate using Google Analytics (GA) feedback. </li>
+      </ul>
+    <li><strong>Jun 2018 - Jun 2021</strong> R&amp;D Engineer and master’s fellow at NCR Tech / OKI Brasil.</li>
+      <ul>
+        <li>Researched and developed computer vision and deep learning solutions.
+            Create and present weekly progress to the client (audience: administrative and technical from NCR - São Paulo). </li>
+        <li>Led discussions on emerging AI techniques, defining next steps based on new requirements, feature       updates, and system limitations. </li>
+      </ul>
   </ul>
 
-  <h1 id="interests">Interests</h1>
+  <h1 id="skills">Skills and interests</h1>
   <ul>
-    <li>Neural Networks and Deep Learning</li>
+    <li>AI, Neural Networks and Deep Learning</li>
     <li>Computer Vision</li>
     <li>Robotics</li>
     <li>Agile Management</li>
-  </ul>
-
-  <h1 id="skills">Skills</h1>
-  <ul>
-    <li>Python</li>
-    <li>C/C++</li>
-    <li>SQL</li>
-    <li>Git</li>
-    <li>Machine and Deep Learning</li>
-    <li>Computer Vision</li>
-    <li>3D Priting</li>
-    <li>Robotics</li>
+    <li>Pytorch, OpenCV, Pandas, Polars, FastAPI, Git, Docker, ElasticSearch, AWS/Boto3, Unix/Bash, 3D printing</li>
   </ul>
 </div>
 
@@ -63,7 +65,13 @@ order: 1
 <h1>Main Projects</h1>
   <ul class="project-list">
     <li ><a href="https://robocin.com.br/">Co-founder of RobôCIn - UFPE</a>, a research group in Centro de Informática of UFPE, that uses robotics to solve problems (exited in 2021).</li>
-  </ul>
+    <ul>
+      <li><strong>Led teams</strong> in robot soccer AI research, applying <strong>Deep Learning</strong> and <strong>Reinforcement Learning</strong>.</li>
+      <li><strong>Developed</strong> vision and control systems using <strong>OpenCV, QT, and ROS</strong>.</li>
+      <li><strong>Developed</strong> a software system with <strong>ROS</strong> to control a human-size domestic robot for the @Home category on RoboCup.</li>
+      <li><strong>Presented</strong> multiple workshops on <strong>computer vision, 3D modeling and printing, and robotics simulation</strong>.</li>
+   </ul>
+</ul>
 
 <h1>Papers</h1>
 
@@ -91,8 +99,19 @@ order: 1
     </div>
 </div>
 
+<h1>Awards</h1>
+<ul>
+    <li><strong>1st Place Team</strong> at Microsoft College Bot-ando Competition, UFPE (2019)</li>
+    <li><strong>Achieved top rankings</strong> in Latin American IEEE Very Small Size Soccer: <strong>5th</strong> (2017), <strong>4th</strong> (2020)</li>
+    <li><strong>3rd Place Team</strong> at Microsoft College Code Competition, UFPE (2018)</li>
+    <li><strong>Top 10 Project</strong> at National DragonBoard IoT Embedded Competition among 350 teams (2017)</li>
+    <li><strong>Honorable Mention</strong> at Sigfox Embedded System - WND IoT Challenge (2017)</li>
+</ul>
 
-
+<h1> Online Courses</h1>
+<ul>
+Rust (Alura 2023), Kafka (Alura 2023), Agile Management Practices SC-AMP (Agile Institute Brazil 2022), Scrum (Alura 2022), Kanban Foundation KIKF (2020), Deep Learning with Pytorch (Udemy 2018), Deep Learning: GANs and Variational Autoencoders (Udemy 2017), 3D Printing with Fusion 360 (Udemy, 2017), Android (CITi, 2016), Logic: Language and Information (Melbourne, 2015).
+</ul>
 
 </content>
 </body>
