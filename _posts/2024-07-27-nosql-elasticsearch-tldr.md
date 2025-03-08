@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Z-UnderDev DB: NoSQL ElasticSearch: TL;DR"
+title: "DB: NoSQL ElasticSearch: TL;DR"
 author: Carlos Pena
 date: 2024-07-27
 ---
