@@ -192,9 +192,9 @@ def consume_with_retry():
                     properties=pika.BasicProperties(headers=new_headers),
                 )
                 print(f"Requeued for retry #{retries + 1}")
-                # Even though the message was processed with failure, 
+                # Even though the message was processed with failure,
                 # as we inserted it into a new queue,
-                # we must return an ACK for the original message, 
+                # we must return an ACK for the original message,
                 # otherwise the message would be processed again in the DEFAULT queue.
                 ch.basic_ack(delivery_tag=method.delivery_tag)
 
@@ -254,4 +254,4 @@ Requeued for retry #3
 Received: {'message': 'Default msg', 'time': '2025-03-22 18:12:53.859188', 'idx': 3}, Retry #: 3
 Processing error: Simulated processing error
 Exceeded retries. Sending to DLQ.
-``` 
+```
