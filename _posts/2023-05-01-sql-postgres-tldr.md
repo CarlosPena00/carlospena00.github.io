@@ -27,8 +27,8 @@ check (VALUE > 0 and VALUE < 10000);
 drop domain if exists cep_type cascade;
 create domain cep_type AS TEXT
 check(
-   	VALUE ~ '^\d{7,8}$'
- 	OR VALUE ~ '^\d{5}-\d{3}$'
+    VALUE ~ '^\d{7,8}$'
+    OR VALUE ~ '^\d{5}-\d{3}$'
 );
 
 drop table ADDRESS;
@@ -75,21 +75,21 @@ INSERT INTO chcp_users (cpf, name, age)
 VALUES ('11122233345', 'Carlos Pena', 27)
 ON CONFLICT (cpf)
 DO UPDATE SET
-	name = EXCLUDED.name,
-	age = EXCLUDED.age;
+    name = EXCLUDED.name,
+    age = EXCLUDED.age;
 
 select * from chcp_users
--- 1	11122233345	Carlos Pena	27
+-- 1    11122233345 Carlos Pena 27
 
 INSERT INTO chcp_users (cpf, name, age)
 VALUES ('11122233345', 'Carlos H C Pena', 28)
 ON CONFLICT (cpf)
 DO UPDATE SET
-	name = EXCLUDED.name,
-	age = EXCLUDED.age;
+    name = EXCLUDED.name,
+    age = EXCLUDED.age;
 
 select * from chcp_users
--- 1	11122233345	Carlos H C Pena	28
+-- 1    11122233345 Carlos H C Pena 28
 
 
 INSERT INTO chcp_users (cpf, name, age)
@@ -99,7 +99,7 @@ DO nothing
 -- Updated Rows: 0 (error has been suppressed)
 
 select * from chcp_users
--- 1	11122233345	Carlos H C Pena	28
+-- 1    11122233345 Carlos H C Pena 28
 ```
 
 
@@ -122,15 +122,15 @@ CREATE OR REPLACE PROCEDURE populate_table(
 LANGUAGE plpgsql
 AS $$
 DECLARE
-	i INTEGER := 1;
-	random_st INTEGER := 0;
-	random_range INTEGER :=  0;
+    i INTEGER := 1;
+    random_st INTEGER := 0;
+    random_range INTEGER :=  0;
 BEGIN
     WHILE i <= in_count loop
-		random_st := random() * 1000;
-		random_range :=  random() * 1000;
+        random_st := random() * 1000;
+        random_range :=  random() * 1000;
 
-	    INSERT INTO example_table (start_num, end_num, text_column)
+        INSERT INTO example_table (start_num, end_num, text_column)
         VALUES (random_st, random_st+random_range, 'Row ' || i);
         i := i + 1;
     END LOOP;
@@ -142,8 +142,8 @@ CALL populate_table(2000000);
 
 select * from example_table
 where
-	100 >= start_num and
-	100 <= end_num;
+    100 >= start_num and
+    100 <= end_num;
 -- COST 0.00 - 42739.00 -- Seq Scan
 create index idx_example_table_start on example_table(start_num);
 create index idx_example_table_end on example_table(end_num);
@@ -152,13 +152,13 @@ create index idx_example_table_start_end on example_table(start_num, end_num des
 
 select * from example_table
 where
-	100 >= start_num and
-	100 <= end_num;
+    100 >= start_num and
+    100 <= end_num;
 -- COST 3798.16 - 19575.96 -- Bitmap Heap Scan (idx_example_table_start)
 
 select * from example_table
 where
-	100 between start_num and end_num;
+    100 between start_num and end_num;
 -- COST 3798.16 - 19575.96 -- Bitmap Heap Scan (idx_example_table_start)
 
 
@@ -167,7 +167,7 @@ create index idx_example_table_range_gist ON example_table using gist (numrange(
 
 select * from example_table
 where
-	numeric '100' <@ numrange(start_num, end_num, '[]');
+    numeric '100' <@ numrange(start_num, end_num, '[]');
 -- COST 385.91 - 13086.03 -- Bitmap Heap Scan (idx_example_table_range_gist)
 ```
 
@@ -408,7 +408,7 @@ delete from temp_prod_summarization;
 
 -- Add data into a empty temp_prod_summarization
 insert into temp_prod_summarization
-	(product_id, store_id, price, stock, title, tags, description)
+    (product_id, store_id, price, stock, title, tags, description)
 SELECT
     p.product_id,
     p.store_id,
@@ -423,8 +423,8 @@ JOIN prod_stock s
 JOIN prod_info i
     ON p.product_id = i.product_id
 where 1=1
-	and s.stock > 0
-	and p.price > 0  --and 'ergonomics'=any(i.tags)
+    and s.stock > 0
+    and p.price > 0  --and 'ergonomics'=any(i.tags)
 
 -- Add/Update data
 INSERT INTO prod_summarization (

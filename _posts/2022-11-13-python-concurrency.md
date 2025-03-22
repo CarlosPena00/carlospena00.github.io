@@ -99,7 +99,7 @@ inputs = [1] * 20
 # it was necessary to use a list with N values and add a dummy
 # parameter in the cpu_bound function.
 results = pqdm(inputs, cpu_bound, n_jobs=20)
-# real	0m3,446s
+# real  0m3,446s
 ```
 
 ```py
@@ -107,7 +107,7 @@ import concurrent.futures
 with concurrent.futures.ProcessPoolExecutor(max_workers=20) as executor:
     futures = [executor.submit(cpu_bound) for _ in range(20)]
     results = [j.result() for j in concurrent.futures.as_completed(futures)]
-# real	0m3,472s
+# real  0m3,472s
 ```
 
 Now yes! A decreasing in total runtime from ± 20s to ± 3.5s

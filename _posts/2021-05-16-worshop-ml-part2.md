@@ -140,7 +140,7 @@ y_test_random = np.random.randint(0, 10, size=len(x_test))
 
 print_metrics(y_test, y_test_random, 'Random')
 
-    Random: Accuracy 0.097	 F1 0.096
+    Random: Accuracy 0.097   F1 0.096
 ```
 
 
@@ -166,7 +166,7 @@ y_test_pred_knn.shape, y_test.shape
 ((10000,), (10000, 1))
 
 print_metrics(y_test, y_test_pred_knn, 'KNN')
-    KNN: Accuracy 0.354	 F1 0.349
+    KNN: Accuracy 0.354  F1 0.349
 ```
 
 # Features Extraction
@@ -241,7 +241,7 @@ y_test_pred_knn_hog.shape, y_test.shape
     ((10000,), (10000, 1))
 
 print_metrics(y_test, y_test_pred_knn_hog, 'KNN HOG')
-    KNN HOG: Accuracy 0.512	 F1 0.506
+    KNN HOG: Accuracy 0.512  F1 0.506
 ```
 
 #### See also
@@ -267,7 +267,7 @@ y_test_pred_forest = forest.predict(x_test_row)
     Wall time: 308 ms
 
 print_metrics(y_test, y_test_pred_forest, 'Forest')
-    Forest: Accuracy 0.468	 F1 0.464
+    Forest: Accuracy 0.468   F1 0.464
 ```
 
 # Forest + HOG
@@ -287,7 +287,7 @@ y_test_pred_forest_hog = forest_hog.predict(x_test_hog)
     Wall time: 106 ms
 
 print_metrics(y_test, y_test_pred_forest_hog, 'Forest HOG')
-    Forest HOG: Accuracy 0.526	 F1 0.522
+    Forest HOG: Accuracy 0.526   F1 0.522
 ```
 
 # Row

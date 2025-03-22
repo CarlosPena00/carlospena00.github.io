@@ -9,7 +9,7 @@ For this example we will create a client/server to send an image via gRPC. It wi
 
 ## Setup
 
-```
+```js
 micromamba create -n my_env python=3.12 grpcio-tools opencv-python numpy
 ```
 

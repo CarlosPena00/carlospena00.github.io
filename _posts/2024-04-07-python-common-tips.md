@@ -26,9 +26,7 @@ services:
 
 
 ```py
-pip install ipykernel jupyterlab npm node nodejs
-pip install jupyterlab_execute_time
-pip install black isort jupyterlab-code-formatter
+pip install ipykernel jupyterlab npm node nodejs jupyterlab_execute_time black isort jupyterlab-code-formatter
 
 ipython kernel install --user --name=<env_name>
 ```
