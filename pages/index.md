@@ -41,7 +41,8 @@ order: 1
       <ul>
         <li> <strong>Lead</strong> two agile teams in the <strong>research and development of AI-driven and computer vision solutions</strong>. Oversee Scrum activities, including backlog refinement, code reviews, and strategic alignment with Product Owners. Play a key role in facilitating dialogue between developers and clients/POs, ensuring clear communication and focusing on generating tasks that directly address pain points and business needs. </li>
         <li> <strong>Designed and implemented</strong> a Transport Management System (TMS-Shipping) capable of supporting 13K+ simultaneous users during peak events (e.g., Black Friday). The system operates 24/7, ensuring high availability and reliability. Integrated observability tools for real-time monitoring and performance optimization. Stack includes Oracle, PostgreSQL, Redis, and AWS services (ECR, EKS, S3). </li>
-        <li> Created a custom <strong>product search engine</strong> with ElasticSearch, optimizing the e-commerce conversion rate using Google Analytics (GA) feedback. </li>
+        <li> Created a custom <strong>product search engine</strong> with ElasticSearch, optimizing the e-commerce conversion rate using Google Analytics (GA) feedback.</li>
+        <li> Named <strong>IT Professional of the year</strong> by FerreiraCosta/FCxLabs in 2023.</li>
       </ul>
     <li><strong>Jun 2018 - Jun 2021</strong> R&amp;D Engineer and master’s fellow at NCR Tech / OKI Brasil.</li>
       <ul>
