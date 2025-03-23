@@ -1,11 +1,35 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.3.0
+    rev: 'v5.0.0'
     hooks:
-      - id: check-yaml
-      - id: end-of-file-fixer
       - id: trailing-whitespace
-  - repo: https://github.com/psf/black
-    rev: 22.3.0
+      - id: end-of-file-fixer
+      - id: check-yaml
+        exclude: 'deploy/'
+      - id: check-added-large-files
+      - id: mixed-line-ending
+        args: [--fix=lf]
+        exclude: '\.bat$'
+  - repo: https://github.com/Lucas-C/pre-commit-hooks
+    rev: v1.5.5
     hooks:
-      - id: black
+      - id: remove-tabs
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: 'v0.8.4'
+    hooks:
+      - id: ruff
+      - id: ruff-format
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: 'v1.13.0'
+    hooks:
+      - id: mypy
+        additional_dependencies:
+          [
+            types-pytz,
+            types-requests,
+            types-cachetools,
+            boto3-stubs,
+            types-boto3-lite
+          ]
