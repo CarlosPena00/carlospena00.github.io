@@ -9,7 +9,8 @@ order: 1
 <content>
 <div class="profile">
     <img class="avatar" src="https://avatars.githubusercontent.com/u/14184997">
-    <div class="profiletext">
+    <div class="profiletext"> 
+    <strong>AI Architect | Senior Data Scientist | Master’s Research Fellow | Team Lider | R&D </strong> <br><br> 
     I am a passionate researcher, agile leader, and effective problem-solver with a Master's in Computer Science from the Informatics Center (CIn) at the Federal University of Pernambuco (UFPE). With deep expertise in machine learning, deep learning, and computer vision, I develop innovative, custom solutions that directly address customer pain points. I excel at bridging the gap between technical teams and stakeholders, ensuring clear communication and strategic alignment to drive impactful, data-driven results.
     <br><br>
     <a href="https://www.linkedin.com/in/chcp" target="_blank"><svg width="24" height="24" viewBox="0 0 24 24" ><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"></path></svg></a>
@@ -24,33 +25,10 @@ order: 1
     </div>
 </div>
 
-<div>
-  <h1 id="education">Education</h1>
-  <ul>
-    <li><strong>2020 - 2022</strong> Masters in Computer Science, Universidade Federal De Pernambuco (UFPE) with GPA 4.0/4.0.</li>
-      <ul>
-      <li>Automatic panoptic segmentation of microscopic cells for cell counting and shape analysis.
-</li>
-      </ul>
-    <li><strong>2014 - 2019</strong> Bachelors in Computer Engineering, Universidade Federal De Pernambuco (UFPE).</li>
-  </ul>
+<iframe src="/assets/chcp_resume_cv.pdf" width="100%" height="1000px" style="border: none;"></iframe>
 
-  <h1 id="work-experience">Work Experience</h1>
-  <ul>
-    <li><strong>Jul 2021 - Present</strong> AI Specialist at FCx Labs. </li>
-      <ul>
-        <li> <strong>Lead</strong> two agile teams in the <strong>research and development of AI-driven and computer vision solutions</strong>. Oversee Scrum activities, including backlog refinement, code reviews, and strategic alignment with Product Owners. Play a key role in facilitating dialogue between developers and clients/POs, ensuring clear communication and focusing on generating tasks that directly address pain points and business needs. </li>
-        <li> <strong>Designed and implemented</strong> a Transport Management System (TMS-Shipping) capable of supporting 13K+ simultaneous users during peak events (e.g., Black Friday). The system operates 24/7, ensuring high availability and reliability. Integrated observability tools for real-time monitoring and performance optimization. Stack includes Oracle, PostgreSQL, Redis, and AWS services (ECR, EKS, S3). </li>
-        <li> Created a custom <strong>product search engine</strong> with ElasticSearch, optimizing the e-commerce conversion rate using Google Analytics (GA) feedback.</li>
-        <li> Named <strong>IT Professional of the year</strong> by FerreiraCosta/FCxLabs in 2023.</li>
-      </ul>
-    <li><strong>Jun 2018 - Jun 2021</strong> R&amp;D Engineer and master’s fellow at NCR Tech / OKI Brasil.</li>
-      <ul>
-        <li>Researched and developed computer vision and deep learning solutions.
-            Create and present weekly progress to the client (audience: administrative and technical from NCR - São Paulo). </li>
-        <li>Led discussions on emerging AI techniques, defining next steps based on new requirements, feature       updates, and system limitations. </li>
-      </ul>
-  </ul>
+
+<div>
 
   <h1 id="skills">Skills and interests</h1>
   <ul>
@@ -86,8 +64,6 @@ order: 1
         <div><strong class="date">2022</strong>, International Joint Conference on Neural Networks (<strong>IJCNN</strong>)</div>
     </div>
 </div>
-
-
 
 <div class="paper">
     <div class="paper-img-col">
