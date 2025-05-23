@@ -15,6 +15,7 @@ order: 2
 List of repositories with minimal examples of some application/library
 
 <ul>
+    <li class='list_padding'><a href='https://github.com/CarlosPena00/template_python'>Python - New Project Template</a></li>
     <li class='list_padding'><a href='https://github.com/CarlosPena00/sandbox_celery'>Python - Celery</a></li>
     <li class='list_padding'><a href='https://github.com/CarlosPena00/sandbox_kafka'>Python - Kafka</a></li>
     <li class='list_padding'><a href='https://github.com/CarlosPena00/sandbox_rabbitmq'>Python - RabbitMQ</a></li>
