@@ -71,8 +71,8 @@ header {
 
 header nav {
     font-size: 2.4em;
-    width: 90%;
-    max-width: 1000px;
+    width: 100%;
+    max-width: 1200px;
     display: grid;
     grid-template-columns: 2fr 1fr;
     align-items: center;
@@ -87,12 +87,12 @@ header nav ul.navigation {
     display: flex;
     justify-content: flex-end;
     list-style: none;
-    margin: 4px 14% 4px 0px;
+    margin: 4px 7% 4px 0px;
 }
 
 content {
-    width: 90%;
-    max-width: 1000px;
+    width: 100%;
+    max-width: 1200px;
     padding: 20px;
 }
 
