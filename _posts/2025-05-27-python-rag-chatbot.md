@@ -325,3 +325,21 @@ with gr.Blocks() as demo:
 
 demo.launch(debug=True)
 ```
+
+# Test it with deploy in huggingface.co spaces
+
+It is possible to join Gradio with FastAPI
+
+```python
+gradio_app = 
+()
+app = gr.mount_gradio_app(app, gradio_app, path="")  # root path "/"
+```
+
+<iframe 
+    src="https://carlospena-dummy-chatbot.hf.space/" 
+    width="100%" 
+    height="700" 
+    frameborder="2"
+    allow="clipboard-write"
+></iframe>
