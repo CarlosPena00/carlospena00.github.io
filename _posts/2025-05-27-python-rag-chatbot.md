@@ -331,8 +331,7 @@ demo.launch(debug=True)
 It is possible to join Gradio with FastAPI
 
 ```python
-gradio_app = 
-()
+gradio_app = create_gradio_app()
 app = gr.mount_gradio_app(app, gradio_app, path="")  # root path "/"
 ```
 
