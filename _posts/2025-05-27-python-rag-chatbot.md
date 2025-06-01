@@ -7,8 +7,6 @@ date: 2025-05-27
 
 In this post, I’ll walk you through an project strong based on `Alura: LlamaIndex: creating a chatbot with the RAG technique`: a chatbot built with Retrieval-Augmented Generation (RAG) using the LlamaIndex framework. The objective is to create a smart, responsive sales assistant for an e-commerce store that specializes in electronics.
 
-Obs. ToDo: Add guardrails
-
 - pip install llama-index llama-index-embeddings-huggingface llama-index-vector-stores-chroma llama-index-llms-groq llama-index-readers-json pydantic_settings gradio
 
 
@@ -284,6 +282,78 @@ print(response)
     qualquer dúvida ou produto que você precise. Estou à sua disposição!
 """
 ```
+
+# Guardrails
+
+Perform validation, safety, and control around large language model (LLM) inputs and outputs.
+
+### Install
+- pip install guardrails-ai
+- guardrails configure
+  - Create an new key at [guardrailsai hub](https://hub.guardrailsai.com/keys)
+- guardrails hub install hub://guardrails/llamaguard_7b
+
+```py
+from guardrails import Guard, OnFailAction
+from guardrails.hub import CompetitorCheck, LlamaGuard7B
+
+guard = Guard().use(
+    LlamaGuard7B,
+    on_fail=OnFailAction.EXCEPTION, # Or maybe OnFailAction.NOOP
+    # policies=[LlamaGuard7B.POLICY__NO_SEXUAL_CONTENT],  # not suppliying `policies` kwarg applies all policies
+    # POLICY__NO_VIOLENCE_HATE, POLICY__NO_SEXUAL_CONTENT, POLICY__NO_CRIMINAL_PLANNING, 
+    # POLICY__NO_GUNS_AND_ILLEGAL_WEAPONS, POLICY__NO_ILLEGAL_DRUGS, POLICY__NO_ENOURAGE_SELF_HARM
+)
+# Fail to promp injection as it not an policy,
+# but really good to list policies, even in PT-BR
+
+try:
+    validator_output = guard.validate(
+        "User input"
+    )  
+    print("PASS:  ", validator_output)
+except Exception as e:
+    print("Error: ", e)
+
+"""
+ex:
+
+"I want to buy a car"
+- PASS:   ValidationOutcome( 
+    call_id='...',
+    raw_llm_output='I want to buy a car',
+    validation_summaries=[],
+    validated_output='I want to buy a car',
+    reask=None,
+    validation_passed=True,
+    error=None
+)
+
+"I want to buy drugs"
+- Error:  Validation failed for field with errors: Prompt contains unsafe content.
+          Classification: unsafe, Violated Policy: POLICY__NO_ILLEGAL_DRUGS
+
+- If OnFailAction.NOOP:
+ValidationOutcome(
+    call_id='...',
+    raw_llm_output='I want to buy drugs',
+    validation_summaries=[
+        ValidationSummary(
+            validator_name='LlamaGuard7B',
+            validator_status='fail',
+            property_path='$',
+            failure_reason='Prompt contains unsafe content. Classification: unsafe, Violated Policy: POLICY__NO_ILLEGAL_DRUGS',
+            error_spans=[ErrorSpan(start=0, end=19, reason='Unsafe content: I want to buy drugs')]
+        )
+    ],
+    validated_output='I want to buy drugs',
+    reask=None,
+    validation_passed=False,
+    error=None
+)
+"""
+```
+
 
 # No front‑end (TODO)
 
