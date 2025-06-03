@@ -110,7 +110,7 @@ repos:
 
 - pre-commit run --all-files
 
-## Alias
+## Alias & Functions
 
 ```js
 alias ca='micromamba activate'
@@ -120,6 +120,24 @@ alias jlab='micromamba activate jupyterinstall && jupyter lab'
 alias gf='git fetch -p'
 alias gg='git push origin HEAD'
 alias ruffc='ruff check --fix'
+
+killport() {
+  if [ -z "$1" ]; then
+    echo "Usage: killport <port>"
+    return 1
+  fi
+
+  PORT="$1"
+  PIDS=$(lsof -t -i tcp:"$PORT" -sTCP:LISTEN)
+
+  if [ -z "$PIDS" ]; then
+    echo "No process is listening on port $PORT"
+    return 0
+  fi
+
+  echo "Killing processes on port $PORT: $PIDS"
+  kill -9 $PIDS
+}
 ```
 
 ## Make
