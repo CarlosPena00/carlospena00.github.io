@@ -119,6 +119,7 @@ alias cad='micromamba deactivate'
 alias jlab='micromamba activate jupyterinstall && jupyter lab'
 alias gf='git fetch -p'
 alias gg='git push origin HEAD'
+alias gadd='git diff --name-only --cached | xargs git add'
 alias ruffc='ruff check --fix'
 
 killport() {
