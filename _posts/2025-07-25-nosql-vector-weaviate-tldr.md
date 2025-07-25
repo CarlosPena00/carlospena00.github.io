@@ -2,7 +2,7 @@
 layout: post
 title: "DB: NoSQL VectorDB Weaviate: TL;DR"
 author: Carlos Pena
-date: 2024-07-04
+date: 2025-07-25
 ---
 
 ## Weaviate
