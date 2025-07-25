@@ -268,3 +268,56 @@ def query_collection(  # type: ignore[no-any-unimported]
     return result
 
 ```
+
+- Example:
+
+```py
+client = weaviate.connect_to_local(port=8079)
+
+products_collection = create_collection(
+    name="products",
+    source_properties=["name", "description", "category", "price"],
+    properties=[
+        Property(name="pid", data_type=DataType.UUID, vectorize_property_name=True),
+        Property(
+            name="name", data_type=DataType.TEXT, vectorize_property_name=True
+        ),
+        Property(
+            name="description",
+            data_type=DataType.TEXT,
+            vectorize_property_name=True,
+        ),
+        Property(
+            name="price", data_type=DataType.NUMBER, vectorize_property_name=True
+        ),
+        Property(
+            name="category", data_type=DataType.TEXT, vectorize_property_name=True
+        ),
+        Property(name="created_at", data_type=DataType.DATE),
+        Property(name="user_ratings", data_type=DataType.NUMBER),
+        Property(
+            name="budget", data_type=DataType.TEXT, vectorize_property_name=True
+        ),
+    ],
+    vectorize_collection_name=False,
+)
+docs = generate_fake_documents(30)
+count = len(products_collection)
+logger.info(f"Total documents in collection: {count}")
+
+add_objs_to_collection(docs, products_collection)
+count = len(products_collection)
+logger.info(f"Total documents in collection: {count}")
+
+sample = query_collection(
+    collection=products_collection,
+    query="Smart TV",
+    limit=5,
+    query_type=QueryType.HYBRID_SEARCH,
+)
+description = [r.properties["description"] for r in sample.objects]
+logger.info(f"Sample documents: {description}")
+
+client.close()
+
+```
