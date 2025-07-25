@@ -301,7 +301,7 @@ guard = Guard().use(
     LlamaGuard7B,
     on_fail=OnFailAction.EXCEPTION, # Or maybe OnFailAction.NOOP
     # policies=[LlamaGuard7B.POLICY__NO_SEXUAL_CONTENT],  # not suppliying `policies` kwarg applies all policies
-    # POLICY__NO_VIOLENCE_HATE, POLICY__NO_SEXUAL_CONTENT, POLICY__NO_CRIMINAL_PLANNING, 
+    # POLICY__NO_VIOLENCE_HATE, POLICY__NO_SEXUAL_CONTENT, POLICY__NO_CRIMINAL_PLANNING,
     # POLICY__NO_GUNS_AND_ILLEGAL_WEAPONS, POLICY__NO_ILLEGAL_DRUGS, POLICY__NO_ENOURAGE_SELF_HARM
 )
 # Fail to promp injection as it not an policy,
@@ -310,7 +310,7 @@ guard = Guard().use(
 try:
     validator_output = guard.validate(
         "User input"
-    )  
+    )
     print("PASS:  ", validator_output)
 except Exception as e:
     print("Error: ", e)
@@ -319,7 +319,7 @@ except Exception as e:
 ex:
 
 "I want to buy a car"
-- PASS:   ValidationOutcome( 
+- PASS:   ValidationOutcome(
     call_id='...',
     raw_llm_output='I want to buy a car',
     validation_summaries=[],
@@ -405,10 +405,10 @@ gradio_app = create_gradio_app()
 app = gr.mount_gradio_app(app, gradio_app, path="")  # root path "/"
 ```
 
-<iframe 
-    src="https://carlospena-dummy-chatbot.hf.space/" 
-    width="100%" 
-    height="700" 
+<iframe
+    src="https://carlospena-dummy-chatbot.hf.space/"
+    width="100%"
+    height="700"
     frameborder="2"
     allow="clipboard-write"
 ></iframe>
