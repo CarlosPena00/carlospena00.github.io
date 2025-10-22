@@ -13,6 +13,8 @@ My notes about "DeepLearning.AI Data Engineering"
 # C4: Data Modeling, Transformation, and Serving
 
 🧠 Warehouse vs. Lake vs. Lakehouse
+
+```js
 | Feature / Aspect    | 🏛️ **Data Warehouse**                 | 🪣 **Data Lake**                            | ⚡ **Data Lakehouse**                              |
 | ------------------- | ------------------------------------- | ------------------------------------------- | -------------------------------------------------- |
 | **Core Purpose**    | Centralized analytical store SQL/BI   | Raw data repository for all data types      | Unified platform combining data lake flexibility with warehouse reliability |
@@ -25,7 +27,7 @@ My notes about "DeepLearning.AI Data Engineering"
 | **Use Cases**       | BI, Reporting, Historical Analysis    | Data exploration, Data science, ETL staging | Unified analytics, ML, BI, real-time analytics     |
 | **Management Risk** | Data Silos                            | Risk of Data Swamp (if ungoverned)          | Centralized governance, schema enforcement         |
 | **Examples / Tech** | Snowflake, BigQuery, Redshift         | AWS S3, Azure Data Lake, Hadoop HDFS        | Databricks Delta Lake, Apache Iceberg, Apache Hudi |
-
+```
 
 ## 🔹 Denormalized Form
 - **Definition:** Data with **redundancy** and often **nested structures** (e.g., JSON).  
