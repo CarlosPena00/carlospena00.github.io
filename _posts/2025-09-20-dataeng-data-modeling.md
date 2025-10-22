@@ -12,6 +12,21 @@ My notes about "DeepLearning.AI Data Engineering"
 
 # C4: Data Modeling, Transformation, and Serving
 
+🧠 Warehouse vs. Lake vs. Lakehouse
+| Feature / Aspect    | 🏛️ **Data Warehouse**                 | 🪣 **Data Lake**                            | ⚡ **Data Lakehouse**                              |
+| ------------------- | ------------------------------------- | ------------------------------------------- | -------------------------------------------------- |
+| **Core Purpose**    | Centralized analytical store SQL/BI   | Raw data repository for all data types      | Unified platform combining data lake flexibility with warehouse reliability |
+| **Data Type**       | Structured                            | Structured, Semi-structured, Unstructured   | Structured and Semi-structured                     |
+| **Schema**          | Predefined (schema-on-write)          | Flexible (schema-on-read)                   | Hybrid: supports both                              |
+| **Storage Format**  | Columnar storage (e.g., Parquet, ORC) | Object storage (e.g., S3, GCS, Azure Blob)  | Object storage with metadata layers                |
+| **Performance**     | Optimized for analytical queries      | Lower performance for direct queries        | Optimized through caching and metadata             |
+| **Cost**            | High (due to compute and management)  | Low (commodity storage)                     | Moderate: low storage cost with efficient compute  |
+| **Scalability**     | Moderate                              | High                                        | High: scalable with compute/storage decoupling     |
+| **Use Cases**       | BI, Reporting, Historical Analysis    | Data exploration, Data science, ETL staging | Unified analytics, ML, BI, real-time analytics     |
+| **Management Risk** | Data Silos                            | Risk of Data Swamp (if ungoverned)          | Centralized governance, schema enforcement         |
+| **Examples / Tech** | Snowflake, BigQuery, Redshift         | AWS S3, Azure Data Lake, Hadoop HDFS        | Databricks Delta Lake, Apache Iceberg, Apache Hudi |
+
+
 ## 🔹 Denormalized Form
 - **Definition:** Data with **redundancy** and often **nested structures** (e.g., JSON).  
 - **Use case:** Faster reads, fewer joins, often used in analytics or document databases.  
