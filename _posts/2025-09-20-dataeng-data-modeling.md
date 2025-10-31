@@ -376,7 +376,6 @@ df['category_id'], categories = pd.factorize(df['category'])
 | 102     | Cambridge | MA    | USA     |
 
 **Benefits:**
-
 - Eliminates update anomalies (change country once, not per order)
 - Reduces storage (no duplicate state/country data)
 - Enforces referential integrity via foreign keys
@@ -550,32 +549,166 @@ date_dim_df.show()
 
 ```
 
-# 🔁 Change Data Capture (CDC) Pipeline
+# Part 4: Real-Time Data Integration
 
-The CDC pipeline ensures real-time synchronization between source and target systems through event streaming.
+## Change Data Capture (CDC) Pipelines
 
-**Flow:**
-1. **SQL Database** captures row-level changes (insert/update/delete).  
-2. **Debezium** streams these changes into **Kafka** topics.  
-3. **Kafka** brokers the change events.  
-4. **Flink** consumes from Kafka and writes updates to **PostgreSQL**.
+**Change Data Capture (CDC)** is a pattern for tracking and propagating database changes in real-time to downstream systems.
 
-**Technologies:**
-- Source: MySQL  
-- CDC Engine: Debezium  
-- Event Bus: Apache Kafka  
-- Stream Processor: Apache Flink  
-- Target: PostgreSQL  
+### Why CDC?
+
+**Traditional Batch ETL Limitations:**
+- ❌ **Latency:** Hours to days for data availability
+- ❌ **Resource-intensive:** Full table scans on every run
+- ❌ **No deleted records:** Can't detect deletions easily
+
+**CDC Advantages:**
+- ✅ **Real-time sync:** Sub-second latency for critical data
+- ✅ **Efficient:** Captures only changed rows (incremental)
+- ✅ **Complete audit trail:** Tracks inserts, updates, deletes
+- ✅ **Low impact:** Leverages database transaction logs (no query load)
 
 ---
 
-**Layers Overview**
+### CDC Architecture Pattern
+
+```mermaid
+[OLTP Database] → [CDC Engine] → [Event Stream] → [Stream Processor] → [Target System]
+      MySQL          Debezium        Kafka           Flink/Spark        PostgreSQL/S3
+```
+
+---
+
+### Components Explained
+
+#### **1. Source Database (MySQL, PostgreSQL, Oracle)**
+- **Transaction log (binlog/WAL):** Database writes all changes to durable log before committing
+- **CDC reads log:** Non-invasive monitoring (no query overhead)
+- **Captures:** INSERT, UPDATE, DELETE, schema changes
+
+#### **2. CDC Engine (Debezium)**
+- **Definition:** Open-source CDC platform that reads database logs and emits change events
+- **Connectors:** MySQL, PostgreSQL, MongoDB, Oracle, SQL Server
+- **Output format:** JSON/Avro messages with before/after state
+- **Deployment:** Runs as Kafka Connect connector
+
+**Example Change Event (Debezium):**
+```json
+{
+  "before": {"id": 101, "name": "Alice", "balance": 500},
+  "after": {"id": 101, "name": "Alice", "balance": 750},
+  "op": "u",  // Operation: c=create, u=update, d=delete
+  "ts_ms": 1705392000000,
+  "source": {"db": "customers", "table": "accounts"}
+}
+```
+
+#### **3. Event Stream (Apache Kafka)**
+- **Purpose:** Durable, distributed message queue for change events
+- **Benefits:**
+  - **Decoupling:** Multiple consumers can process same events
+  - **Replay:** Consumers can reprocess historical changes
+  - **Buffering:** Handles spikes in write volume
+- **Topic structure:** Typically one topic per table (e.g., `mysql.customers.accounts`)
+
+#### **4. Stream Processor (Apache Flink, Spark Streaming)**
+- **Purpose:** Real-time transformations, enrichment, aggregations
+- **Operations:**
+  - **Filter:** Route events based on conditions
+  - **Transform:** Rename fields, compute derived columns
+  - **Join:** Enrich with dimension data (e.g., add customer name to order)
+  - **Aggregate:** Compute running totals, windowed metrics
+- **Stateful processing:** Maintains state across events (e.g., session windows)
+
+**Flink CDC Processing Example:**
+```python
+# Pseudocode: Flink SQL for CDC processing
+CREATE TABLE customers_cdc (
+    id INT,
+    name STRING,
+    balance DECIMAL,
+    PRIMARY KEY (id) NOT ENFORCED
+) WITH (
+    'connector' = 'kafka',
+    'topic' = 'mysql.customers.accounts',
+    'format' = 'debezium-json'
+);
+
+-- Materialize current state (UPSERT semantics)
+CREATE TABLE customer_snapshot (
+    id INT PRIMARY KEY,
+    name STRING,
+    total_balance DECIMAL
+) WITH (
+    'connector' = 'jdbc',
+    'url' = 'jdbc:postgresql://warehouse/analytics'
+);
+
+INSERT INTO customer_snapshot
+SELECT id, name, balance FROM customers_cdc;
+```
+
+#### **5. Target System (Data Warehouse, Data Lake)**
+- **PostgreSQL/Redshift:** Analytical queries, BI dashboards
+- **S3/Delta Lake:** Long-term storage, batch analytics
+- **Elasticsearch:** Full-text search, log analytics
+- **Real-time dashboard:** Push metrics to monitoring systems
+
+---
+
+### CDC Pipeline Flow (Step-by-Step)
+
+**Scenario:** Customer updates account balance
+
+1. **Application writes to MySQL:**
+   ```sql
+   UPDATE accounts SET balance = 750 WHERE id = 101;
+   ```
+
+2. **MySQL writes to binlog:**
+   - Binlog entry contains full before/after row state
+
+3. **Debezium reads binlog:**
+   - Parses binary log entry
+   - Converts to JSON change event
+   - Publishes to Kafka topic `mysql.customers.accounts`
+
+4. **Kafka persists event:**
+   - Event stored across multiple brokers (replicated)
+   - Available to multiple consumers
+
+5. **Flink consumes event:**
+   - Reads from Kafka topic
+   - Applies transformations (e.g., compute new metrics)
+   - Maintains internal state (e.g., running balance)
+
+6. **Flink writes to PostgreSQL:**
+   - UPSERT operation (update if exists, insert if new)
+   - Analytics database now reflects latest state
+
+---
+
+### CDC Use Cases
+
+| Use Case | Description |
+|----------|-------------|
+| **Real-time analytics** | Keep data warehouse in sync with OLTP databases (sub-second latency) |
+| **Microservices sync** | Propagate changes across service boundaries without tight coupling |
+| **Caching invalidation** | Update Redis/Memcached when source data changes |
+| **Search index updates** | Sync Elasticsearch with database changes for fresh search results |
+| **Audit logging** | Complete change history for compliance (GDPR, SOX) |
+| **Data lake ingestion** | Stream changes to S3/Delta Lake for long-term storage |
+
+---
+
+### CDC Implementation Example (Debezium + Kafka + PostgreSQL)
+
+**Technology Stack:**
 
 | Layer | Technology | Purpose |
-|--------|-------------|----------|
-| Source | MySQL | Transactional data source |
-| CDC | Debezium | Change data capture |
-| Stream | Kafka | Event streaming backbone |
-| Processing | Flink | Real-time transformations |
-| Serving | PostgreSQL | Analytical serving store |
-
+|-------|------------|---------|
+| **Source** | MySQL 8.0 | Transactional database (binlog enabled) |
+| **CDC** | Debezium 2.x | Reads MySQL binlog, publishes change events |
+| **Stream** | Apache Kafka 3.x | Event backbone (durable, distributed queue) |
+| **Processing** | Apache Flink 1.17 | Real-time transformations and aggregations |
+| **Target** | PostgreSQL 15 | Analytical serving layer (materialized views) |
