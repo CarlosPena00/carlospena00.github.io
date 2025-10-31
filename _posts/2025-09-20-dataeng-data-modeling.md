@@ -165,6 +165,22 @@ RETURN p.ProductName, p.UnitPrice;
 MATCH (c1:Customer {CustomerID: "Carlos"})-[:PURCHASED]->()-[:ORDERS]->(p:Product)
 <-[:ORDERS]-()<-[:PURCHASED]-(c2:Customer)
 RETURN c2.CustomerID;
+
+-- Create new node
+CREATE (a:Product {country : 'US', description : "SmartTV", code: 'BWC'}) RETURN a"
+
+-- Create new relationship
+MATCH (a:Product {code: 'ABC'}), (b:Product {code: 'CDE'}) CREATE (a)-[f:family {dist: 12}]->(b) RETURN f
+
+-- Update
+MATCH (a:Product) WHERE a.code = 'BWC' SET a.price = 199 RETURN a
+
+-- Delete
+MATCH (a:Product)-[r]-() WHERE a.code = 'CLR' DELETE r, a
+
+-- With
+MATCH (p:Product)-[f:family]->(b:Product) WITH p, count(f) AS count_family WHERE count_family=1 and p.code = 'RAA' RETURN p LIMIT 10
+
 ```
 
 ---
