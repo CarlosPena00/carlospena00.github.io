@@ -270,32 +270,126 @@ ORDER BY fraud_score DESC;
 - **Trade-off:** Storage waste + potential data inconsistency.  
 
 
-## 🔹  Normal Forms (Relational Modeling)
+### Normal Forms: Eliminating Redundancy
 
-🔹 **1NF – First Normal Form**
-- Each **column must be atomic** (no arrays or JSON inside a column).
-- Table must have a **Primary Key (PK)**.
-- **No repeating groups** of columns.  
-- ✅ Example: Instead of `colors = ["red","blue"]`, explode into multiple rows.  
-- 🛠 Useful tools:
-  - `pd.json_normalize` → Flatten nested JSON.  
-  - `pd.explode` → Convert list to multiple rows.  
-  - `pd.factorize` → Encode categorical values.  
+Normalization progressively eliminates redundancy and dependency anomalies to ensure data integrity.
+
+---
+
+#### **1NF – First Normal Form**
+
+**Rule:** Each column contains only **atomic values** (no arrays, no nested objects), and each row is uniquely identifiable.
+
+**Requirements:**
+1. Table has a **Primary Key**
+2. Each column contains **single values** (not lists or sets)
+3. No **repeating groups** (e.g., `phone1`, `phone2`, `phone3` columns)
+
+**Example Violation:**
+
+| order_id | customer_name | products               |
+|----------|---------------|------------------------|
+| 1        | Alice         | ["Laptop", "Mouse"]    |
+
+**1NF Correction:**
+
+| order_id | customer_name | product   |
+|----------|---------------|-----------|
+| 1        | Alice         | Laptop    |
+| 1        | Alice         | Mouse     |
+
+**Python Tools for 1NF:**
+```python
+import pandas as pd
+
+# Flatten nested JSON
+df = pd.json_normalize(json_data)
+
+# Explode lists into separate rows
+df = df.explode('products')
+
+# Encode categories as integers
+df['category_id'], categories = pd.factorize(df['category'])
+```
+
+---
+
+#### **2NF – Second Normal Form**
+
+**Rule:** Already in 1NF + no **partial dependencies** (non-key columns must depend on the entire composite key).
+
+**When this matters:** Tables with **composite primary keys** (e.g., `(order_id, product_id)`).
+
+**Example Violation:**
+
+| order_id | product_id | product_name | customer_name | order_date |
+|----------|------------|--------------|---------------|------------|
+| 1        | 101        | Laptop       | Alice         | 2025-01-01 |
+| 1        | 102        | Mouse        | Alice         | 2025-01-01 |
+
+**Problem:** `customer_name` and `order_date` depend only on `order_id` (partial dependency).
+
+**2NF Correction:**
+
+**Orders Table:**
+
+| order_id | customer_name | order_date |
+|----------|---------------|------------|
+| 1        | Alice         | 2025-01-01 |
+
+**Order_Items Table:**
+
+| order_id | product_id | product_name |
+|----------|------------|--------------|
+| 1        | 101        | Laptop       |
+| 1        | 102        | Mouse        |
+
+---
+
+#### **3NF – Third Normal Form**
+
+**Rule:** Already in 2NF + no **transitive dependencies** (non-key columns must not depend on other non-key columns).
+
+**Example Violation:**
+
+| order_id | customer_name | city       | state | country |
+|----------|---------------|------------|-------|---------|
+| 1        | Alice         | Boston     | MA    | USA     |
+| 2        | Bob           | Cambridge  | MA    | USA     |
+
+**Problem:** `state` → `country` (transitive dependency: `order_id` → `city` → `state` → `country`)
+
+**3NF Correction:**
+
+**Orders Table:**
+
+| order_id | customer_name | city_id |
+|----------|---------------|---------|
+| 1        | Alice         | 101     |
+| 2        | Bob           | 102     |
+
+**Cities Table:**
+
+| city_id | city      | state | country |
+|---------|-----------|-------|---------|
+| 101     | Boston    | MA    | USA     |
+| 102     | Cambridge | MA    | USA     |
+
+**Benefits:**
+
+- Eliminates update anomalies (change country once, not per order)
+- Reduces storage (no duplicate state/country data)
+- Enforces referential integrity via foreign keys
+
+---
+
+**When to Normalize vs. Denormalize:**
+- **OLTP systems:** Normalize to 3NF (data integrity critical)
+- **OLAP systems:** Denormalize for query performance (star schema)
+- **Hybrid:** Normalize operational DB, denormalize data warehouse  
 
 
-🔹 **2NF – Second Normal Form**
-- Requirement: Already in 1NF.  
-- Remove **partial dependencies**: no non-key column should depend only on part of a **composite key**.  
-- Solution: **Split into multiple tables**.  
-- ✅ Example: In a sales table keyed by `(order_id, product_id)`, the `customer_name` depends only on `order_id`. → Move customer data to a separate table.  
-
-
-🔹 **3NF – Third Normal Form**
-- Requirement: Already in 2NF.  
-- Remove **transitive dependencies**: non-key column should not depend on another non-key column.  
-- ✅ Example: If `city → state`, and `state → country`, then `city` should not sit with `country` in the same table. Normalize into separate entities.  
-- Goal: Reduce redundancy, improve **referential integrity**.  
-
+---
 
 ## 🔹 Star Schema (OLAP Modeling)
 
