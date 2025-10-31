@@ -74,19 +74,5 @@ order: 1
     </div>
 </div>
 
-<h1>Awards</h1>
-<ul>
-    <li><strong>1st Place Team</strong> at Microsoft College Bot-ando Competition, UFPE (2019)</li>
-    <li><strong>Achieved top rankings</strong> in Latin American IEEE Very Small Size Soccer: <strong>5th</strong> (2017), <strong>4th</strong> (2020)</li>
-    <li><strong>3rd Place Team</strong> at Microsoft College Code Competition, UFPE (2018)</li>
-    <li><strong>Top 10 Project</strong> at National DragonBoard IoT Embedded Competition among 350 teams (2017)</li>
-    <li><strong>Honorable Mention</strong> at Sigfox Embedded System - WND IoT Challenge (2017)</li>
-</ul>
-
-<h1> Online Courses</h1>
-<ul>
-Rust (Alura 2023), Kafka (Alura 2023), Agile Management Practices SC-AMP (Agile Institute Brazil 2022), Scrum (Alura 2022), Kanban Foundation KIKF (2020), Deep Learning with Pytorch (Udemy 2018), Deep Learning: GANs and Variational Autoencoders (Udemy 2017), 3D Printing with Fusion 360 (Udemy, 2017), Android (CITi, 2016), Logic: Language and Information (Melbourne, 2015).
-</ul>
-
 </content>
 </body>
