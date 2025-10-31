@@ -1,20 +1,180 @@
 ---
 layout: post
-title: "DataEng: Data Modeling"
+title: "Data Engineering: Data Modeling"
 author: Carlos Pena
 date: 2025-07-30
 ---
 
-# Data Engineering
-
 My notes about "DeepLearning.AI Data Engineering"
 (It will still be updated, I'm making a dump for easy access in the future)
 
+
+# C3: Data Storage and Queries
+
+### 1. File Storage
+- Represents a **hierarchical directory structure** (folders containing files).
+- Files are typically **modified in place** (mutable).
+- Users and systems can **navigate** directories using standard paths.
+- Commonly built on top of **block storage** for performance.
+
+> 🧠 Used for: operating systems, shared drives, and application-level file systems.
+
+---
+
+### 2. Block Storage
+> **Concept:** Files are divided into small, fixed-size blocks; each block is tracked in a lookup table.
+
+- Designed for **high-speed, low-latency access**.
+- Optimized for **frequent reads and writes**.
+- Best suited for **OLTP (Online Transaction Processing)** workloads.
+- Underlies most **virtual machine disks**, e.g. AWS **EBS for EC2**.
+
+> ⚙️ Typical use cases: databases, application servers, and transactional systems.
+
+---
+
+### 3. Object Storage (e.g., Amazon S3)
+> **Concept:** Stores immutable data objects, each addressed by a unique key instead of a file path.
+
+- Objects are **immutable**: updates require **re-writing the entire file** (versioning supported).
+- Keys are **flat identifiers**, not hierarchical directories.
+- Scales **horizontally** with high durability and parallel access.
+- Ideal for **OLAP**, **data lakes**, and **machine learning pipelines** (text, video, audio, etc.).
+- Poor fit for **transactional workloads** or random writes.
+
+> ⚙️ Examples: AWS S3, Google Cloud Storage, Azure Blob Storage.
+
+---
+
+### 4. Distributed Storage Systems
+
+- Provide **fault tolerance** and **high durability** via replication and partitioning.
+- **Replication:** Copies the same data across multiple nodes.
+- **Partitioning (Sharding):** Splits data into smaller chunks distributed across nodes.
+- Most modern systems implement **both**.
+
+## The CAP Theorem
+> A distributed system can only fully guarantee **two** of the following three:
+
+| Property | Description |
+|-----------|--------------|
+| **Consistency (C)** | Every read reflects the most recent write (ACID-like). |
+| **Availability (A)** | Every request receives a response (even if outdated). |
+| **Partition Tolerance (P)** | The system remains operational despite network failures. |
+
+- **ACID systems → CP (Consistency + Partition tolerance)**  
+- **BASE systems → AP (Availability + Partition tolerance)**
+
+## Data Access Scenarios and Storage Models
+
+### Scenario
+- Perform a `SELECT` to compute the **sum of price**.
+- Data volume example:
+  - 1M rows × 30 columns × 100 bytes per entry = **~3 GB**
+  - I/O throughput: **200 MB/s**
+
+
+### Row-Oriented Databases (SQL / OLTP)
+
+**Use Case:** Low-latency reads/writes for transactional systems.
+
+- All data for a query must be loaded into memory.
+- Performance estimation:
+  - **1M rows → ~15 seconds**
+  - **1B rows → ~4 hours**
+- Strength: Efficient for *point reads* and *small writes*.
+- Weakness: Poor for large-scale analytical aggregations.
+
+### Column-Oriented Databases (NoSQL / OLAP)
+
+**Use Case:** Analytical workloads with large aggregations.
+
+- Optimized for reading a few columns across many rows.
+- Performance estimation:
+  - **1B rows → ~8 minutes**
+- Weakness: Inefficient for transactional workloads such as  
+  `SELECT * FROM table` or frequent updates/inserts.
+
+
+### Hybrid Formats: Parquet and ORC
+
+**Definition:** Row–columnar hybrid storage formats optimized for analytics.
+
+- Data is **partitioned into row groups** (typically 128 MB each).
+- Each group is stored in a **column-wise** format.
+- Each column chunk is divided into **pages**, containing:
+  - Encoded values (e.g., *Run-Length Encoding*).
+  - Metadata: `min`, `max`, `count`, etc.
+- Excellent for **semi-structured data** and **data lakes**.
+
+
+### Graph Databases
+
+**Use Case:** Model and query complex data relationships.
+
+**Applications:**
+- Product recommendations
+- Social networks
+- Supply chain modeling
+- Fraud detection
+- RAG / Chatbot reasoning layers
+
+**Common Implementations:**
+- Neo4j
+- Amazon Neptune
+- Apache Jena / SPARQL
+
+**Data Model:**
+- **Node:** `( )`
+- **Relationship:** `[ ]`
+- **Path:** `(source_node)-[relation]->(target_node)`
+
+---
+
+### Example Cypher Queries
+
+```cypher
+-- Return all nodes
+MATCH (n) RETURN n;
+
+-- Count total nodes
+MATCH (n) RETURN COUNT(n);
+
+-- Return distinct labels
+MATCH (n) RETURN DISTINCT labels(n);
+
+-- Count nodes of a specific type
+MATCH (n:Order) RETURN COUNT(n);
+
+-- Show properties of one Order node
+MATCH (n:Order) RETURN properties(n) LIMIT 1;
+
+-- Compute average order value
+MATCH ()-[r:ORDERS]->() 
+RETURN AVG(r.quantity * r.unitPrice) AS average_price;
+
+-- Average price per category
+MATCH ()-[r:ORDERS]->()-[part:PART_OF]->(c:CATEGORY)
+RETURN c.CategoryName, AVG(r.quantity * r.unitPrice) AS average_price;
+
+-- List products in the "Meat" category
+MATCH (p:Product)-[:PART_OF]->(c:Category {CategoryName: "Meat"})
+RETURN p.ProductName, p.UnitPrice;
+
+-- Find customers who bought the same product as a given customer
+MATCH (c1:Customer {CustomerID: "Carlos"})-[:PURCHASED]->()-[:ORDERS]->(p:Product)
+<-[:ORDERS]-()<-[:PURCHASED]-(c2:Customer)
+RETURN c2.CustomerID;
+```
+
+---
+
+
 # C4: Data Modeling, Transformation, and Serving
 
-🧠 Warehouse vs. Lake vs. Lakehouse
+### 🧠 Warehouse vs. Lake vs. Lakehouse
 
-```js
+
 | Feature / Aspect    | 🏛️ **Data Warehouse**                 | 🪣 **Data Lake**                            | ⚡ **Data Lakehouse**                              |
 | ------------------- | ------------------------------------- | ------------------------------------------- | -------------------------------------------------- |
 | **Core Purpose**    | Centralized analytical store SQL/BI   | Raw data repository for all data types      | Unified platform combining data lake flexibility with warehouse reliability |
@@ -27,7 +187,7 @@ My notes about "DeepLearning.AI Data Engineering"
 | **Use Cases**       | BI, Reporting, Historical Analysis    | Data exploration, Data science, ETL staging | Unified analytics, ML, BI, real-time analytics     |
 | **Management Risk** | Data Silos                            | Risk of Data Swamp (if ungoverned)          | Centralized governance, schema enforcement         |
 | **Examples / Tech** | Snowflake, BigQuery, Redshift         | AWS S3, Azure Data Lake, Hadoop HDFS        | Databricks Delta Lake, Apache Iceberg, Apache Hudi |
-```
+
 
 ## 🔹 Denormalized Form
 - **Definition:** Data with **redundancy** and often **nested structures** (e.g., JSON).  
