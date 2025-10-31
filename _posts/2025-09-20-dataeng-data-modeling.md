@@ -131,64 +131,123 @@ My notes about "DeepLearning.AI Data Engineering"
 
 ---
 
-### Example Cypher Queries
+#### **Cypher Query Language (Neo4j)**
+
+**Basic Queries:**
 
 ```cypher
--- Return all nodes
+-- Return all nodes in the graph
 MATCH (n) RETURN n;
 
 -- Count total nodes
-MATCH (n) RETURN COUNT(n);
+MATCH (n) RETURN COUNT(n) AS total_nodes;
 
--- Return distinct labels
+-- Return distinct node labels (types)
 MATCH (n) RETURN DISTINCT labels(n);
 
--- Count nodes of a specific type
-MATCH (n:Order) RETURN COUNT(n);
+-- Count nodes of specific type
+MATCH (n:Order) RETURN COUNT(n) AS order_count;
 
 -- Show properties of one Order node
 MATCH (n:Order) RETURN properties(n) LIMIT 1;
-
--- Compute average order value
-MATCH ()-[r:ORDERS]->() 
-RETURN AVG(r.quantity * r.unitPrice) AS average_price;
-
--- Average price per category
-MATCH ()-[r:ORDERS]->()-[part:PART_OF]->(c:CATEGORY)
-RETURN c.CategoryName, AVG(r.quantity * r.unitPrice) AS average_price;
-
--- List products in the "Meat" category
-MATCH (p:Product)-[:PART_OF]->(c:Category {CategoryName: "Meat"})
-RETURN p.ProductName, p.UnitPrice;
-
--- Find customers who bought the same product as a given customer
-MATCH (c1:Customer {CustomerID: "Carlos"})-[:PURCHASED]->()-[:ORDERS]->(p:Product)
-<-[:ORDERS]-()<-[:PURCHASED]-(c2:Customer)
-RETURN c2.CustomerID;
-
--- Create new node
-CREATE (a:Product {country : 'US', description : "SmartTV", code: 'BWC'}) RETURN a"
-
--- Create new relationship
-MATCH (a:Product {code: 'ABC'}), (b:Product {code: 'CDE'}) CREATE (a)-[f:family {dist: 12}]->(b) RETURN f
-
--- Update
-MATCH (a:Product) WHERE a.code = 'BWC' SET a.price = 199 RETURN a
-
--- Delete
-MATCH (a:Product)-[r]-() WHERE a.code = 'CLR' DELETE r, a
-
--- With
-MATCH (p:Product)-[f:family]->(b:Product) WITH p, count(f) AS count_family WHERE count_family=1 and p.code = 'RAA' RETURN p LIMIT 10
-
 ```
+
+**Aggregation Queries:**
+
+```cypher
+-- Compute average order value across all relationships
+MATCH ()-[r:ORDERS]->()
+RETURN AVG(r.quantity * r.unitPrice) AS avg_order_value;
+
+-- Average price per product category
+MATCH ()-[r:ORDERS]->()-[:PART_OF]->(c:Category)
+RETURN c.CategoryName, AVG(r.quantity * r.unitPrice) AS avg_price
+ORDER BY avg_price DESC;
+
+-- Top 10 customers by total spending
+MATCH (c:Customer)-[p:PURCHASED]->()
+RETURN c.CustomerID, c.name, SUM(p.amount) AS total_spent
+ORDER BY total_spent DESC
+LIMIT 10;
+```
+
+**Filtering and Pattern Matching:**
+
+```cypher
+-- List products in "Meat" category
+MATCH (p:Product)-[:PART_OF]->(c:Category {CategoryName: "Meat"})
+RETURN p.ProductName, p.UnitPrice
+ORDER BY p.UnitPrice DESC;
+
+-- Find customers who bought the same product as "Carlos" (collaborative filtering)
+MATCH (c1:Customer {CustomerID: "Carlos"})-[:PURCHASED]->()-[:ORDERS]->(p:Product)
+      <-[:ORDERS]-()<-[:PURCHASED]-(c2:Customer)
+WHERE c1 <> c2
+RETURN DISTINCT c2.CustomerID, c2.name;
+
+-- Find friend recommendations (friend-of-friend not already connected)
+MATCH (me:Person {name: "Alice"})-[:FRIENDS_WITH]->(friend)-[:FRIENDS_WITH]->(fof)
+WHERE NOT (me)-[:FRIENDS_WITH]->(fof) AND me <> fof
+RETURN fof.name, COUNT(friend) AS mutual_friends
+ORDER BY mutual_friends DESC;
+```
+
+**Write Operations:**
+
+```cypher
+-- Create new node with properties
+CREATE (p:Product {
+    country: 'US',
+    description: "SmartTV",
+    code: 'BWC',
+    price: 599.99
+}) RETURN p;
+
+-- Create relationship between existing nodes
+MATCH (a:Product {code: 'ABC'}), (b:Product {code: 'CDE'})
+CREATE (a)-[r:RELATED_TO {similarity: 0.85, dist: 12}]->(b)
+RETURN r;
+
+-- Update node properties
+MATCH (p:Product) WHERE p.code = 'BWC'
+SET p.price = 199, p.discount = true
+RETURN p;
+
+-- Delete node and all its relationships
+MATCH (p:Product)-[r]-() WHERE p.code = 'CLR'
+DELETE r, p;
+```
+
+**Advanced Queries (WITH clause for aggregation pipelines):**
+
+```cypher
+-- Find products with exactly 1 related product
+MATCH (p:Product)-[f:RELATED_TO]->(related:Product)
+WITH p, COUNT(f) AS relation_count
+WHERE relation_count = 1 AND p.code = 'RAA'
+RETURN p.code, p.description, relation_count
+LIMIT 10;
+
+-- Multi-hop fraud detection: flag accounts with shared payment methods
+MATCH (account1:Account)-[:USES_CARD]->(card:CreditCard)<-[:USES_CARD]-(account2:Account)
+WHERE account1 <> account2
+WITH account1, account2, COUNT(card) AS shared_cards
+WHERE shared_cards > 2
+RETURN account1.id, account2.id, shared_cards AS fraud_score
+ORDER BY fraud_score DESC;
+```
+
+**Performance Optimization:**
+- **Indexes:** Create on frequently queried properties (`CREATE INDEX ON :Customer(CustomerID)`)
+- **Limit traversal depth:** Avoid unbounded path queries (`[:KNOWS*1..3]` for 1-3 hops)
+- **Use EXPLAIN/PROFILE:** Analyze query execution plans
 
 ---
 
-
 # C4: Data Modeling, Transformation, and Serving
+## Modern Data Storage Architectures
 
-### 🧠 Warehouse vs. Lake vs. Lakehouse
+### Data Warehouse vs. Data Lake vs. Data Lakehouse
 
 
 | Feature / Aspect    | 🏛️ **Data Warehouse**                 | 🪣 **Data Lake**                            | ⚡ **Data Lakehouse**                              |
