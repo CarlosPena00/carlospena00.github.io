@@ -62,7 +62,7 @@ My notes about "DeepLearning.AI Data Engineering"
 | **Availability (A)** | Every request receives a response (even if outdated). |
 | **Partition Tolerance (P)** | The system remains operational despite network failures. |
 
-- **ACID systems → CP (Consistency + Partition tolerance)**  
+- **ACID systems → CP (Consistency + Partition tolerance)**
 - **BASE systems → AP (Availability + Partition tolerance)**
 
 ## Data Access Scenarios and Storage Models
@@ -92,7 +92,7 @@ My notes about "DeepLearning.AI Data Engineering"
 - Optimized for reading a few columns across many rows.
 - Performance estimation:
   - **1B rows → ~8 minutes**
-- Weakness: Inefficient for transactional workloads such as  
+- Weakness: Inefficient for transactional workloads such as
   `SELECT * FROM table` or frequent updates/inserts.
 
 
@@ -264,10 +264,92 @@ ORDER BY fraud_score DESC;
 | **Examples / Tech** | Snowflake, BigQuery, Redshift         | AWS S3, Azure Data Lake, Hadoop HDFS        | Databricks Delta Lake, Apache Iceberg, Apache Hudi |
 
 
+### Next-Generation Data Lake Architecture
+
+1. **Landing Zone:**
+   Raw files (e.g., `.csv`, `.json`, `.png`, `.mp3`).
+
+2. **Processing Zone:**
+   Data cleaning, validation, standardization, and PII removal.
+
+3. **Cleaned/Transformed Zone:**
+   Optimized storage formats (`.parquet`, `.avro`, `.orc`).
+
+4. **Modeling/Business Zone:**
+   Business logic transformations and enrichment.
+
+5. **Curated/Enriched Zone:**
+   Final structured data ready for analytics or ML.
+
+
+### Open Table Formats
+Provide transactional capabilities on top of data lakes.
+
+| Format             | Core Abstractions & Strengths                                                                                                        | Ecosystem Alignment                                                                                                         |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| **Delta Lake**     | Transaction log stored as JSON + Parquet checkpoints; strong integration with Apache Spark; excellent ACID semantics and time travel | Deep integration with **Databricks** ecosystem and Spark; growing native support in **Flink**, **Trino**, and **Snowflake** |
+| **Apache Iceberg** | Metadata and manifest lists for scalable partition and schema evolution; snapshot isolation; designed for engine independence        | Native in **Spark**, **Flink**, **Trino**, **Athena**, **Snowflake**, **BigQuery**, etc.                                    |
+
+**Shared Capabilities:**
+- Schema and data versioning
+- Transactional updates/deletes
+- Time-travel (snapshot queries)
+- Support for schema evolution and partition updates
+
+## AWS Lake Formation
+
+**Purpose:** Centralized governance and orchestration for AWS-based data lakes.
+
+### Components
+1. **Data Sources:**
+   S3, Relational databases, NoSQL stores, etc.
+
+2. **Ingestion:**
+   Tools: AWS Kinesis, Firehose, DataSync, Data Migration Service (DMS).
+
+3. **Storage Layer:**
+   - **S3:** All data types (raw and processed).
+   - **Amazon Redshift:** Structured and semi-structured data.
+   - **Redshift Spectrum:** Integrates S3 and Redshift seamlessly (no ETL required).
+
+4. **Processing:**
+   AWS EMR, AWS Glue, Apache Flink, SQL-based ELT.
+
+5. **Catalog:**
+   Lake Formation + AWS Glue Data Catalog (includes metadata and IAM policies).
+
+6. **Consumption Layer:**
+   AWS Athena, Redshift Spectrum, QuickSight, SageMaker.
+
+
+## smart_open Library
+
+**Purpose:** Efficient I/O streaming for very large files.
+
+**Highlights:**
+- Drop-in replacement for Python’s built-in `open()`.
+- Supports:
+  - **S3**, **GCS**, **Azure Blob**, **HDFS**, **HTTP/S**, **SFTP**, **Local FS**
+- Handles **on-the-fly compression/decompression**.
+- Ideal for scalable ETL and ML pipelines working with large datasets.
+
+---
+
+### Summary
+
+| Layer | Focus | Example Tools |
+|--------|--------|----------------|
+| **Data Warehouse** | Structured, analytical | AWS Redshift |
+| **Data Lake** | Flexible, raw data | Hadoop, Spark, S3 |
+| **Data Lakehouse** | Unified storage + analytics | Databricks, Delta Lake |
+| **Governance** | Metadata, access control | AWS Lake Formation, Glue |
+| **ETL/Processing** | Transformation & ingestion | EMR, Glue, Flink, Wrangler |
+
+
 ## 🔹 Denormalized Form
-- **Definition:** Data with **redundancy** and often **nested structures** (e.g., JSON).  
-- **Use case:** Faster reads, fewer joins, often used in analytics or document databases.  
-- **Trade-off:** Storage waste + potential data inconsistency.  
+- **Definition:** Data with **redundancy** and often **nested structures** (e.g., JSON).
+- **Use case:** Faster reads, fewer joins, often used in analytics or document databases.
+- **Trade-off:** Storage waste + potential data inconsistency.
 
 
 ### Normal Forms: Eliminating Redundancy
@@ -385,68 +467,68 @@ df['category_id'], categories = pd.factorize(df['category'])
 **When to Normalize vs. Denormalize:**
 - **OLTP systems:** Normalize to 3NF (data integrity critical)
 - **OLAP systems:** Denormalize for query performance (star schema)
-- **Hybrid:** Normalize operational DB, denormalize data warehouse  
+- **Hybrid:** Normalize operational DB, denormalize data warehouse
 
 
 ---
 
 ## 🔹 Star Schema (OLAP Modeling)
 
-- **Goal:** Optimize for **analytical queries** (BI dashboards, reporting).  
-- **Structure:**  
-  - **Fact Table** = Business event (append-only).  
-    - Grain: Prefer **atomic** (lowest-level detail).  
-    - Surrogate Key: Auto-generated, meaningless but unique.  
-  - **Dimension Tables** = Descriptive context (Who, What, Where, When).  
-  - **Conformed Dimension:** A dimension shared across multiple fact tables.  
+- **Goal:** Optimize for **analytical queries** (BI dashboards, reporting).
+- **Structure:**
+  - **Fact Table** = Business event (append-only).
+    - Grain: Prefer **atomic** (lowest-level detail).
+    - Surrogate Key: Auto-generated, meaningless but unique.
+  - **Dimension Tables** = Descriptive context (Who, What, Where, When).
+  - **Conformed Dimension:** A dimension shared across multiple fact tables.
 
 ### Steps to Build:
-1. **Choose business process:** e.g., *Sales Transactions*.  
-   - Questions:  
-     - Which products sell in which stores?  
-     - How do sales vary by store or brand?  
-2. **Declare the grain:** e.g., *Individual item in an order*.  
-3. **Identify dimensions:**  
-   - `dim_store` (surrogate key, store info)  
-   - `dim_item` (product details)  
-   - `dim_date` (calendar attributes: day, month, quarter, weekday)  
-4. **Define facts (order line):**  
-   - `item_quantity`, `item_price`  
-   - Foreign Keys: `store_id`, `item_id`, `date_id`  
-   - Natural keys: `(order_id, line_number)`  
-   - Surrogate PK: e.g., `MD5(order_id + line_number)`  
+1. **Choose business process:** e.g., *Sales Transactions*.
+   - Questions:
+     - Which products sell in which stores?
+     - How do sales vary by store or brand?
+2. **Declare the grain:** e.g., *Individual item in an order*.
+3. **Identify dimensions:**
+   - `dim_store` (surrogate key, store info)
+   - `dim_item` (product details)
+   - `dim_date` (calendar attributes: day, month, quarter, weekday)
+4. **Define facts (order line):**
+   - `item_quantity`, `item_price`
+   - Foreign Keys: `store_id`, `item_id`, `date_id`
+   - Natural keys: `(order_id, line_number)`
+   - Surrogate PK: e.g., `MD5(order_id + line_number)`
 
 
 ## 🔹 Data Vault Modeling
 
-- **Approach:** Agile, scalable modeling for Data Warehouses.  
+- **Approach:** Agile, scalable modeling for Data Warehouses.
 - **Layers:**
-  1. **Staging:** Insert-only raw data from multiple sources.  
-  2. **Data Vault:**  
-     - **Hubs:** Core business keys (customers, products, employees).  
-       - Columns: business key, hash key, load date, record source.  
-     - **Links:** Relationships between hubs (transactions, associations).  
-       - Columns: hub keys, hash key, load date, record source.  
-     - **Satellites:** Contextual attributes (descriptions, metrics).  
-       - Columns: descriptive fields, load date, record source.  
-  3. **Information Delivery:** Denormalized presentation layer (often star schema).  
+  1. **Staging:** Insert-only raw data from multiple sources.
+  2. **Data Vault:**
+     - **Hubs:** Core business keys (customers, products, employees).
+       - Columns: business key, hash key, load date, record source.
+     - **Links:** Relationships between hubs (transactions, associations).
+       - Columns: hub keys, hash key, load date, record source.
+     - **Satellites:** Contextual attributes (descriptions, metrics).
+       - Columns: descriptive fields, load date, record source.
+  3. **Information Delivery:** Denormalized presentation layer (often star schema).
 
-- **Strengths:**  
-  - Flexible for change.  
-  - Historical tracking built-in.  
-  - Good fit for environments with **fast-changing requirements** and/or agile.  
+- **Strengths:**
+  - Flexible for change.
+  - Historical tracking built-in.
+  - Good fit for environments with **fast-changing requirements** and/or agile.
 
 
 
 # 🔥 Apache Spark Overview
 
-**Apache Spark** is a distributed computing framework for large-scale data processing.  
+**Apache Spark** is a distributed computing framework for large-scale data processing.
 It generalizes **MapReduce** by performing operations **in-memory**, drastically reducing I/O overhead.
 
 ### Key Concepts
-- **RDD (Resilient Distributed Dataset):** Immutable distributed collection of data.  
-- **DataFrame:** Higher-level abstraction with schema, built on RDDs.  
-- **Spark SQL:** Allows querying DataFrames using SQL syntax.  
+- **RDD (Resilient Distributed Dataset):** Immutable distributed collection of data.
+- **DataFrame:** Higher-level abstraction with schema, built on RDDs.
+- **Spark SQL:** Allows querying DataFrames using SQL syntax.
 - **Lazy Evaluation:** Transformations execute only when an action (`show()`, `collect()`, `write()`) is triggered.
 
 
@@ -468,7 +550,7 @@ schema = StructType([
 
 test_df = spark.createDataFrame(list_of_tuples, schema)
 test_df.show()
-``` 
+```
 
 ## 💾 Read/Writing Data to Relational Databases (JDBC)
 
@@ -489,7 +571,7 @@ customers_df = spark.read.jdbc(
 # used to register a DataFrame as a temporary
 # SQL-queryable view within the current Spark session
 customers_df.createOrReplaceTempView("customers")
-``` 
+```
 
 ## Custom SQL Functions (UDFs)
 
@@ -507,7 +589,7 @@ spark.sql("SELECT book_id, titleUDF(book_name) AS title FROM books")
 
 ```py
 dim_customers_df = spark.sql("""
-    SELECT 
+    SELECT
         CAST(customerNumber AS STRING) AS customer_number,
         ...
     FROM customers
@@ -523,7 +605,7 @@ dim_customers_df = dim_customers_df.withColumn(
 # 📆 Date Dimension Generation
 
 from pyspark.sql.functions import (
-    col, explode, sequence, year, month, dayofweek, 
+    col, explode, sequence, year, month, dayofweek,
     dayofmonth, dayofyear, weekofyear, date_format, lit
 )
 from pyspark.sql.types import DateType
