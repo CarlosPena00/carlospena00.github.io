@@ -106,7 +106,7 @@ My notes about "DeepLearning.AI Data Engineering"
   - Encoded values (e.g., *Run-Length Encoding*).
   - Metadata: `min`, `max`, `count`, etc.
 - Excellent for **semi-structured data** and **data lakes**.
-
+- Can be compressed using: `SNAPPY` (recommended) or `gzip` (small size, slower time)
 
 ### Graph Databases
 
