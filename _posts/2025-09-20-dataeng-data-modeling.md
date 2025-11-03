@@ -288,7 +288,16 @@ Provide transactional capabilities on top of data lakes.
 | Format             | Core Abstractions & Strengths                                                                                                        | Ecosystem Alignment                                                                                                         |
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
 | **Delta Lake**     | Transaction log stored as JSON + Parquet checkpoints; strong integration with Apache Spark; excellent ACID semantics and time travel | Deep integration with **Databricks** ecosystem and Spark; growing native support in **Flink**, **Trino**, and **Snowflake** |
-| **Apache Iceberg** | Metadata and manifest lists for scalable partition and schema evolution; snapshot isolation; designed for engine independence        | Native in **Spark**, **Flink**, **Trino**, **Athena**, **Snowflake**, **BigQuery**, etc.                                    |
+
+**Apache Iceberg**
+
+- Metadata layer:
+   1. metadata file (metadata.json): table schema, table location (e.g., S3), and the timestamp and UUID of the last snapshot.
+   2. Manifest list (snap-*.avro): corresponds to a single snapshot and points to manifest files.
+   3. Manifest file (manifest-*.avro): points to data files and contains file-level statistics and partition information.
+
+- Storage layer:
+   - Data files (e.g., .parquet, .orc)
 
 **Shared Capabilities:**
 - Schema and data versioning
