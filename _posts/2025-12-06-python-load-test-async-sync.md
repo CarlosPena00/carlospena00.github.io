@@ -181,6 +181,56 @@ Interpretation:
 
 ---
 
+## Postgres SELECT: Async vs. Sync
+
+- Workers: 4
+- Target VUs: 2000
+- Using external DB (in the same network)
+
+```py
+@app.get("/sync_select")
+def sync_select_api(user_id: int = 1):
+    assert sync_pool is not None, "Sync pool not initialized"
+    with sync_pool.connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(QUERY, {"user_id": user_id})
+            rows = cur.fetchall()
+    return {"rows": rows}
+
+@app.get("/async_select")
+async def async_select_api(user_id: int = 1):
+    assert async_pool is not None, "Async pool not initialized"
+    async with async_pool.connection() as aconn:
+        async with aconn.cursor() as cur:
+            await cur.execute(QUERY, {"user_id": user_id})
+            rows = await cur.fetchall()
+    return {"rows": rows}
+```
+
+
+```js
+// Sync results
+http_req_duration....................: avg=1.7s min=24.69ms med=1.75s max=2.2s p(90)=1.99s p(95)=2.03s
+{ expected_response:true }...........: avg=1.7s min=24.69ms med=1.75s max=2.2s p(90)=1.99s p(95)=2.03s
+http_req_failed......................: 0.00%  0 out of 36601
+http_reqs............................: 36601  1123.598929/s
+
+// Async results
+http_req_duration....................: avg=967.04ms min=8.03ms med=978.02ms max=1.26s p(90)=1.08s p(95)=1.12s
+{ expected_response:true }...........: avg=967.04ms min=8.03ms med=978.02ms max=1.26s p(90)=1.08s p(95)=1.12s
+http_req_failed......................: 0.00%  0 out of 63899
+http_reqs............................: 63899  2007.858967/s
+```
+
+### Interpretation
+
+- Async DB access roughly halves p95 compared to sync and sustains ~1.8× throughput under the same load (VUs=2000, workers=4).
+- Both report 0% errors; async delivers lower tail latency and better concurrency utilization.
+- Use async drivers/pools for IO-bound DB queries. Reserve sync for simple or low-concurrency paths, or isolate via separate workers.
+- Note: When using async, reduce `AsyncConnectionPool` `max_size` to avoid "too many clients" errors (e.g., `FATAL: sorry, too many clients already`).
+
+---
+
 ## High-level conclusions
 
 1. Async IO-bound endpoints (pure `await` non-blocking operations) scale well with additional Uvicorn workers and produce low tail latency when workers > 1.
