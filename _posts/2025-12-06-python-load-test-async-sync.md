@@ -437,6 +437,36 @@ This report summarizes load test results comparing FastAPI endpoints implemented
     http_reqs...............................: 340    9.985143/s
 ```
 
+```js
+// Async with await asyncio.create_task / asyncio.to_thread(fibonacci, FIB)
+
+// FIB=15
+    http_req_duration.......................: avg=37.57ms min=3.46ms med=37.54ms max=71.82ms p(90)=42.07ms p(95)=44.76ms
+      { expected_response:true }............: avg=37.57ms min=3.46ms med=37.54ms max=71.82ms p(90)=42.07ms p(95)=44.76ms
+    http_req_failed.........................: 0.00%  0 out of 25935
+    http_reqs...............................: 25935  835.932105/s
+
+
+// FIB=20
+    http_req_duration.......................: avg=62.05ms min=7.28ms med=62.01ms max=150.61ms p(90)=69.55ms p(95)=73.32ms
+      { expected_response:true }............: avg=62.05ms min=7.28ms med=62.01ms max=150.61ms p(90)=69.55ms p(95)=73.32ms
+    http_req_failed.........................: 0.00%  0 out of 15724
+    http_reqs...............................: 15724  506.418692/s
+
+// FIB=25
+    http_req_duration.......................: avg=355.38ms min=13.86ms med=359.71ms max=514.98ms p(90)=379.44ms p(95)=391.62ms
+      { expected_response:true }............: avg=355.38ms min=13.86ms med=359.71ms max=514.98ms p(90)=379.44ms p(95)=391.62ms
+    http_req_failed.........................: 0.00%  0 out of 2763
+    http_reqs...............................: 2763   88.245227/s
+
+// FIB=30
+
+    http_req_duration.......................: avg=3.42s min=120.94ms med=3.6s max=4.18s p(90)=3.94s p(95)=4.05s
+      { expected_response:true }............: avg=3.42s min=120.94ms med=3.6s max=4.18s p(90)=3.94s p(95)=4.05s
+    http_req_failed.........................: 0.00%  0 out of 299
+    http_reqs...............................: 299    8.862774/s
+
+```
 
 ---
 
