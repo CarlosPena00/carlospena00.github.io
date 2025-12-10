@@ -5,8 +5,6 @@ author: Giovanni Paolo, et al.
 date: 2025-12-06
 ---
 
-# Learning resources
-
 Python
 ======
 
