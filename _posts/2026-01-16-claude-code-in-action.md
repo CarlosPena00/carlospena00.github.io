@@ -284,11 +284,62 @@ Tool names you can hook into:
 ### Example use case
 - PreToolUse checks for duplicated code before allowing edits (avoid repeated logic)
 
+
+### Example: Automatically Run Ruff After Python Code Edits
+
+You can automate code formatting and linting with Ruff after every code edit by configuring a post-edit hook in Claude.
+
+#### 1. Add a PostToolUse Hook in `.claude/settings.json`
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/run-ruff.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+#### 2. Create the `run-ruff.sh` Script
+
+> **Note:** Claude does not display logs, echo, or errors from hooks. For debugging, write output to a file (e.g., using `echo` or `tee`).
+
+```js
+#!/bin/bash
+input=$(cat)
+file_path=$(echo "$input" | jq -r '.tool_input.file_path' 2>/dev/null)
+
+# Only proceed if the file exists and is a Python file
+if [[ -z "$file_path" || ! -f "$file_path" || "$file_path" != *.py ]]; then
+  exit 0
+fi
+
+uv run ruff check --fix --unsafe-fixes "$file_path"
+uv run ruff format "$file_path"
+exit 0
+```
+
+**Tips:**
+- Make sure `jq`, `uv`, and `ruff` are installed and available in your environment.
+- Grant execute permission to the script: `chmod +x .claude/hooks/run-ruff.sh`
+- For debugging, add lines like `echo "$file_path" >> /tmp/ruff_hook.log`.
+
+This setup ensures your Python files are automatically linted and formatted after each edit, keeping your codebase clean and consistent.
+
 ---
 
 ## 11) Other hook event types
 
-Besides `PreToolUse`, you can hook into:
+Besides `PreToolUse` and `PostToolUse`, you can hook into:
 
 - **Notification**
   - runs when Claude needs permission to use a tool
