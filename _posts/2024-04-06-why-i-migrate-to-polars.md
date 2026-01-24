@@ -5,7 +5,7 @@ author: Carlos Pena
 date: 2024-04-06
 ---
 
-This is, in fact, the fist "blog post", and I want to talk a bit about it. I developed a data-intensive application that should handle multiple users per second and work nonstop for 24h/7.
+This is, in fact, the first "blog post", and I want to talk a bit about it. I developed a data-intensive application that should handle multiple users per second and work nonstop for 24h/7.
 
 My first step was to convert all SQL queries into Pandas DataFrame, it was perfect to study the data and do some previews in a jupyter notebook. But, In production, the result was not satisfactory at all, even after Pandas 2.0, the code was slow, and we detected a memory leak about 1GB per day.
 

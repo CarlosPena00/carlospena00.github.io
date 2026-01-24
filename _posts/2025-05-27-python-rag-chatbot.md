@@ -5,7 +5,7 @@ author: Carlos Pena
 date: 2025-05-27
 ---
 
-In this post, I’ll walk you through an project strong based on `Alura: LlamaIndex: creating a chatbot with the RAG technique`: a chatbot built with Retrieval-Augmented Generation (RAG) using the LlamaIndex framework. The objective is to create a smart, responsive sales assistant for an e-commerce store that specializes in electronics.
+In this post, I'll walk you through a project strong based on `Alura: LlamaIndex: creating a chatbot with the RAG technique`: a chatbot built with Retrieval-Augmented Generation (RAG) using the LlamaIndex framework. The objective is to create a smart, responsive sales assistant for an e-commerce store that specializes in electronics.
 
 - pip install llama-index llama-index-embeddings-huggingface llama-index-vector-stores-chroma llama-index-llms-groq llama-index-readers-json pydantic_settings gradio
 

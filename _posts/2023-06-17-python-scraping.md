@@ -11,7 +11,7 @@ For this, we chose the website `investidor10` which contains information on BR s
 
 > `https://investidor10.com.br/acoes/[stock-name]/`
 
-We start from the premise that the site contains all the necessary information, and the patten must be maintained for all stocks. And so, we can skip the Crawler step (future post).
+We start from the premise that the site contains all the necessary information, and the pattern must be maintained for all stocks. And so, we can skip the Crawler step (future post).
 
 ## Download
 - Some websites rejects requests without User-Agent

@@ -322,7 +322,7 @@ WHERE d.tsv_content @@ to_tsquery('Postg:*')
 # Differential Updates
 
 For this example we will create three product tables: `prod_price`, `prod_stock`, `prod_info`
-and they will be summarized in the `prod_sumarização` table.
+and they will be summarized in the `prod_summarization` table.
 
 
 ```sql

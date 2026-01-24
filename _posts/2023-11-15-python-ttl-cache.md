@@ -7,7 +7,7 @@ date: 2022-11-15
 
 - How to cache data with `cachetools.func` and `Redis` in python
 
-Imagine that your application is slow or overloading the bank, for example. But there is a possibility, caching the data, with one limitation, the data cannot be too outdated.
+Imagine that your application is slow or overloading the database, for example. But there is a possibility, caching the data, with one limitation, the data cannot be too outdated.
 
 ## Database
 

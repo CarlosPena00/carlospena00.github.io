@@ -13,7 +13,7 @@ date: 2024-07-27
 ## Elastic
 ```js
 // ElasticSearch requires virtual memory at least [262144]
-// it will be reseted to default value after reboot
+// it will be reset to default value after reboot
 sudo sysctl -w vm.max_map_count=262144
 // Created a network to ensure communication between kibana and elastic
 docker network create elastic
