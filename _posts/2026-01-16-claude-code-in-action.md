@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Claude Code in Action - Notes"
+title: "LLM: Claude Code in Action - Notes"
 author: Carlos Pena
 date: 2026-01-17
 ---
@@ -284,6 +284,28 @@ Tool names you can hook into:
 ### Example use case
 - PreToolUse checks for duplicated code before allowing edits (avoid repeated logic)
 
+### Example: Automatically Run Sqlmesh Format After Sql Code Edits
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "(Edit|Write).*\\.sql",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run sqlmesh format",
+            "timeout": 30,
+            "description": "Auto-format SQLMesh models and tests after editing"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+``` 
 
 ### Example: Automatically Run Ruff After Python Code Edits
 
