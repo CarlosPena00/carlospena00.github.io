@@ -410,3 +410,94 @@ async def main():
 
 asyncio.run(main())
 ```
+
+---
+
+# Extra
+
+## 13) Claude Skills
+
+- Personal  ~/.claude/skills/<skill-name>/SKILL.md  All your projects
+- Project   .claude/skills/<skill-name>/SKILL.md    This project only
+
+ex: Git Writter
+
+
+```bash
+# /.claude/skills/git-writter/SKILL.md
+# git-writer
+
+A skill to check the git staged area and write a conventional commit message.
+
+## Instructions
+
+<git-writer>
+
+### Step 1: Analyze the staged changes
+
+Run these commands in parallel to gather context:
+
+1. `git diff --cached --stat` - Get a summary of staged changes
+2. `git diff --cached` - Get the full diff of staged changes
+3. `git log --oneline -5` - See recent commit style for consistency
+
+### Step 2: Determine the commit type
+
+Based on the staged changes, select the appropriate type:
+
+- `feat`: new feature
+- `fix`: bug fix
+- `docs`: documentation only
+- `style`: formatting (no code change)
+- `refactor`: code change that neither fixes a bug nor adds a feature
+- `perf`: performance improvement
+- `test`: add/update tests
+- `build`: build system/deps changes
+- `ci`: CI configuration changes
+- `chore`: maintenance tasks
+- `revert`: revert a previous commit
+
+### Step 3: Write the commit message
+
+Follow this format exactly:
+
+<type>(<scope>): <short, imperative description>
+
+[body]
+
+---
+How to test
+
+[explicit, reproducible steps or N/A]
+
+[optional footer(s)]
+
+
+**Rules:**
+- Title must be **clear and short** (aim for **<= 72 chars**)
+- Use **imperative** mood ("add", "fix", "remove")
+- If you use a scope, keep it short (e.g. `ui`, `core`, `deps`)
+- For breaking changes: Add `!` after type/scope: `feat!: ...` or `feat(api)!: ...`
+- The "How to test" section should be explicit and reproducible with copy/paste-ready steps
+- If testing is not applicable, write `N/A`
+- The first letter of the short description should be Capital
+
+### Step 4: Present the commit message
+
+Show the proposed commit message to the user and ask if they want to:
+1. Commit with this message
+2. Edit the message
+3. Cancel
+
+### Step 5: Execute the commit (if approved)
+
+If the user approves, create the commit using:
+
+git commit -m "$(cat <<'EOF'
+<commit message here>
+EOF
+)"
+
+
+</git-writer>
+```
