@@ -291,7 +291,7 @@ Tool names you can hook into:
   "hooks": {
     "PostToolUse": [
       {
-        "matcher": "(Edit|Write).*\\.sql",
+        "matcher": "Edit|Write|MultiEdit",
         "hooks": [
           {
             "type": "command",
@@ -305,7 +305,7 @@ Tool names you can hook into:
   }
 }
 
-``` 
+```
 
 ### Example: Automatically Run Ruff After Python Code Edits
 
@@ -318,7 +318,7 @@ You can automate code formatting and linting with Ruff after every code edit by 
   "hooks": {
     "PostToolUse": [
       {
-        "matcher": "Edit|Write",
+        "matcher": "Edit|Write|MultiEdit",
         "hooks": [
           {
             "type": "command",
