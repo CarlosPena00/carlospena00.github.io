@@ -113,6 +113,7 @@ rerepos:
 
 ```js
 alias gf='git fetch -p'
+alias gc='git checkout'
 alias gg='git push origin HEAD'
 alias gadd='git diff --name-only --cached | xargs git add'
 alias uruff='uv run ruff check --fix --unsafe-fixes'
