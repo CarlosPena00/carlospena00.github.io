@@ -410,6 +410,7 @@ content pre code {
 
 .highlight pre {
     background-color: #2d3748;
+    color: #f8f8f2;
     padding: 1.25rem;
     overflow-x: auto;
     line-height: 1.5;
