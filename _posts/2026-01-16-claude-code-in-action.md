@@ -501,3 +501,101 @@ EOF
 
 </git-writer>
 ```
+
+ex: Review
+
+```bash
+---
+name: review-changes
+description: Review staged changes and commits not yet merged into origin/master. Checks if commits should be split, performs a brief code review (clarity, structure, maintainability), scans for security vulnerabilities (SQL injection, prompt injection, secrets, auth bypass, etc.), and verifies test coverage for new logic. Ignores unstaged changes.
+disable-model-invocation: true
+allowed-tools: Bash(git *)
+---
+
+# Code Review
+
+Perform a structured review of the current changes.
+
+## Context
+
+- Staged diff: !`git diff --cached`
+- Staged files: !`git diff --cached --name-only`
+- Commits not in origin/master: !`git log origin/master..HEAD --oneline`
+- Full diff of commits not in origin/master: !`git diff origin/master...HEAD`
+- Test files in staged area: !`git diff --cached --name-only | grep -E "test_|_test\.py" || echo "(none)"`
+
+## Steps
+
+1. Read all context provided above
+2. Identify the scope: staged files + commits not yet in origin/master. Ignore unstaged changes entirely.
+3. Run each review check below and produce a structured report
+
+## Review Checks
+
+### 1. Commit Scope — Should this be split?
+
+Evaluate whether the commit mixes unrelated concerns. Flag it if:
+- It touches both production code **and** unrelated config/tooling changes
+- It combines a refactor with a new feature (makes bisecting harder)
+- It addresses more than one logical change that could be reverted independently
+- The diff is large enough that a reviewer cannot reason about it atomically
+
+If it should be split, explain **why** and suggest how to split it (e.g., "Separate the middleware auth change from the OAuth endpoint work").
+
+If it is cohesive, say so briefly.
+
+### 2. Code Review — Clarity, Structure, Maintainability
+
+For each changed file, assess:
+- **Clarity:** Are variable/function names descriptive? Is intent obvious without extra comments?
+- **Structure:** Does the change follow the existing project layering (`endpoints → service → resources`)? Are responsibilities correctly placed?
+- **Maintainability:** Is there duplicated logic that should be extracted? Are magic values or hardcoded strings introduced? Is error handling appropriate?
+- **Type safety:** Does it avoid `dict[str, Any]` or `JSONResponse` for structured payloads? Uses `TypedDict` / `BaseModel` correctly?
+- **Style:** Does it follow `async def` for I/O routes, structured logging with loguru, and modern Python syntax (`str | None`, not `Optional`)?
+
+Only flag real issues — do not nitpick style that matches the existing codebase conventions.
+
+### 3. Security — Vulnerabilities and Trust Boundaries
+
+Check for security issues introduced by the diff:
+
+- **SQL injection:** Are all DB queries using parameterized queries or ORM bindings? Flag any f-string or `.format()` interpolation into raw SQL.
+- **Prompt injection:** If user-controlled input is interpolated into LLM prompts, is it sanitised or clearly delimited? Flag direct concatenation of untrusted input into prompt templates.
+- **Secrets / credentials:** Are API keys, passwords, or tokens hardcoded or logged? They must come from `config.py` / environment — never literals or `print`/`logger` calls that expose them.
+- **Auth bypass:** Does the change introduce new routes or public paths that skip the Bearer token middleware? Verify that any addition to the public-path allowlist is intentional.
+- **Input validation:** Are path parameters, query strings, and request bodies validated through Pydantic models before reaching service/resource layers? Flag raw access to `request.query_params` or `request.body()` without validation.
+- **Dependency confusion / supply chain:** Does the diff add new packages to `pyproject.toml`? If so, note them for manual vetting (check PyPI for typosquats, abandoned maintainers, or unusual install scripts).
+- **Insecure deserialization:** Is `pickle`, `yaml.load` (without `Loader=yaml.SafeLoader`), or `eval` used on untrusted data?
+
+Report: ✅ no issues, ⚠️ potential concern (describe it), or ❌ clear vulnerability (describe and suggest fix).
+
+### 4. Test Coverage — New Logic Paths
+
+Check whether new or modified logic has tests:
+- If a new endpoint is added, is there at least a smoke test?
+- If a service function or resource has new branches, are those branches exercised?
+- If auth/middleware logic changed, are the protected/unprotected path behaviors tested?
+- If no test files were changed but production logic was modified, flag the specific functions/paths that are untested
+
+Report: ✅ covered, ⚠️ partially covered (describe gap), or ❌ not covered (list what's missing).
+
+## Output Format
+
+Present the review as four clearly labelled sections:
+
+```
+## 1. Commit Scope
+<assessment>
+
+## 2. Code Review
+<per-file findings, or "No issues found." if clean>
+
+## 3. Security
+<security findings, or "No issues found." if clean>
+
+## 4. Test Coverage
+<coverage assessment>
+```
+
+Keep each section concise. Use bullet points for individual findings. Avoid restating the diff — focus on actionable observations.
+```
