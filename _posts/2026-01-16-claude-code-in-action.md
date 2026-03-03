@@ -583,7 +583,6 @@ Report: ✅ covered, ⚠️ partially covered (describe gap), or ❌ not covered
 
 Present the review as four clearly labelled sections:
 
-```
 ## 1. Commit Scope
 <assessment>
 
@@ -595,7 +594,7 @@ Present the review as four clearly labelled sections:
 
 ## 4. Test Coverage
 <coverage assessment>
-```
+
 
 Keep each section concise. Use bullet points for individual findings. Avoid restating the diff — focus on actionable observations.
 ```
