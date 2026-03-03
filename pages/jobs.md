@@ -7,7 +7,7 @@ order: 3
 
 <h1>Vagas Abertas</h1>
 
-Fazemos parte do time de IA & Dados da FerreiraCosta (FCxLabs). Se você quer resolver problemas reais com dados e IA em escala, entre em contato via LinkedIn.
+Fazemos parte do time de IA & Dados da FerreiraCosta (FCxLabs). Se você quer resolver problemas reais com dados e IA em escala, entre em contato via <a href='https://forms.office.com/r/utx5Z7cmKu'>Forms</a>.
 
 <div style="margin-bottom: 24px;"></div>
 
