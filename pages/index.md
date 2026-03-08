@@ -23,7 +23,7 @@ order: 1
     </div>
 </div>
 
-<iframe src="/assets/carlos_pena_cv.pdf" width="100%" height="1000px" style="border: none;"></iframe>
+<iframe src="/assets/carlos-pena-cv.pdf" width="100%" height="1000px" style="border: none;"></iframe>
 
 
 <div>
