@@ -174,3 +174,118 @@ Before finalizing a dimensional model, verify:
 - [ ] Atomic data is stored — summary-only tables are a red flag
 - [ ] ETL loads dimensions before facts
 - [ ] Audit/lineage columns are present on all tables
+
+
+---
+
+# Chapter 3
+
+## Four-Step Dimensional Design Process
+
+### Step 1: Select the Business Process
+
+- A low-level activity performed by an organization: taking orders, invoicing, payments, handling service calls, registering students, etc.
+- Expressed as **action verbs**
+- Supported by an operational system such as a billing or purchasing system
+- Business processes generate or capture key performance metrics
+- Triggered by inputs and result in output metrics
+
+### Step 2: Declare the Grain
+
+The **grain** defines what a single row in the fact table represents — always atomic.
+
+Examples:
+- One row per scan of an individual product on a customer sales transaction
+- One row per bank account per month
+
+### Step 3: Identify the Dimensions
+
+Answers: **Who, What, Where, When, Why, How**
+
+- Describe how business people interpret the data resulting from the business event
+- Associated with the event (date, product, customer, employee, facility)
+- List all discrete, text-like attributes for each dimension
+
+### Step 4: Identify the Facts
+
+- Numeric, additive figures — such as quantity ordered or dollar cost amount
+- Driven by user requirements and the realities of the source data
+
+---
+
+## Retail Case Study
+
+**Scenario:** A grocery chain with 100 stores across 5 states, each carrying a full complement of departments (Grocery, Frozen, Dairy, Meat, etc.) and approximately 60,000 SKUs per store. Data is collected at cash registers (POS system).
+
+| Design Step | Decision |
+|-------------|----------|
+| **Business Process** | Purchases at POS system |
+| **Grain** | One row per individual product scanned per sales transaction |
+| **Dimensions** | Date, Store, Product, Promotion, Cashier, Payment Method |
+| **Facts** | Sales quantity, unit prices, discounts, sales amount, cost amount |
+
+> If a new dimension causes additional rows, it should be disqualified or the grain must be revisited.
+
+### Facts Detail
+
+Sales quantity, extended discount, sales, and cost dollar amounts are **additive** across all dimensions.
+
+**Derived facts** (e.g., Extended Gross Profit = Extended Sales − Extended Cost) are generally recommended to be stored on disk.
+
+| Name | Description | Example |
+| --- | --- | --- |
+| **Regular Unit Price** | Original price per unit before any discount | $1,000 |
+| **Discount Unit Price** | Discount applied per unit | $100 |
+| **Net Unit Price** | Final price per unit after discount | $900 |
+| **Extended Discount Dollar Amount** | Total discount for all units (discount × quantity) | $200 |
+| **Extended Sales Dollar Amount** | Total revenue after discount (net price × quantity) | $1,800 |
+| **Extended Cost Dollar Amount** | Total cost for all units (cost × quantity) | $1,200 |
+| **Extended Gross Profit Dollar Amount** | Total profit (sales − cost) | $600 |
+
+**Non-Additive Facts:**
+
+- **Gross Margin** (gross profit / extended sales revenue) — cannot be summarized along any dimension; must be computed as `SUM(revenues) / SUM(costs)`
+- **Unit Price** — summing unit prices across any dimension is meaningless
+
+---
+
+### Dimension Details
+
+#### Date Dimension
+
+The Date dimension is typically the first and most reused dimension; usually daily-grained.
+
+- Pre-populate **10–20 years** of dates in advance
+- Include: full date description, day of the week, day number in month/year, last-day-of-month flag, month, quarter, holiday indicator, weekday indicator, etc.
+- Include name columns for reporting (e.g., "Monday", "January")
+- Use meaningful labels for flags (e.g., "Holiday" / "Non-Holiday" instead of Y/N or 1/0)
+
+> See [kimballgroup.com](http://kimballgroup.com) → Tools → Utilities for a pre-built Date dimension.
+
+**Current and relative date attributes** (e.g., `is_current_date`, `is_current_month`) may have an update lag of up to one day — it is better to compute these at query time than to store them.
+
+#### Time-of-Day
+
+Time-of-day is typically separated from the Date dimension to avoid row explosion.
+
+- If filtering or rolling up by time periods (15-minute intervals, hours, shifts), treat time-of-day as a full-fledged dimension table with one row per discrete period.
+
+#### Product Dimension
+
+TODO
+
+
+## Best Practices Summary — Chapter 3
+
+| Practice | Why |
+|----------|-----|
+| Always declare the grain before choosing dimensions and facts | Prevents scope creep and mixed granularity |
+| Flatten hierarchies into dimension rows | Enables drill-up/down without joins; improves BI tool usability |
+| Replace NULL dimension attributes with "Unknown" or "N/A" | Avoids GROUP BY / WHERE surprises and confuses end users |
+| Use descriptive text labels instead of Y/N flags | Reports are self-explanatory without lookup tables |
+| Store derived facts (e.g., gross profit) on disk | Avoids repeated computation; ensures consistent results |
+| Never sum non-additive facts (unit price, ratios) | Use `SUM(numerator) / SUM(denominator)` instead |
+| Use a Factless Fact Table for promotion coverage | Enables "promoted but not sold" analysis |
+| Store degenerate dimensions (order/transaction numbers) in the fact table | They have no attributes; a separate table would be empty |
+| Pre-populate the Date dimension 10–20 years ahead | Avoids ETL failures on future dates |
+| Separate time-of-day from the Date dimension | Prevents row explosion on the Date dimension |
