@@ -22,7 +22,7 @@ A measurement event in the physical world has a one-to-one relationship to a sin
 
 - **Additive** — can be summed across all dimensions (e.g.: sales amount, quantity sold)
 - **Semi-additive** — can be summed across some dimensions but not all (e.g.: account balance should not be summed along the time dimension)
-- **Non-additive** — should never be summed (e.g.: unit prices — use counts or averages instead)
+- **Non-additive** — should never be summed (e.g.: unit prices — use counts or weighted averages instead: `SUM(extended_sales) / SUM(quantity)`)
 
 > You should not store redundant text in a fact table.
 
@@ -244,7 +244,7 @@ Sales quantity, extended discount, sales, and cost dollar amounts are **additive
 
 **Non-Additive Facts:**
 
-- **Gross Margin** (gross profit / extended sales revenue) — cannot be summarized along any dimension; must be computed as `SUM(revenues) / SUM(costs)`
+- **Gross Margin** (gross profit / extended sales revenue) — cannot be summarized along any dimension; must be computed as `SUM(gross_profit) / SUM(extended_sales)` or equivalently `SUM(extended_sales - extended_cost) / SUM(extended_sales)`
 - **Unit Price** — summing unit prices across any dimension is meaningless
 
 ---
@@ -258,7 +258,7 @@ The Date dimension is typically the first and most reused dimension; usually dai
 - Pre-populate **10–20 years** of dates in advance
 - Include: full date description, day of the week, day number in month/year, last-day-of-month flag, month, quarter, holiday indicator, weekday indicator, etc.
 - Include name columns for reporting (e.g., "Monday", "January")
-- Use meaningful labels for flags (e.g., "Holiday" / "Non-Holiday" instead of Y/N or 1/0)
+- Use meaningful labels for flags (e.g., "Holiday" / "Non-Holiday" instead of Y/N or 1/0) *(I disagree — in SQL/engineering contexts, booleans or Y/N are often cleaner)*
 
 > See [kimballgroup.com](http://kimballgroup.com) → Tools → Utilities for a pre-built Date dimension.
 
@@ -272,8 +272,106 @@ Time-of-day is typically separated from the Date dimension to avoid row explosio
 
 #### Product Dimension
 
-TODO
+- **Flatten many-to-one hierarchies** — do not normalize (no snowflaking)
+- **Attributes with embedded meaning** — preserve the full value and also store the parsed sub-attributes separately (e.g., store both `"Tropicana OJ 64oz"` and individual `brand`, `size`, `flavor` columns)
 
+**Numeric values — Attribute or Fact?**
+
+| Signal | Put it in... |
+|--------|-------------|
+| Used primarily in calculations | Fact table |
+| Used primarily to filter, group, or label | Dimension table |
+| Serves both purposes | Both — with distinct meanings |
+
+> Example: Standard price stored in the **fact** captures the valuation at purchase time; stored in the **dimension** it indicates the current list price.
+
+Rule of thumb:
+- Data used in calculations → **Facts**
+- Data used as constraints, groups, or labels → **Dimensions**
+
+**Drilling Down / Up:**
+
+- **Drill down** — add more dimension columns (more detail)
+- **Drill up** — remove dimension columns (aggregate)
+
+#### Store Dimension
+
+The Store dimension usually does not have a pre-existing source table — the team often builds it by combining multiple source systems.
+
+**Required attributes:** city, country, city-state combination, state, zip code, selling square footage, total square footage, first open date, remodel date, store manager.
+
+- All descriptive attributes should have meaningful labels (~10+ characters) — avoid single-character codes
+
+> **Best Practice:** Create **role-playing views** of the Date dimension to represent different business events (e.g., order date, shipment date, delivery date). This avoids multiple joins to the same table (`JOIN dim_date d1 ... JOIN dim_date d2 ...`) and keeps queries readable.
+
+#### Promotion Dimension
+
+Also called the **Causal Dimension** — it describes the factors believed to cause a change in product sales.
+
+Must include: temporary price reductions, aisle displays, newspaper ads, coupons, etc. These are typically combined into a single dimension row.
+
+**Key business questions it enables:**
+
+- Did products under promotion experience a sales lift? (Requires agreeing on a baseline with the business)
+- Were sales transferred from regularly-priced products to discounted ones?
+- Did promoted products cannibalize sales of other products?
+- What was the net overall gain before, during, and after the promotion?
+- Was the promotion profitable?
+
+#### Null Foreign Keys, Null Attributes, and Null Facts
+
+| Scenario | Recommendation |
+|----------|---------------|
+| Null FK in fact table | **Never allow it** — add a row in the dimension (e.g., "Not Applicable") and point the FK there |
+| Null attribute in dimension | Replace with a descriptive string: "Unknown", "Not Applicable" |
+| Null value in a fact column | Usually acceptable — aggregate functions (`MIN`, `MAX`, `COUNT`, `AVG`) handle NULLs correctly |
+
+#### Payment Method Dimension
+
+A single transaction may involve more than one payment method (e.g., cash + gift card), which would violate the grain of the sales fact table.
+
+**Solution:** Create a separate **Payment fact table** with a finer grain — one row per payment method per transaction — rather than forcing multiple payment methods into the sales fact row.
+
+#### Degenerate Dimensions
+
+A degenerate dimension is a dimension key that has **no associated dimension table** — it carries no descriptive attributes beyond the identifier itself (e.g., a POS transaction number, order number, or invoice number).
+
+- Store it directly in the fact table (no join needed)
+- Useful for grouping all line items of a single transaction (market basket analysis)
+- Denoted as **DD** in schema diagrams
+
+#### Extensibility
+
+The dimensional model is designed to accommodate change gracefully:
+
+| Change | How to handle |
+|--------|--------------|
+| Add a new dimension (e.g., Frequent Shopper) | Add a new FK column to the fact table; backfill historical rows with a "Prior to Program" surrogate key |
+| Add a new dimension attribute | Add a new column; fill historical rows with "Not Available" or equivalent |
+| Add a new measured fact (same grain, same process) | Add a new column to the existing fact table |
+| Add a new measured fact (different grain or process) | Create a new fact table |
+
+### Factless Fact Table
+
+**Use case:** *Which products were on promotion but did not sell?*
+
+A Factless Fact Table contains only foreign keys — no numeric measures (or a dummy constant like `1`). It records that an event **could have happened** but carries no measurement.
+
+**Promotion Coverage schema:**
+
+```
+promotion_coverage_fact
+├── date_key        (FK)
+├── product_key     (FK)
+├── store_key       (FK)
+└── promotion_key   (FK)
+```
+
+**Query pattern to find promoted-but-unsold products:**
+
+1. Query `promotion_coverage_fact` → all products on promotion
+2. Query `sales_fact` → all products actually sold
+3. Return `(1) EXCEPT (2)`
 
 ## Best Practices Summary — Chapter 3
 
