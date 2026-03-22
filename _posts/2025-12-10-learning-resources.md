@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Learning Resources"
+title: "Learning Resources: Curated list"
 author: Giovanni Paolo, et al.
 date: 2025-12-06
 ---

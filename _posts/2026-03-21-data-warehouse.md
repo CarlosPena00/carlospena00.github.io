@@ -2,7 +2,7 @@
 layout: post
 title: "Data Engineering: Notes of Data Warehouse Toolkit"
 author: Carlos Pena
-date: 2026-03-07
+date: 2026-03-21
 ---
 
 My notes about the Data Warehouse Toolkit (Kimball).
