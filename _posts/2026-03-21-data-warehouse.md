@@ -373,6 +373,47 @@ promotion_coverage_fact
 2. Query `sales_fact` → all products actually sold
 3. Return `(1) EXCEPT (2)`
 
+### Surrogate Keys
+
+Surrogate keys are artificial keys — the DW system has no dependency on the source system's key type or values, so changes to the source key have no impact.
+
+**Fact table surrogate key** — not useful for BI queries, but has ETL benefits:
+
+- Immediate unique identification of a row
+- Enables resuming an interrupted bulk load from a known checkpoint
+- Allows replacing `UPDATE` with `INSERT + DELETE` (safer in bulk ETL)
+- Required when the fact table participates in a parent/child schema (rare)
+
+### Snowflaking (Normalized Dimensions)
+
+**Avoid it.** Snowflaking normalizes dimension tables into multiple related tables, which hurts query readability and BI tool usability.
+
+One acceptable exception: **outrigger dimensions** — a secondary dimension attached to a dimension table (not to the fact table directly).
+
+> Example: `Product Dimension` → `Product Introduction Date Dimension` (date, calendar month, year, fiscal year, ...)
+>
+> Even so, outriggers add joins and reduce readability — use them only when the size or volatility of the sub-dimension justifies it.
+
+### Centipede Fact Table
+
+A **Centipede Fact Table** occurs when a fact table has an excessive number of dimension foreign keys.
+
+- Most business processes can be fully represented with fewer than 20 dimensions
+- If a design reaches 25 or more dimensions, look for opportunities to consolidate using a **Junk Dimension**
+
+**Junk Dimension** — combine several low-cardinality flags and indicators (that would otherwise each get their own FK column) into a single dimension table:
+
+| Without Junk Dimension | With Junk Dimension |
+|------------------------|---------------------|
+| `is_gift_flag` (FK) | `transaction_type_key` (FK → `junk_dim`) |
+| `is_rush_order_flag` (FK) | *(all flags live as columns inside `junk_dim`)* |
+| `payment_status_key` (FK) | |
+| `return_flag` (FK) | |
+
+> The junk dimension contains one row per unique combination of flag values. It reduces the number of FK columns in the fact table without losing any information.
+
+
+
 ## Best Practices Summary — Chapter 3
 
 | Practice | Why |
