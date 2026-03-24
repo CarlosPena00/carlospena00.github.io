@@ -178,7 +178,7 @@ Before finalizing a dimensional model, verify:
 
 ---
 
-# Chapter 3
+# Chapter 3 - Retail
 
 ## Four-Step Dimensional Design Process
 
@@ -428,3 +428,35 @@ A **Centipede Fact Table** occurs when a fact table has an excessive number of d
 | Store degenerate dimensions (order/transaction numbers) in the fact table | They have no attributes; a separate table would be empty |
 | Pre-populate the Date dimension 10–20 years ahead | Avoids ETL failures on future dates |
 | Separate time-of-day from the Date dimension | Prevents row explosion on the Date dimension |
+
+
+# Chapter 4 - Inventory
+
+```
+Purchase Order → Receive Warehouse Deliveries → Warehouse Product Inventory → Store Delivery → Store Product Inventory → Retail Sales
+```
+
+- Each process has its unique metrics, unique timestamp, and unique granularity → each process spawns one or more fact tables
+
+## Inventory Periodic Snapshot
+
+Levels of inventory measurement taken at regular intervals, each placed as a separate row in the fact table.
+
+**Example:** The most atomic level of detail provided by the operational inventory system is a daily inventory snapshot per product per store.
+
+| Key | Columns |
+|-----|---------|
+| **Dimensions** | `date_key`, `product_key`, `store_key` |
+| **Facts** | `quantity_on_hand` |
+
+To reduce data volumes, it is common to either:
+- Change the snapshot frequency, or
+- Keep only the last 60 days of inventory
+
+**Semi-additive fact:** `quantity_on_hand` cannot be aggregated over time, but can be summed across stores.
+
+> **Caution with `AVG`:** `SQL AVG` averages over all rows returned by the query — not just the number of distinct dates.
+>
+> Example: 3 products × 4 stores × 7 dates → the denominator would be 84, not 7.
+>
+> **Correct approach:** `SUM(quantity_on_hand) / COUNT(DISTINCT date_key)`, or use a window function to first aggregate per date, then average the results.
