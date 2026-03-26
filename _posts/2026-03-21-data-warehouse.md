@@ -459,4 +459,32 @@ To reduce data volumes, it is common to either:
 >
 > Example: 3 products × 4 stores × 7 dates → the denominator would be 84, not 7.
 >
-> **Correct approach:** `SUM(quantity_on_hand) / COUNT(DISTINCT date_key)`, or use a window function to first aggregate per date, then average the results.
+> **Correct approach:** Use a window function to first aggregate per date, then average the results — this is the most robust solution.
+>
+> `SUM(quantity_on_hand) / COUNT(DISTINCT date_key)` also works, but breaks silently on sparse data (if not every product has a snapshot for every date, the denominator will be wrong).
+
+
+### Additional Inventory Metrics
+
+The periodic snapshot alone is rarely sufficient — it is usually necessary to add metrics that provide meaning and insight:
+
+- **Quantity sold / shipped**
+- **Turns:** `qty_sold / qty_on_hand` *(note: the standard financial formula is `COGS (Cost of Goods Sold) / Average Inventory` — this quantity-based ratio is a simplified proxy)*
+- **Number of days of supply**
+- **Extended value of inventory at cost**
+
+## Inventory Transactions
+
+Another way to model inventory is through **inventory transactions**: receive, place, release, inspect, bin, ship, return, remove, etc.
+
+> It is impractical to rely solely on the transaction model — it is too dense, though technically possible. *(This was more true in Kimball's era. Modern columnar stores like Snowflake, BigQuery, and Redshift handle transaction-grain tables well — the "too dense" argument is less compelling today.)*
+
+> If measurements have different natural granularities or dimensionalities, they should belong to different fact tables.
+
+## Inventory Accumulating Snapshot
+
+Useful when you can identify each individual product (e.g., by serial number) to track its full lifecycle.
+
+- Individual rows are updated as new information arrives (e.g., bin placement date)
+- The process must have a clear beginning and end, with defined pipeline steps
+- Useful when the business wants to analyze pipeline flow and throughput
