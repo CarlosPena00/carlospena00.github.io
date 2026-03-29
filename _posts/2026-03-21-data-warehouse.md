@@ -432,9 +432,26 @@ A **Centipede Fact Table** occurs when a fact table has an excessive number of d
 
 # Chapter 4 - Inventory
 
+## Summary
+
+Chapter 4 extends the retail dimensional model into the **inventory supply chain**, demonstrating how the same business pipeline spawns multiple fact tables — each with its own grain, metrics, and modeling pattern.
+
+**Core pipeline:**
 ```
 Purchase Order → Receive Warehouse Deliveries → Warehouse Product Inventory → Store Delivery → Store Product Inventory → Retail Sales
 ```
+
+**Key highlights:**
+
+- Inventory introduces all three fact table types in a single business context: **Periodic Snapshot**, **Transaction**, and **Accumulating Snapshot** — making it the clearest illustration of when to use each
+- `quantity_on_hand` is the canonical example of a **semi-additive fact**: valid to sum across products and stores, but meaningless to sum across time
+- `SQL AVG` on semi-additive facts is a silent trap — the denominator includes all rows, not distinct dates; always aggregate per date first using a window function
+- The **transaction model** (receive, ship, return, etc.) is theoretically complete but was considered too dense by Kimball; modern columnar stores have made this concern less relevant
+- The **accumulating snapshot** is the right model when a process has a defined beginning, end, and pipeline milestones — it is updated in place as milestones are reached
+- Chapter 4 is also where Kimball introduces the **Enterprise DW Bus Architecture** and **Bus Matrix** as the enterprise integration strategy — conformed dimensions are the "bus" that connects independent data marts without a monolithic build
+- The **Shrunken Rollup Conformed Dimension** is introduced as a mechanism for fact tables that operate at a coarser grain than the base dimension (e.g., brand-level vs. SKU-level), while still conforming to it
+
+---
 
 - Each process has its unique metrics, unique timestamp, and unique granularity → each process spawns one or more fact tables
 
@@ -488,3 +505,127 @@ Useful when you can identify each individual product (e.g., by serial number) to
 - Individual rows are updated as new information arrives (e.g., bin placement date)
 - The process must have a clear beginning and end, with defined pipeline steps
 - Useful when the business wants to analyze pipeline flow and throughput
+
+## Enterprise Data Warehouse Bus Architecture
+
+The **Bus Architecture** is the framework that integrates dimensional data marts across the entire organization into a cohesive enterprise warehouse — without requiring a single monolithic system.
+
+The "bus" analogy comes from electrical engineering: multiple components plug into it independently but share a standard interface. In DW terms, **conformed dimensions** and **conformed facts** serve as that shared interface.
+
+**Key properties:**
+
+- Each business process is built as an independent data mart
+- All marts conform to shared dimensions — enabling drill-across queries
+- The enterprise view emerges incrementally, mart by mart
+- No big-bang monolithic build required
+
+**Drill-across:** When two fact tables share a conformed dimension, a BI tool can query both and align results on that shared key — this is Kimball's integration mechanism instead of a normalized enterprise model.
+
+### Enterprise Data Warehouse Bus Matrix
+
+The **Bus Matrix** is the master planning document for the entire DW/BI system — the most important artifact to create before building anything.
+
+**Structure:**
+
+| Business Process | Date | Customer | Product | Employee | Store | Promotion |
+|---|---|---|---|---|---|---|
+| Sales Orders | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Inventory | ✓ | | ✓ | | ✓ | |
+| HR Payroll | ✓ | | | ✓ | ✓ | |
+| Marketing Spend | ✓ | ✓ | ✓ | | | ✓ |
+
+- **Rows** = business processes (each becomes one or more fact tables)
+- **Columns** = dimensions
+- **Checkmark** = this dimension participates in this business process
+
+**What it reveals:**
+
+- **Integration opportunities** — columns with many checkmarks are candidates for conformed dimensions
+- **Scope boundaries** — rows define what each data mart covers and help prioritize build order
+- **Missing conformance** — if two rows use "Customer" but mean different things, that conflict must be resolved before building
+
+**Variations:**
+
+- **Opportunity/Stakeholder Matrix** — adds business stakeholders as a third axis; useful for prioritization and buy-in
+- **High-level vs. Detailed** — start with one row per business process; drill into a detailed matrix with one row per fact table (transaction, periodic snapshot, accumulating snapshot)
+
+**How to use it:**
+
+1. Workshop rows with business stakeholders — processes come from the business, not from IT systems
+2. Identify the highest-value row and build that mart first
+3. Lock down shared dimensions early (`Date` and `Customer` almost always appear in row 1)
+4. Revisit and expand as new processes are onboarded — the matrix is a living document
+
+> A checkmark in the matrix is a commitment: this dimension will mean the same thing in this mart as everywhere else. That commitment is what makes drill-across queries possible.
+
+**Common Mistakes:**
+
+- Overly excessive rows
+- Report-centric, the matrix row should reference the business process
+- Overly generalized column
+- Separate columns for each level of hierarchy: Should always be in more granular
+
+### Shrunken Rollup Conformed Dimension
+
+A **shrunken rollup conformed dimension** is a higher-grain version of a base conformed dimension that contains a **subset of rows and a subset of attributes** — and still conforms to it.
+
+It exists to serve fact tables that operate at a coarser grain than the base dimension (e.g., a Marketing Spend fact table at brand level, while the base `Product` dimension is at SKU level).
+
+**Conformance rules — a shrunken dimension conforms when:**
+
+1. **Attribute subset** — every column in the shrunken dimension also exists in the base dimension with the same name and meaning
+2. **Row subset** — every row corresponds to one or more rows in the base dimension (it is a rollup, not an arbitrary filter)
+
+> Renaming a column or redefining its meaning in the shrunken version breaks conformance — drill-across queries will produce incorrect results.
+
+**Example:**
+
+Base `Product` dimension (SKU-level grain):
+
+| product_key | sku | product_name | brand | category | department |
+|---|---|---|---|---|---|
+| 1 | SKU-001 | Tropicana OJ 64oz | Tropicana | Juice | Beverages |
+| 2 | SKU-002 | Minute Maid OJ 64oz | Minute Maid | Juice | Beverages |
+
+Shrunken rollup `Brand` dimension (brand-level grain):
+
+| brand_key | brand | category | department |
+|---|---|---|---|
+| 10 | Tropicana | Juice | Beverages |
+| 11 | Minute Maid | Juice | Beverages |
+
+**Do not remove attributes from the base dimension** — the shrunken rollup is an addition, not a replacement. The `Product` dimension keeps all its columns.
+
+**Physical table or view?**
+
+| Situation | Use |
+|---|---|
+| All rollup attributes come from the base dimension | View (`CREATE VIEW brand_dim AS SELECT DISTINCT ...`) |
+| Rollup has its own attributes or its own source system | Physical table |
+| Rollup is queried heavily at scale | Physical table (for performance) |
+
+Prefer a view — it stays in sync automatically and guarantees conformance by definition. Only materialize into a physical table when there is a concrete reason to do so.
+
+**In the Bus Matrix**, a shrunken rollup is annotated with a partial or shaded checkmark to indicate the business process uses a rolled-up version of a shared dimension, not the full atomic one.
+
+---
+
+## Best Practices Summary — Chapter 4
+
+| Practice | Why |
+|----------|-----|
+| Model each business process as its own fact table | Each process has a unique grain, timestamp, and metrics — mixing them corrupts the grain |
+| Choose the right fact table type per process | Periodic Snapshot for regular level measurements; Transaction for discrete events; Accumulating Snapshot for pipeline lifecycles |
+| Zero-fill periodic snapshots for inactive products | Maintains continuity for time-series calculations; absence of a row implies missing data, not zero inventory |
+| Never sum `quantity_on_hand` across time | It is semi-additive — summing over dates produces meaningless totals |
+| Never use `SQL AVG` directly on semi-additive facts | The denominator counts all rows, not distinct dates — aggregate per date first using a window function |
+| Use `SUM(qty) / COUNT(DISTINCT date_key)` only on dense data | Breaks silently on sparse snapshots where not every product has a row for every date |
+| Add enrichment metrics beyond `quantity_on_hand` | Turns, days of supply, extended cost at inventory — raw on-hand quantity alone provides little business insight |
+| Use the correct Turns formula for financial reporting | `COGS / Average Inventory`, not `qty_sold / qty_on_hand` — the quantity ratio is only a simplified operational proxy |
+| Do not rely solely on the transaction model for inventory | Too granular for most analytical queries; combine with a periodic snapshot for level-based analysis |
+| Use the accumulating snapshot only for processes with a defined start, end, and milestones | It is updated in place — unsuitable for open-ended or unbounded processes |
+| Build the Bus Matrix before writing any code | It is the master planning artifact — defines scope, surfaces conformance conflicts, and aligns business and IT |
+| Derive Bus Matrix rows from business processes, not reports or IT systems | Report-centric rows produce a matrix that is hard to maintain and impossible to conform |
+| Use the most granular grain in the Bus Matrix columns | One column per hierarchy level inflates the matrix; roll hierarchy levels into the dimension, not into separate columns |
+| Implement shrunken rollup dimensions as views when possible | A view stays in sync with the base dimension automatically and guarantees conformance by definition |
+| Never rename or redefine attributes in a shrunken rollup | Doing so breaks conformance — drill-across queries on that attribute will produce incorrect results |
