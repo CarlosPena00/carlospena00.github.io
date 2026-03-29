@@ -629,3 +629,164 @@ Prefer a view — it stays in sync automatically and guarantees conformance by d
 | Use the most granular grain in the Bus Matrix columns | One column per hierarchy level inflates the matrix; roll hierarchy levels into the dimension, not into separate columns |
 | Implement shrunken rollup dimensions as views when possible | A view stays in sync with the base dimension automatically and guarantees conformance by definition |
 | Never rename or redefine attributes in a shrunken rollup | Doing so breaks conformance — drill-across queries on that attribute will produce incorrect results |
+
+# Chapter 5 - Procurement (Acquisition)
+
+Key business questions procurement data must answer:
+
+- Which materials/products are most frequently purchased? How many vendors supply these? At what price?
+- What are the opportunities to negotiate? Single sourcing or making guaranteed buys?
+- Are your employees purchasing from preferred vendors, or skirting the negotiated vendor agreement with **maverick spending** (purchases outside company policies/workflows)?
+- How are your vendors performing?
+- Vendor fill rate? On-time delivery performance? Late deliveries?
+
+**Business processes in scope:** Purchase Requisitions, Purchase Orders, Shipping Notifications, Warehouse Receipts, Vendor Invoices, Vendor Payments.
+
+## Single vs. Multiple Transaction Fact Tables
+
+- Draw the Bus Matrix (process, atomic granularity, metrics, dimensions)
+- Ask: Are the business processes truly unique (e.g., Purchase Orders vs. Warehouse Receipts)? Are there multiple source systems with metrics at unique granularities? What is the dimensionality?
+- It is easier to load operational data from different sources into separate fact tables than to force them into one
+
+## Complementary Procurement Accumulating Snapshot
+
+- Useful for monitoring order speed through the procurement pipeline
+- Tracks each purchase order from requisition to payment as a single row updated at each milestone
+
+## Slowly Changing Dimensions (SCD) — All Types
+
+| Type | Name | Strategy | Key trait |
+|------|------|----------|-----------|
+| **Type 0** | Retain Original | Never overwrite | Attribute should never change (e.g., original contract date, surrogate key) |
+| **Type 1** | Overwrite | Replace the old value in place | History is lost; always reflects the most recent assignment; can affect aggregated reports |
+| **Type 2** | Add New Row | Insert a new row with a new surrogate key | Full history preserved; requires `effective_date`, `expiration_date`, and `is_current` flag; the same entity will have multiple surrogate keys |
+| **Type 3** | Add New Column | Add a column for the previous value | Only current and one prior value are accessible; rarely used |
+| **Type 4** | Mini-Dimension | Extract rapidly changing attributes into a separate dimension | Keeps the base dimension stable; mini-dimension has its own surrogate key |
+| **Type 5** | Mini-Dimension + Type 1 Outrigger | Type 4 mini-dimension + a Type 1 FK on the base dimension pointing to the current profile | Enables both historical (via fact table FK) and current-state (via base dimension outrigger) queries without exploding either table |
+| **Type 6** | Type 1 + 2 + 3 | Add a new row (Type 2) + overwrite a "current value" column on all rows (Type 1) + keep a "prior value" column (Type 3) | Both current and historical values are accessible on every row; most complex to maintain |
+| **Type 7** | Dual Type 1 + Type 2 | Maintain both a Type 1 (current-only) and a Type 2 (full history) view of the same dimension | Fact rows can join to either view depending on whether the query needs current or historical context |
+
+> **Types 1 and 2 cover the vast majority of real-world cases.** Types 4–7 are advanced techniques — reach for them only when Types 1 and 2 are clearly insufficient. Applying higher types prematurely adds ETL complexity with little benefit.
+
+> **Type 1 attributes inside a Type 2 dimension:** When a non-versioned attribute changes, the business must decide whether to update only the current row or all historical rows. There is no universal answer — it depends on whether historical reports should reflect the value at the time of the event or always the latest value.
+
+> **Backfilling Type 2 history:** It is possible to load historical rows into a Type 2 dimension on initial load, but it requires the source system to provide effective dates for each change. This is often difficult in practice — source systems rarely retain that history — but it is not impossible and should not be ruled out without investigation.
+
+
+### SCD Type 5 — Mini-Dimension + Type 1 Outrigger
+
+Type 5 = **Type 4 (mini-dimension) + a Type 1 FK on the base dimension** pointing to the customer's current profile.
+
+**The problem it solves:** Some dimension attributes change frequently (e.g., age band, income bracket, credit score tier). Applying Type 2 to a large dimension like Customer causes it to grow uncontrollably. Type 4 alone solves the size problem but still lets you query current state by joining the fact table to the mini-dimension — what it loses is the ability to ask **"show me all customers currently in the Gold tier"** without scanning the fact table at all. The Type 1 outrigger on the base dimension solves that specific gap.
+
+**Structure:**
+
+```
+customer_dim (base)
+├── customer_key          (SK)
+├── customer_id
+├── name
+├── ...stable attributes...
+└── current_profile_key   ← Type 1 outrigger — always overwritten to latest profile
+
+customer_profile_dim (mini-dimension)
+├── profile_key           (SK)
+├── age_band              (e.g., "25–34")
+├── income_bracket        (e.g., "50k–75k")
+├── purchase_frequency    (e.g., "Weekly")
+└── credit_score_tier     (e.g., "Good")
+
+sales_fact
+├── date_key
+├── customer_key          ← FK to base customer_dim
+├── customer_profile_key  ← FK to mini-dimension (profile at time of sale)
+└── sales_amount
+```
+
+**Two query paths:**
+
+| Need | Join path |
+|------|-----------|
+| What profile did this customer have at purchase time? | `sales_fact` → `customer_profile_dim` via `profile_key` |
+| What does this customer look like today? | `customer_dim` → `customer_profile_dim` via `current_profile_key` |
+
+**ETL behavior:** When a customer's profile changes, insert a new row into `customer_profile_dim` (new `profile_key`) and overwrite `current_profile_key` on the `customer_dim` row (Type 1). The fact table retains the old `profile_key` — history is preserved there automatically.
+
+---
+
+### SCD Type 6 — Type 1 + 2 + 3 Combined
+
+Type 6 (1+2+3=6) adds both a "current value" column and a "prior value" column to every row of a Type 2 dimension, then overwrites the current value column across all rows whenever the attribute changes.
+
+**Structure (example: Customer Region):**
+
+```
+customer_dim
+├── customer_key      (SK)
+├── customer_id
+├── region            ← Type 2 versioned value (value at time this row was created)
+├── current_region    ← Type 1 overwritten on ALL rows (always reflects latest)
+├── prior_region      ← Type 3 prior value column
+├── effective_date
+├── expiration_date
+└── is_current
+```
+
+**Example — customer moves from East to West:**
+
+| customer_key | customer_id | region | current_region | prior_region | is_current |
+|---|---|---|---|---|---|
+| 201 | C-001 | East | West | East | N |
+| 202 | C-001 | West | West | East | Y |
+
+- `region` on row 201 is still "East" — the historical value when that row was active
+- `current_region` on both rows is "West" — overwritten everywhere (Type 1)
+- `prior_region` retains "East" (Type 3) — but only for this change; on a second change (e.g., West → North), `prior_region` on the new row would be "West", not "East". The Type 3 column holds only **one prior value** — it does not chain history across multiple changes
+
+**Query flexibility:**
+
+| Analysis need | Column to use |
+|---|---|
+| What region was the customer in when they bought? | `region` (Type 2 versioned) |
+| What region is the customer in now? | `current_region` (Type 1) |
+| What was their previous region? | `prior_region` (Type 3) |
+
+**The cost:** Every attribute change triggers an `UPDATE` across all historical rows for that entity to refresh `current_region`. This is the most ETL-intensive SCD type. It is elegant for querying but expensive to maintain at scale.
+
+---
+
+### SCD Type 7 — Dual Type 1 + Type 2 Dimensions
+
+Type 7 maintains the Type 2 dimension as normal, but also exposes a **Type 1 current-state view** by filtering to only `is_current = 'Y'` rows. The fact table stores both the Type 2 surrogate key (historical) and the durable natural key (for joining to the current-state view).
+
+**Structure:**
+
+```
+customer_dim (Type 2, full history)
+├── customer_key   (SK — changes with each new version)
+├── customer_id    (durable natural key — stable across versions)
+├── region
+├── effective_date
+├── expiration_date
+└── is_current
+
+-- Type 1 current-state view (no ETL needed — just a filter)
+CREATE VIEW customer_current_dim AS
+  SELECT * FROM customer_dim WHERE is_current = 'Y'
+
+sales_fact
+├── customer_key    ← FK to Type 2 dimension (historical context)
+├── customer_id     ← durable key for joining to current-state view
+└── ...
+```
+
+**Two query paths:**
+
+| Need | Join |
+|------|------|
+| Historical — what was the customer's region when they bought? | `sales_fact.customer_key` → `customer_dim` |
+| Current — what region is the customer in today? | `sales_fact.customer_id` → `customer_current_dim` |
+
+**Advantage over Type 6:** No `UPDATE` across historical rows — the current-state view is just a filter. The ETL complexity stays the same as a standard Type 2.
+
+**Disadvantage:** BI tools must be aware of two keys (`customer_key` and `customer_id`) and two join paths — this adds semantic complexity for report writers.
