@@ -598,3 +598,74 @@ Present the review as four clearly labelled sections:
 
 Keep each section concise. Use bullet points for individual findings. Avoid restating the diff — focus on actionable observations.
 ```
+
+---
+
+# Introduction to Agent Skills
+Reference: [Claude Code in Action](https://anthropic.skilljar.com/claude-code-in-action)
+
+
+When Claude Code starts, it scans for skills but only loads the name and description into context — the full skill file is loaded only when triggered.
+
+**Skill Priority** (highest to lowest):
+
+* Enterprise — managed settings
+* Personal — your home directory (`~/.claude/skills/`)
+* Project — the `.claude/skills/` directory inside a repository
+* Plugins — installed plugins
+
+Avoid naming conflicts by using descriptive names. Instead of just "review," use something like "frontend-review" or "backend-review."
+
+**SKILL.md frontmatter fields:**
+- **Required:** `name`, `description` — what the skill does and when Claude should use it
+- **Optional:** `allowed-tools` (e.g., `Read`, `Grep` for read-only skills), `model` (e.g., `sonnet`, `haiku`)
+
+Example minimal `SKILL.md`:
+
+```yaml
+---
+name: summarize-pr
+description: Summarize pull request changes. Use when asked to summarize, describe, or review a PR.
+allowed-tools: Bash(git *)
+model: haiku
+---
+
+# PR Summary
+
+Run `git diff origin/main...HEAD` and summarize the key changes in plain language,
+grouped by area (e.g., API, UI, tests).
+```
+
+> **Note:** Keep `SKILL.md` under 500 lines. Link to supporting files in `scripts/`, `references/`, or `assets/` — Claude reads them only when needed.
+
+- Subagents don't automatically see your skills — you must explicitly list them in a custom agent's frontmatter `skills` field.
+- Built-in agents (Explorer, Plan, Verify) can't access skills at all — only custom subagents defined in `.claude/agents/` can.
+
+
+**Skill Directory Structure:**
+
+```
+.claude/skills/
+└── <skill-name>/
+    ├── SKILL.md        ← skill definition and instructions
+    ├── scripts/        ← executable helpers (run directly, not loaded into context)
+    ├── references/     ← supplementary documentation
+    └── assets/         ← templates and data files
+```
+
+**All Together:**
+
+* `CLAUDE.md` — always-on project standards
+* Skills — task-specific expertise, loaded on demand
+* Hooks — automated operations triggered by tool events
+* Subagents — isolated execution contexts for delegated work
+* MCP servers — external tools and integrations
+
+**Quick Troubleshooting Checklist:**
+
+* Not triggering? Improve your description and add trigger phrases.
+* Not loading? Check your path, file name, and YAML syntax.
+* Wrong skill used? Make descriptions more distinct from each other.
+* Being shadowed? Check the priority hierarchy and rename if needed.
+* Plugin skills missing? Clear cache and reinstall.
+* Runtime failure? Check dependencies, permissions, and paths.
