@@ -441,8 +441,72 @@ Depois do cadastro:
 
 ---
 
-## Módulo 4 — Aula 1: Renda variável
+## Módulo 4 — Renda variável
 
 - Apenas para o **longo prazo** (mínimo de 10 anos).
 - **Commodities**: carne, minério de ferro, cebola etc.
   - Produtos padronizados: importa o **tipo/qualidade**, não a marca ou quem fabricou.
+
+**Direitos do acionista minoritário:**
+
+- Recebe até **25% do lucro** da empresa em forma de **dividendos/JCP**.
+- Pode **participar das assembleias** (no caso de ações ordinárias).
+- Tem acesso aos **números da empresa**.
+
+**Preço da ação:**
+
+- O preço da ação **não é o valor real da empresa** — é apenas a última cotação. Você não precisa reavaliar seu patrimônio a cada oscilação.
+
+**IPO (abertura de capital):**
+
+- A empresa vai à **B3**, ajusta o regulamento interno e cria o **RI (Relações com Investidores)** para expor tudo que é relevante ao investidor; as informações são **auditadas por terceiros**.
+- Olhar o RI de grandes empresas para se **familiarizar**.
+- Depois do IPO, a empresa **não ganha nem perde** com a variação das ações.
+  - Pode fazer um **follow-on** para vender mais ações primárias.
+
+**Conceitos:**
+
+- **Valuation**: valor "justo" da empresa (exemplo simples: 10 anos de lucros).
+- **Free float**: ações livres em circulação para o investidor geral (o Novo Mercado exige **≥ 25%**).
+  - **Oferta primária** (IPO): o dinheiro vai para a **empresa**.
+  - **Oferta secundária** (dia a dia): o dinheiro vai para o **dono/vendedor**.
+- A empresa **não pode distribuir lucros** apenas ao controlador ou a uma única pessoa.
+
+**Tipos de ação e nomenclaturas:**
+
+- **Responsabilidade limitada**: o acionista não responde solidariamente por dívidas, processos judiciais ou outros problemas da empresa.
+- **Sociedade Anônima (S.A.)**: a responsabilidade do sócio acionista é limitada ao valor investido.
+- **Ordinárias (ON)** — ticker final **3**: direito a voto e participação em assembleia; no Novo Mercado só existem ordinárias.
+- **Preferenciais (PN)** — ticker final **4**: apenas direito ao lucro. Em estatais, investidores costumam preferir a PN, já que o governo será sempre o controlador.
+- **Dígitos 5 e 6**: classes customizadas com direitos especiais em dividendos; é preciso olhar o RI caso a caso — em geral **não vale a pena**.
+- **Tag Along**: direito de vender pelo mesmo preço dos majoritários em caso de alienação do controle. Sempre investir em empresas com tag along — de preferência **≥ 80%**.
+- **UNITs** — ticker final **11**: pacotes de ações ON e PN, para dar liquidez às ON (ex.: TAEE11 = 2 ON + 1 PN); fazem sentido para grandes volumes.
+
+**Níveis de governança corporativa** (do melhor para o pior para o minoritário):
+
+| Nível | Free float | Tipos | Conselho | Tag Along | Câmara de arbitragem |
+|-------|-----------|-------|----------|-----------|----------------------|
+| Novo Mercado | 25% | Só ON | Mín. 5 membros | 100% ON | Sim |
+| Nível 2 | 25% | ON e PN | Mín. 5 membros | 100% (ON e PN) | Sim |
+| Nível 1 | 25% | ON e PN | Mín. 3 membros | 80% ON | Não |
+| Tradicional | Sem regra | ON e PN | Mín. 3 membros | 80% ON | Não |
+
+- **Pregão**: horário de negociação das **10h às 17h55**.
+
+**Acionista relevante (acima de 5% da empresa):**
+
+- É considerado relevante (isoladamente ou em grupo) e tem mais direitos.
+- Sua posição é **publicada como fato relevante**.
+- Pode **pedir assembleias** e **convocar votações**.
+
+**Tamanho das empresas (por valor de mercado):**
+
+- **Small caps**: menos de R$ 10 bi.
+- **Mid caps**: de R$ 10 bi a R$ 50 bi.
+- **Large caps / Blue chips**: acima de R$ 50 bi.
+
+Referências:
+
+- Horário de negociação de ações (B3): <https://www.b3.com.br/pt_br/solucoes/plataformas/puma-trading-system/para-participantes-e-traders/horario-de-negociacao/acoes/>
+- Dicionário da comunidade AUVP: <https://comunidade.auvp.com.br/dicionário/>
+- Exemplo de RI (Itaúsa — estatuto, políticas e códigos): <https://ri.itausa.com.br/governanca-corporativa/estatuto-politicas-e-codigos/>
