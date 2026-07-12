@@ -9,7 +9,7 @@ Minhas anotações do curso da AUVP.
 
 ---
 
-## Módulo 0 & 1
+## Módulo 0 & 1 - Preparação
 
 ### Quem é quem no mercado
 
@@ -25,7 +25,7 @@ Minhas anotações do curso da AUVP.
 
 ---
 
-## Módulo 2
+## Módulo 2 - Finanças Pessoais
 
 ### Aula 1: Orçamento doméstico
 
@@ -98,7 +98,7 @@ Ferramentas:
 
 ---
 
-## Módulo 3
+## Módulo 3 - Renda Fixa
 
 ### Aula 1: Renda fixa
 
@@ -470,3 +470,122 @@ Referências:
 - Horário de negociação de ações (B3): <https://www.b3.com.br/pt_br/solucoes/plataformas/puma-trading-system/para-participantes-e-traders/horario-de-negociacao/acoes/>
 - Dicionário da comunidade AUVP: <https://comunidade.auvp.com.br/dicionário/>
 - Exemplo de RI (Itaúsa - estatuto, políticas e códigos): <https://ri.itausa.com.br/governanca-corporativa/estatuto-politicas-e-codigos/>
+
+### Escolas de investimento
+
+**Value Investing - Benjamin Graham** (mentor de Warren Buffett):
+
+- Foco em empresas **subvalorizadas**.
+- Baseado no **valor intrínseco**: Preço da ação (P), P/VP, P/L.
+- Muito positivo em momentos de **crise generalizada**.
+- "Comprar ao som dos canhões e vender ao som dos violinos."
+- A metodologia exige estudo aprofundado da empresa, política, país etc.
+
+**Cigar Butts - Warren Buffett:**
+
+- Foco em **empresas ruins com bons preços** (abaixo do P/VP).
+- Empresas quebrando cujo VP é alto - mesmo que quebrem, o VP ainda compensa.
+- Warren **abandonou** a metodologia depois de se queimar com ela.
+
+**Buy and Hold - Luiz Barsi Filho (BR):**
+
+- Comprar boas ações **sem obrigação de vender** (durante a fase de acumulação).
+- Focado em **reinvestir dividendos**.
+- Empresas estabelecidas e lucrativas.
+- O foco **não é o preço**: compra ao longo de décadas, sem se importar com a cotação.
+- No Brasil, Barsi foca no **pagamento de dividendos** para investir e rebalancear.
+
+**Jeremy Siegel:**
+
+- Não existe assimetria no mercado: comprar uma boa empresa no menor valor é tão bom quanto no valor atual.
+- Pressupõe que os mercados são **100% eficientes**.
+
+**Visão da AUVP:**
+
+- Procurar **boas oportunidades**.
+- É raro, mas empresas sem lucro podem ter amplo crescimento.
+  - Empresas de tecnologia demoram a dar lucro, mas quando dão costumam ser ótimas.
+- O mercado **não é 100% eficiente**, principalmente em crises.
+- O mundo não vai acabar - e se acabar, você terá problemas maiores.
+- Grandes empresas podem passar por crises e continuar boas (mas nem sempre).
+- Análises fundamentalistas **não garantem** o futuro.
+- **Critérios** para escolher uma empresa:
+  - Líder e competitiva em seu setor.
+  - Lucrativa e sem dívidas excessivas.
+  - Não supervalorizada.
+  - Alto **ROE**.
+  - Boa **margem líquida**.
+  - Carteira diversificada (não igualitária).
+
+- **Todo problema complexo tem uma solução simples e errada** (ex.: escolher aleatoriamente ou seguir uma carteira recomendada).
+
+### Análise
+
+A análise de uma empresa passa por três frentes: **setor**, **empresa** e **indicadores**.
+
+**1. Setor - viável ou não; perene ou não:**
+
+- Em 1949, o crescimento do setor aéreo era óbvio e já estava precificado por todos os investidores; o que não era óbvio é que, mesmo crescendo, o setor não daria lucro (compra aeronaves, abastecimento, taxas - não controla nada do setor etc.).
+- Se o setor for ruim, não importa se a empresa é boa - ela vai sofrer (ex.: Kodak).
+- Quanto mais comum, perene e independente, melhores são os investimentos.
+- Classificação dos setores:
+  - **Excelentes**: financeiro, materiais básicos, saúde, utilidade pública.
+  - **OK** (mais complexos e com mais falências): comunicação, consumo cíclico, consumo não cíclico, petróleo, gás e biocombustíveis.
+    - Não significa que não se deva investir - só é preciso ter cuidado.
+
+**2. Empresa - Scuttlebutt / Growth Investing (Philip Fisher):**
+
+- Foco na **qualidade** da empresa, mais do que nos números.
+- Em vez de estudar a Ambev, ele estudava primeiro **como se faz uma cerveja**.
+- Começa pelos temas mais macro (quais os números razoáveis da indústria).
+- Pesquisa termos técnicos (ex.: lúpulo, legislação etc.).
+- Entrevistava pessoas relevantes da empresa por várias horas.
+- Foco em **inovação**.
+- Comprar empresas interessantes por preços razoáveis.
+- Exige muito tempo e paciência.
+- Hoje poderia ser feito via Reclame Aqui, JusBrasil, Glassdoor etc.
+
+Ele transformou seus critérios em **15 perguntas**:
+
+1. A empresa possui produtos/serviços com potencial de mercado suficiente para viabilizar um aumento considerável nas vendas por vários anos?
+   - Contraexemplos: Blockbuster, Kodak, Saraiva, Bradesco (hoje precisa se adaptar; continua achando que o Brasil é o mesmo de 2020).
+   - Vale investir em empresas de datilografia quando a IBM já existia?
+   - TIM: operadora de telefone → internet → somente internet → iluminação/dimerização de lâmpadas (smart cities).
+2. A administração está determinada a continuar desenvolvendo produtos/processos que aumentem ainda mais o potencial de vendas, mesmo depois de explorar exaustivamente as linhas mais atrativas do momento?
+   - Coca-Cola criou a Fanta para vender produtos customizados conforme o elemento abundante do país; adaptou-se à mudança dos consumidores.
+   - Renner: apenas roupa → financiamento → banco.
+3. Quais são os esforços efetivos da empresa em P&D em relação ao seu porte?
+   - Simplificando: quantos % da receita vêm de produtos novos.
+     - Investir em P&D sem gerar produto novo não faz sentido.
+     - RI sem P&D é mau sinal.
+   - Bom exemplo: WEG (motor elétrico, eólico etc.).
+   - Contraexemplo: farmácia (não evoluiu muito recentemente; sem planos com laboratório, hospitais, clientes de longo prazo etc.).
+   - **CAPEX** (Capital Expenditure - dinheiro investido em aumentar a capacidade produtiva) × **OPEX** (dinheiro para operação).
+4. A organização de vendas está acima da média?
+   - Ex.: contrato com Ambev/Heineken que impede vender concorrentes.
+5. A empresa tem **margem de lucro / margem líquida** considerável?
+   - Comparar com empresas do mesmo setor.
+   - Obs.: existe a estratégia de reduzir as margens até os concorrentes quebrarem, para depois subi-las.
+6. O que a empresa faz para **manter ou melhorar** as margens de lucro?
+   - Investimento em fábricas, tecnologia, produtos adicionais.
+7. Tem **boas relações trabalhistas**? → Glassdoor.
+8. Tem **boa relação com os executivos**? → rotatividade dos executivos.
+9. A administração tem profundidade? (complexo de responder para o investidor comum)
+   - Distância entre gerência e liderados.
+   - Existe alguém que subiu de baixo até a gerência?
+10. Possui boa **análise de gastos e controle de custos**?
+    - RI/Guidance: comparar o que foi dito com a realidade.
+11. Existem aspectos peculiares ao segmento que dão pistas de como a empresa pode se sobressair em relação aos concorrentes?
+    - Marca forte, fornecedor diferenciado.
+12. Tem **estratégia de curto e longo prazo** para lucros e resultados (guidance)?
+13. O crescimento futuro provavelmente exigirá a emissão de mais ações para se financiar? A diluição pode anular os benefícios de quem antecipou esse crescimento.
+    - OGX: fez IPO e já previa dois follow-ons.
+    - iFood, Rappi, Uber precisaram de muito dinheiro do mercado - mesmo vencendo, foi arriscado.
+14. Fala abertamente com seus acionistas ou se fecha em situações conturbadas e diante de decepções?
+    - Cuidado com o gestor muito "aparecido", na mídia etc.
+15. Administração de **integridade inquestionável** (ética)?
+    - Gestor que já foi preso ou cometeu crimes: "o criminoso sempre volta à cena do crime".
+
+**3. Indicadores**
+
+*(a completar)*
