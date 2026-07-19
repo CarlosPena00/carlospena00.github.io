@@ -7,9 +7,16 @@ date: 2026-07-01
 
 Minhas anotações do curso da AUVP.
 
+## Índice
+
+- [Módulo 0 & 1 - Preparação](#modulo-0-1)
+- [Módulo 2 - Finanças Pessoais](#modulo-2)
+- [Módulo 3 - Renda Fixa](#modulo-3)
+- [Módulo 4 - Renda variável](#modulo-4)
+
 ---
 
-## Módulo 0 & 1 - Preparação
+## Módulo 0 & 1 - Preparação {#modulo-0-1}
 
 ### Quem é quem no mercado
 
@@ -25,7 +32,7 @@ Minhas anotações do curso da AUVP.
 
 ---
 
-## Módulo 2 - Finanças Pessoais
+## Módulo 2 - Finanças Pessoais {#modulo-2}
 
 ### Aula 1: Orçamento doméstico
 
@@ -98,7 +105,7 @@ Ferramentas:
 
 ---
 
-## Módulo 3 - Renda Fixa
+## Módulo 3 - Renda Fixa {#modulo-3}
 
 ### Aula 1: Renda fixa
 
@@ -221,6 +228,15 @@ Referências:
 - Ficha do ETF AREA11: <https://www.etfsbrasil.com.br/etfs/area11>
 - Material da comunidade AUVP: <https://auvp.net/?id=comunidademod3aulabonus>
 - ETFs internacionais (comunidade AUVP): <https://comunidade.auvp.com.br/artigos/investimentos-internacionais/etfs-internacionais-r3/>
+
+### ETF AUVP11
+
+- Replica o índice **IAFD (Índice AUVP Fundamentalista)**.
+- Diferente do mercado tradicional, aplica **filtros rígidos automaticamente**:
+  - **Setores excluídos**: varejo, aviação e proteína animal.
+  - **Lucratividade**: lucro nos últimos 5 anos.
+  - **Eficiência**: ROE acima de 10% e margem líquida acima de 8%.
+  - **Segurança**: baixo endividamento.
 
 ### Aula 9: Tesouro Educa+ e Renda+
 
@@ -401,7 +417,7 @@ Depois do cadastro:
 
 ---
 
-## Módulo 4 - Renda variável
+## Módulo 4 - Renda variável {#modulo-4}
 
 - Apenas para o **longo prazo** (mínimo de 10 anos).
 - **Commodities**: carne, minério de ferro, cebola etc.
@@ -521,6 +537,8 @@ Referências:
 
 ### Análise
 
+- Toda empresa listada na Bolsa precisa ser **S.A.**
+
 A análise de uma empresa passa por três frentes: **setor**, **empresa** e **indicadores**.
 
 **1. Setor - viável ou não; perene ou não:**
@@ -588,4 +606,303 @@ Ele transformou seus critérios em **15 perguntas**:
 
 **3. Indicadores**
 
-*(a completar)*
+- **Indicadores de preço** (valor atribuído pelo mercado):
+  - **Valor de mercado** = preço da última negociação × número de cotas.
+  - **DY (Dividend Yield)** = proventos pagos em 1 ano / preço atual.
+    - Bazin e outros gostam do DY, pois é mais difícil a empresa "maquiar" o valor que envia aos acionistas.
+  - **LPA (Lucro por Ação)** = lucro líquido / número de ações.
+    - Usado para comparar qual ação está mais barata.
+  - **P/L (Preço / Lucro)**: pagando X pela empresa, recupero esse valor em lucro em P/L anos.
+    - P/L alto → expectativa de crescimento alta (ou acionistas muito otimistas/emocionados).
+  - **P/VP** = preço / valor patrimonial.
+  - **VPA (Valor Patrimonial por Ação)** = patrimônio / número de ações (não entra o lucro).
+    - Caso do Banco do Brasil (BB): VPA > cotação; P/VP = 0,87.
+      - Assimetria de mercado: teoricamente seria melhor construir um banco do zero do que investir no BB - mesmo sem considerar marca, clientes etc.
+  - **P/EBIT** (EBIT = lucro antes de juros e impostos; lucro operacional):
+    - Uma empresa pode ter operação lucrativa (gera caixa, vende bem), mas entrar no vermelho depois de pagar os juros da dívida.
+- **Indicadores de endividamento:**
+  - Para bancos: **Basileia** (mín. 10,5%).
+- **Indicadores de eficiência:**
+  - **Margem bruta** = lucro bruto / receita.
+  - **Margem EBIT** = EBIT / receita líquida.
+    - A empresa pode se alavancar e, temporariamente, tomar um empréstimo (reduzindo a margem líquida).
+  - **Margem líquida**: a verdadeira.
+    - Vários mercados operam com margem líquida pequena → risco.
+    - Margem curta pode ser um fator protetivo (no caso de empresas grandes).
+- **Indicadores de rentabilidade:**
+  - **ROE**: retorno sobre o patrimônio.
+  - **ROIC (Return on Invested Capital)**: retorno sobre o capital investido, considerando dívidas (todo o capital à disposição da empresa).
+  - **ROA**: lucro líquido / total de ativos (geralmente relacionado à eficiência de publicidade).
+  - **Payout**: quantos % do caixa a empresa distribui em dividendos.
+- **Indicadores de crescimento:**
+  - **CAGR Receita** (Taxa de Crescimento Anual Composta em 5 anos).
+  - **CAGR EBIT** (Taxa de crescimento do lucro operacional).
+
+**Hedge**: estratégia de proteção financeira para reduzir ou eliminar o risco de perdas nos investimentos.
+
+- Espécie de seguro sobre diversos tipos de ativos: ações, moedas, commodities etc.
+
+**Investindo com segurança:**
+
+- Lucros consistentes.
+- Baixo endividamento (dívida/lucro até 2).
+- Tag Along 100%.
+- Segmento perene.
+
+**Comparação / Avaliação de empresas**
+
+- A análise do setor vem antes da análise das empresas (sempre comparando com as do mesmo setor).
+- Exemplo: bancos.
+  - Comparar por: CAGR do Lucro Líquido, DY, Margem Líquida, P/L, P/VP, Payout, ROE.
+  - Ferramenta: <https://analitica.auvp.com.br/acoes/comparar?tickers=BBAS3,BBDC4,ITUB4,ABCB4,SANB4>
+
+Comparação em 03/07/2026:
+
+- **Bradesco (BBDC4)**: melhor P/L.
+- **Banco do Brasil (BBAS3)**: menor P/VP (0,62) e P/FCO (0,9).
+- **Santander (SANB4)**: maior Payout (51% vs. ~20% dos demais), mas o menor DY (ruim).
+- **ROE** (eficiência): se todos tivessem o mesmo patrimônio, o ITUB4 ganharia (22,42%).
+- Crescimento do lucro líquido: 10,07%.
+
+Tomada de decisão:
+
+- **A)** Pagar mais caro por uma empresa mais sólida? (dormir tranquilo)
+- **B)** Entender que a empresa passa por dificuldades passageiras (requer leitura de RI/Guidance) - estilo cigar butt.
+  - Relatório de gerenciamento de riscos, press releases e planos de melhoria.
+- Em geral, os quatro bancos são ótimos - depende do estilo do investidor:
+  - **Jeremy Siegel**: a melhor empresa, independentemente do preço.
+  - **Graham**: preço justo pela fórmula √(22,5 × LPA × VPA); P/L até 15.
+  - **Bazin**: preço justo pela média dos dividendos pagos nos últimos 5 anos.
+- O BB tende a ser considerado mais arriscado por ser estatal.
+- Para se arriscar / comprar pelo preço: vai precisar estudar.
+- **Não existe investidor feliz**: se subir ou descer, sempre vai achar que deveria ter feito diferente.
+
+Trade-offs a ponderar:
+
+- Crescimento acelerado × garantia do resultado.
+- Valor de mercado baixo × liquidez e segurança.
+- Guidance é uma promessa da gestão.
+
+Perfil conservador (conserva o capital):
+
+- Lucro consistente em 10 anos.
+- Indicadores sólidos.
+- Empresa consolidada.
+- Não oferece o melhor retorno, mas conserva o capital.
+
+**Empresas de TI (tecnologia):**
+
+- A maior parte **nunca distribuiu lucro** aos acionistas.
+- São avaliadas pela capacidade de gerar **escala → poder**.
+  - Ex.: a Amazon controla a logística do mundo - define o que você pode ou não ter.
+- Mais escala → maior a chance de a empresa ter controle sobre algo.
+
+Critérios:
+
+- **Ordem de grandeza**: fora exceções nichadas, empresas dos EUA.
+- **Faturamento** e crescimento de receita.
+- **Número de usuários** (crescimento).
+- **CAC** (custo de aquisição de cliente).
+- **Churn** (métrica de cancelamento).
+- **Market share**.
+- **Momento da empresa**: cash burn × lucro.
+
+### Diagrama do Cerrado
+
+- Deixa os investimentos mais **racionais e menos emocionais**.
+- Incluir apenas ações aprovadas pelas suas análises/comparações.
+- Focado em **empresas sólidas**.
+- Ao configurar os critérios, o objetivo é **mensurar riscos**, não o potencial de crescimento.
+  - Ex.: ROE > 14%.
+- Focar em ter **5 a 10 ações nacionais**.
+
+### Preço médio
+
+**Bonificação:**
+
+- Toda bonificação é benéfica ao investidor.
+  - É uma das formas de a empresa escapar de impostos, distribuindo ações da tesouraria.
+
+**Subscrição** (pagar por novas ações oferecidas pela empresa):
+
+- Ex.: PETR a R$ 32,30 (free float 25%).
+  - O follow-on eleva o free float para 35%; usa ticker final 1 ou 2.
+  - Mesmo que você não queira as ações, em geral vale a pena exercer - mas verifique o valor (valor fixo + custo de subscrever).
+- Cálculo do preço médio:
+  - Posição atual: 100 ações totalizando R$ 1.000.
+  - Ações subscritas: 20 a R$ 8 → novo investimento de R$ 160.
+  - **Preço médio** = (1.000 + 160) / (100 + 20) = **R$ 9,67**.
+
+### Proventos
+
+**Dividendos:**
+
+- Distribuição **mínima** prevista em lei ou no estatuto interno da empresa.
+- Podem ser **intermediários** (mensal, trimestral etc.) ou **complementares** (ao final do ano fiscal).
+- A empresa precisa ter **lucro / dinheiro em caixa** para distribuir.
+
+**Datas importantes:**
+
+- **Data de declaração**: quando a empresa anuncia que vai pagar o provento.
+- **Data com / data de corte**: último dia em que é possível comprar a ação **com direito** ao provento.
+- **Data Ex (ex-dividendos)**: primeiro dia em que a ação é negociada **sem direito** ao provento.
+  - Quem detém a ação até a data de corte (o dia anterior à Data Ex) recebe.
+- O valor do dividendo é **descontado do preço da ação**.
+  - Ex.: WEGE3 a R$ 43,23 distribui R$ 1,00 por ação. Comprando 1.000 ações, você recebe R$ 1.000 em dividendos - mas esse valor é descontado do preço da ação.
+- **Obs.**: o desconto é um ajuste **técnico e automático** (a B3 ajusta o gráfico para não parecer uma queda real).
+  - Não adianta comprar as ações pouco antes do pagamento só para receber o dividendo e vender.
+
+**Exemplo** (ação a R$ 30,00; dividendo de R$ 2,00; Data Ex em 05/06):
+
+- **Comprou até 04/06** (antes da Data Ex): tem direito ao dividendo.
+  - Patrimônio = ação ajustada a R$ 28,00 + R$ 2,00 de dividendo = **R$ 30,00**.
+- **Comprou em 05/06 ou depois**: compra a ação **já ajustada a R$ 28,00** e **não tem direito** ao dividendo.
+- **Conclusão**: o ajuste é técnico e automático - o investidor **não ganha nem perde** valor; o dividendo é apenas uma reorganização de um valor que já pertencia ao acionista.
+
+**Juros sobre Capital Próprio (JCP):**
+
+- **Dedutível** do lucro tributável da empresa (calculado sobre o patrimônio líquido) - inteligência fiscal, com limitações previstas em lei.
+- Para o acionista, o **IR é retido direto na fonte**.
+
+**Bonificação em ações:**
+
+- Emissão **gratuita** de novas ações, proporcional à posição do acionista.
+- **Isenta de IR** no recebimento, mas pode ser cobrada na venda.
+
+**Bonificação em dinheiro:**
+
+- Pouco comum.
+- A empresa não teve lucro, mas tinha **reservas acumuladas** (venda de ativos, tesouraria, reservas de capital etc.).
+
+**Restituição de capital:**
+
+- **Devolução parcial** do capital social aos acionistas.
+- Ocorre quando a empresa reduz um capital que provavelmente não vai utilizar (comum em empresas com IPO recente).
+- Ex.: Méliuz, GetNinjas etc.
+
+**Subscrição de ação:**
+
+- **Direito de compra** de novas ações (ex.: PETR4D) - subscrição ou follow-on.
+- Você pode **exercer ou vender** o direito.
+
+**Dividendos eventuais ou extraordinários:**
+
+- Pagos **além do obrigatório**, geralmente de caixa excedente.
+- Vêm de lucros acumulados em exercícios anteriores.
+- Aprovados via **voto em assembleia**.
+- Risco: pode ser um sinal de alerta caso a empresa não esteja bem.
+
+**Desdobramento (split) e agrupamento (inplit):**
+
+- Conversão de N → M ações (e vice-versa); **não altera o valor total** da posição.
+- As ações na B3 precisam estar cotadas **acima de R$ 1,00**.
+- No agrupamento, se o acionista não tiver o volume mínimo de ações, a sobra é vendida automaticamente.
+- **Agrupamento** costuma ser mau sinal: há um viés cognitivo de que a maioria não vende ações abaixo de R$ 1,00.
+- **Desdobramento** é saudável: pode dar mais liquidez e facilitar a compra por investidores menores.
+
+### Fundos Imobiliários (FIIs)
+
+- **Nomenclatura**: condomínio de investidores (cotistas); **proventos** (no lugar de dividendos).
+- **Inteligência tributária**: os proventos costumam ser isentos de IR para pessoa física.
+- Os gestores do fundo precisam seguir as regras definidas na **criação do fundo**.
+  - Se foi criado para construir um shopping em A, não pode construir em B.
+- Tendem a ser mais **estáveis** por possuírem diversos imóveis em diversos lugares.
+
+**FiAgro**: investe em fazendas ou financia o agronegócio.
+**FiInfra**: financia ou executa obras de infraestrutura (rodovias, aeroportos, helipontos etc.).
+
+**Fundos de desenvolvimento imobiliário:**
+
+- Maior risco, maior retorno (potencial).
+- Focados em **construir algo** (shopping, edifícios etc.).
+- Riscos: perda de alvará, construção, licença ambiental, material etc.
+- Não indicados para quem quer **viver de renda**.
+- **RMG (Renda Mínima Garantida)**: paga com o dinheiro do caixa captado.
+- Costumam **vendê-los** quando ficam prontos.
+- Ex.: MFII11, RBDS11, RBBV11.
+
+**Fundos de renda de shoppings:**
+
+- Alugados para lojistas; a distribuição de renda tende a ser mais fixa.
+- Tendem a ser mais seguros (se tiverem mais de um shopping).
+- Ex.: VISC11, FLRP11, XPML11.
+
+**Fundos de lajes corporativas e galpões (tijolo):**
+
+- Empresas que precisam de centros logísticos e escritórios.
+- Acompanham o **e-commerce**.
+- Avaliar por **quem aluga** os galpões.
+- Notas de risco (AAA a C); localização; área útil; garagem etc.
+- Ex.: HGLG11, BTLG11.
+
+**Fundos de hotéis:**
+
+- Sensíveis aos ciclos econômicos.
+- Eventos internacionais; ciclos rápidos.
+
+**Escolas, universidades e hospitais:**
+
+- Especializados, um único inquilino → risco maior.
+- Em geral é ruim investir em hospitais, pois o imóvel **não pode ser tomado** em caso de inadimplência.
+
+**Fundos de fundos:**
+
+- Maior diversidade, mas **dupla taxa de administração**.
+- Em geral pode ser substituído por um ETF.
+
+**Compra e venda de imóveis:**
+
+- Pouco comum, desempenho agressivo.
+
+**Fundos de recebíveis imobiliários:**
+
+- Fundos de papel; renda fixa, porém cotados em bolsa.
+- Benefícios tributários.
+- Muito mais risco.
+- Ex.: KNCR11.
+
+**Fundos mistos:**
+
+- Maior rentabilidade, maior diversificação.
+- Ex.: MFII11.
+
+Referências:
+
+- Ranking de FIIs: <https://www.fundsexplorer.com.br/ranking>
+- Portal de FIIs: <https://fiis.com.br/>
+
+**Indicadores:**
+
+- **P/VP**: para FIIs é **extremamente relevante** (ao contrário das empresas, principalmente as de TI).
+  - Na compra/venda/aluguel dos imóveis, eles seguem o valor patrimonial, para mais ou para menos.
+- **Taxa de administração**: em geral perto de 1%.
+- Lista de imóveis / estados.
+- **Taxa de vacância** física e financeira.
+- Não investir em FII com **alavancagem superior a 10%**.
+- Patrimônio **consistentemente crescente**.
+- Histórico de dividendos deve ser **contínuo**, sem grandes oscilações.
+- **FFO (Funds From Operation)**: o caixa gerado pela operação principal do fundo (o resto vem de sobras de caixa).
+
+Exemplo de critérios básicos para o filtro inicial:
+
+- Vacância física e financeira < 10%; P/VP < 1; DY > 6%; taxa < 1%.
+
+**Exemplo:** KNRI11 - R$ 4,6 bi; P/VP 0,94; DY 6% (estável); 18 ativos (3 estados); vacância 0,1%.
+
+**Contraexemplo:** CNES11 - R$ 200 mi; P/VP 0,22; DY 5,6% (decrescente); 1 ativo; vacância física 54%; vacância financeira 120%; taxa 0,5%.
+
+- Historicamente foi bom nos anos 1990 e 2000, mas outras regiões de SP se valorizaram enquanto a área do único ativo ficou para trás.
+- 62% dos contratos vencem em 2026 → risco de não serem renovados.
+- <https://analitica.auvp.com.br/fiis/CNES11>
+
+**Outro contraexemplo:** EDGA11 - monoativo, vacância alta; taxa de administração de 0,2%, mas cobra uma taxa de consultoria de 2,5% ao mês sobre os aluguéis.
+
+**Tipos de contrato:**
+
+- **Típicos**: seguem a lei de locação comum.
+- **Atípicos**: personalizados, de longo prazo e com regras negociadas; geralmente trazem mais estabilidade e segurança.
+
+**Tipo de gestão:**
+
+- **Gestão ativa**: busca novos inquilinos, negocia contratos, propõe melhorias e pode vender o ativo.
+- **Gestão passiva**: limita-se a administrar a situação atual do imóvel, sem esforço para reverter a vacância.
