@@ -532,6 +532,7 @@ Referências:
   - Alto **ROE**.
   - Boa **margem líquida**.
   - Carteira diversificada (não igualitária).
+- Na hora de ter segurança, seja seguro; na hora de ser agressivo, seja agressivo - evite investimentos meio a meio.
 
 - **Todo problema complexo tem uma solução simples e errada** (ex.: escolher aleatoriamente ou seguir uma carteira recomendada).
 
@@ -906,3 +907,95 @@ Exemplo de critérios básicos para o filtro inicial:
 
 - **Gestão ativa**: busca novos inquilinos, negocia contratos, propõe melhorias e pode vender o ativo.
 - **Gestão passiva**: limita-se a administrar a situação atual do imóvel, sem esforço para reverter a vacância.
+
+**Exemplos de FIIs por setor** (para estudo):
+
+| Ativo | Setor |
+|-------|-------|
+| KNRI11 | Híbrido |
+| MALL11 | Shopping |
+| HGLG11 | Logístico |
+| TRXF11 | Híbrido |
+| XPLG11 | Logístico |
+| XPML11 | Shopping |
+| VISC11 | Shopping |
+| BTLG11 | Logístico |
+
+**Fundos de papel:**
+
+- Investem em conglomerados de CRIs para aproveitar benefícios fiscais e pulverizar a alocação.
+- **High Yield**: mais risco (DY > 1,2%; ex.: DEVA11); em geral não recomendado.
+- **High Grade**: baixo risco, maior solidez (AAA; DY 0,7% a 0,9%; menos inadimplência; ex.: KNCR11).
+
+**Ciclos econômicos (fundos de papel):**
+
+- **Selic abaixo de 10%**: os fundos de papel tendem a se beneficiar, pois as empresas pagam os CRIs e CRAs com mais facilidade.
+  - O mercado se aquece devido ao baixo custo do crédito.
+  - Títulos já contratados (geralmente atrelados a IPCA + x%) seguem gerando bons retornos, enquanto as novas alternativas do mercado ficam menos atrativas.
+  - Em geral: as cotas se valorizam e as empresas pagam os dividendos.
+- **Selic acima de 10%** (juros altos): geralmente o momento ideal para comprar cotas.
+  - Loteadoras enfrentam dificuldades para financiar obras e vender imóveis; aumenta a inadimplência dos CRIs e CRAs; o mercado esfria e há empresas quebrando.
+  - A Selic fica mais atrativa para o investidor.
+
+**Fiagro:**
+
+- Fundos para captar recursos para o agro com isenção fiscal.
+- Majoritariamente papel: CRAs, CPRs, terras agrícolas.
+- Ex.: BTRA11 (valorização e aluguel de terras).
+  - Teoricamente bom, mas fatores macroeconômicos e jurídicos acabaram quebrando a ideia original dos fundos.
+- Em geral, os Fiagros estão com risco alto - até quando comparados a ações.
+
+**FiInfra:**
+
+- Rodovias, ferrovias, portos, coleta de chuva, rede e internet, esgoto etc.
+- Majoritariamente papel; em geral, poucas opções.
+- Emprestam para empresas via **debêntures incentivadas**.
+- Sem IR sobre o ganho de capital.
+- Ex.: JURO11, BDIF11, IFRA11, CPTI11.
+
+- **Obs.**: nem os Fiagro nem os FiInfra têm solidez no momento - melhor evitar por hora.
+
+### Small Caps (US: < US$ 10 bi; BR: < R$ 10 bi)
+
+- Mais risco, mais volatilidade e mais assimetria (o mercado demora mais para entender a empresa/setor) → maior rentabilidade potencial.
+- Faz sentido apenas se for **pulverizado**.
+- **Critérios**:
+  - **Crescimento de receita** (e não de lucro; em geral não é lucrativa/estável, pega o lucro e reinveste).
+  - **Margens** do negócio (receita, EBITDA).
+  - **Dívidas**.
+  - **ROIC**.
+
+**Exemplo:** SmartFit (R$ 13 bi):
+
+- Dívida Líquida/PL (patrimônio líquido) e Dívida Líquida/EBITDA baixos.
+- CAGR Receita (5 anos) razoável/baixo.
+- Payout alto (estranho).
+- "Eu acredito que a SmartFit tem potencial competitivo para ganhar o mercado?" → Não.
+- Composição do equity: 58% está com o mercado; o dono tem apenas 7%.
+
+### Método Burro
+
+- O ser humano é voltado para o emocional.
+- 99% dos day traders perdem dinheiro e a maioria dos fundos perde do índice de referência; "os melhores investidores estão mortos".
+- O método consiste em definir valores fixos para cada setor e ir rebalanceando de acordo.
+
+### Armadilhas do mercado financeiro
+
+**COE (Certificado de operações estruturadas)**
+  - ex: Se google+ouro+taxa juros subir; o cliente ganha
+        C.C. o capital fica "protegido" --> amarra o dinheiro por X anos, sem considerar inflação
+  - ex: Se der certo ganha ações, se der errado ganha CRI/CRA
+  Não considera a inflação, custo de oportunidade etc;
+  * Sempre sendo um investimento **ruim**
+
+**Cappitalização**
+  - Junta R$ X para concorrer a premios a x tempos --> Corrigido a IPCA
+  mas desconsiderando o premium do IPCA+
+  - Sempre melhor investir diretamente
+
+**Consorcio**
+  - Pagando a admnistração de 20% + reajuste por INPC
+  - longo prazo acaba em tudo para ser juros
+
+**Opções/Dividendos sinteticos**
+  - Ações com Opção de compra/venda pois é cobrado uma taxa, a longo prazo a casa ganha
