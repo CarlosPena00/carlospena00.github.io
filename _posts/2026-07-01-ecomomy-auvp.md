@@ -1041,3 +1041,15 @@ Links:
 - <https://dolarhoje.com/ouro-hoje/>
 - Ouro Minas: <https://ourominas.com/>
 - Par Metal: <https://www.parmetal.com.br/>
+
+### ETFs de ouro
+
+- No BR temos **GOLD11** e **GLDX11**, embora a compra não seja recomendada.
+  - Ambos funcionam como "envelopes" que compram os ETFs **IAU** e **OUNZ**, respectivamente, garantindo ao investidor uma exposição dupla: à variação do preço do metal e à cotação do dólar.
+- Fundos (não listados em bolsa), ex.: Bradesco Ouro (em geral mais caro).
+
+Links:
+
+- <https://www.etfsbrasil.com.br/etfs/gold11>
+- <https://www.investoetf.com/etf/gldx11/>
+- <https://www.etf.com/IAU>
