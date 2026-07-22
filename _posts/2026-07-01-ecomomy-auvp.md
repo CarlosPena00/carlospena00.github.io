@@ -13,6 +13,7 @@ Minhas anotações do curso da AUVP.
 - [Módulo 2 - Finanças Pessoais](#modulo-2)
 - [Módulo 3 - Renda Fixa](#modulo-3)
 - [Módulo 4 - Renda variável](#modulo-4)
+- [Módulo 5 - Reserva de valor](#modulo-5)
 
 ---
 
@@ -981,21 +982,62 @@ Exemplo de critérios básicos para o filtro inicial:
 
 ### Armadilhas do mercado financeiro
 
-**COE (Certificado de operações estruturadas)**
-  - ex: Se google+ouro+taxa juros subir; o cliente ganha
-        C.C. o capital fica "protegido" --> amarra o dinheiro por X anos, sem considerar inflação
-  - ex: Se der certo ganha ações, se der errado ganha CRI/CRA
-  Não considera a inflação, custo de oportunidade etc;
-  * Sempre sendo um investimento **ruim**
+**COE (Certificado de Operações Estruturadas):**
 
-**Cappitalização**
-  - Junta R$ X para concorrer a premios a x tempos --> Corrigido a IPCA
-  mas desconsiderando o premium do IPCA+
-  - Sempre melhor investir diretamente
+- Ex.: se Google + ouro + taxa de juros subir, o cliente ganha; caso contrário, o capital fica "protegido" → amarra o dinheiro por X anos, sem considerar a inflação.
+- Ex.: se der certo, ganha ações; se der errado, ganha CRI/CRA.
+- Não considera a inflação, o custo de oportunidade etc.
+- **Sempre um investimento ruim.**
 
-**Consorcio**
-  - Pagando a admnistração de 20% + reajuste por INPC
-  - longo prazo acaba em tudo para ser juros
+**Capitalização:**
 
-**Opções/Dividendos sinteticos**
-  - Ações com Opção de compra/venda pois é cobrado uma taxa, a longo prazo a casa ganha
+- Junta R$ X para concorrer a prêmios por um tempo → corrigido pelo IPCA, mas desconsiderando o prêmio do IPCA+.
+- Sempre melhor investir diretamente.
+
+**Consórcio:**
+
+- Paga taxa de administração de ~20% + reajuste pelo INPC.
+- No longo prazo, tudo acaba virando juros.
+
+**Opções / Dividendos sintéticos:**
+
+- Ações com opção de compra/venda; como é cobrada uma taxa, no longo prazo a casa ganha.
+
+## Módulo 5 - Reserva de valor {#modulo-5}
+
+- Reserva de emergência e dinheiro físico **não são** reserva de valor.
+- Reserva de valor é apenas o que sobrevive à inflação por diversos anos.
+
+**Características de uma reserva de valor:**
+
+1. Aceita internacionalmente;
+2. Facilmente transportável;
+3. Valiosa;
+4. Escassa;
+5. Facilmente transferível;
+6. Divisível e mensurável;
+7. Testada pelo tempo (longa história de valor).
+
+- Exemplos: **ouro**, prata, diamantes/gemas etc.
+  - Em geral são ruins de dividir.
+- Bitcoin é considerado por alguns como potencial reserva, mas ainda não foi testado pelo tempo.
+
+### Ouro físico
+
+- É caro e a cotação sofre ágio/deságio na compra e na venda.
+  - No mercado irregular é mais caro ainda.
+- Não é confiscável (se não souberem que existe) → mantido escondido.
+- Imune a bloqueios judiciais e não deixa vestígios.
+- Isenção de IR até R$ 20 mil (hoje usa-se mais o bitcoin).
+
+**Riscos:** segurança e necessidade de aferir a pureza.
+
+- Não comentar, não mostrar, evitar locais óbvios.
+- Em geral há negociadores locais (as placas "compro ouro").
+- Joias são problemáticas pelo preço embutido do trabalho do artesão.
+
+Links:
+
+- <https://dolarhoje.com/ouro-hoje/>
+- Ouro Minas: <https://ourominas.com/>
+- Par Metal: <https://www.parmetal.com.br/>
