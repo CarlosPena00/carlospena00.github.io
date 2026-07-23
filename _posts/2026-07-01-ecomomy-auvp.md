@@ -1053,3 +1053,20 @@ Links:
 - <https://www.etfsbrasil.com.br/etfs/gold11>
 - <https://www.investoetf.com/etf/gldx11/>
 - <https://www.etf.com/IAU>
+
+### Bitcoin
+
+- **Fear & Greed Index** (volatilidade + volume de mercado + redes sociais + dominância das demais criptos):
+  - Abaixo de 50%: momento recomendado para compra.
+  - <https://alternative.me/crypto/fear-and-greed-index/>
+
+**Carteiras (wallets):**
+
+- **Hot wallet**: Exodus (sempre ativar a *secret key*).
+- **Cold wallet**: Trezor / Ledger.
+  - Grande vantagem: **não exige** manter o dispositivo conectado à internet o tempo todo.
+  - **Procedimento seguro**:
+    - Baixar o aplicativo oficial (ex.: da Trezor).
+    - Desligar a internet.
+    - Copiar o endereço público em um papel/bloco.
+    - **Jamais** digitar ou salvar as palavras-chave (*seed*) no PC ou em bloco de notas digital; guardar apenas o endereço de recebimento.
