@@ -14,6 +14,7 @@ Minhas anotações do curso da AUVP.
 - [Módulo 3 - Renda Fixa](#modulo-3)
 - [Módulo 4 - Renda variável](#modulo-4)
 - [Módulo 5 - Reserva de valor](#modulo-5)
+- [Módulo 6 - Exterior](#modulo-6)
 
 ---
 
@@ -1070,3 +1071,71 @@ Links:
     - Desligar a internet.
     - Copiar o endereço público em um papel/bloco.
     - **Jamais** digitar ou salvar as palavras-chave (*seed*) no PC ou em bloco de notas digital; guardar apenas o endereço de recebimento.
+
+
+## Módulo 6 - Exterior {#modulo-6}
+
+- Não se deve investir 100% em um único país (caso da Argentina).
+- O Brasil tem um *rank* de segurança baixo.
+- Diversificar no exterior gera correlação neutra - o ideal do investimento (Ray Dalio: o ideal são 15 investimentos não correlacionados).
+
+**BDR (Brazilian Depositary Receipts):**
+
+- Recibos de empresas estrangeiras, negociados no BR em reais.
+- Distribuem dividendos; atualmente são mais obsoletos (maior taxa etc.).
+- **Patrocinados** (a empresa quer se abrir ao BR): ticker final 32, 33 ou 11.
+- **Não patrocinados** (feitos por terceiros): ticker final 34 ou 35.
+
+**ETFs internacionais:** IVVB11, GPUS11, XINA11.
+
+- O IVVB11 investe no IVV (com uma pequena taxa adicional).
+- É melhor investir diretamente no IVV.
+- Em geral, a RF americana não compensa, pois o Brasil tem o maior juro real do mundo.
+
+**Custódia e órgãos reguladores:**
+
+- 90% dos americanos investem por corretoras; no BR, apenas 4%.
+- **CBLC (Companhia Brasileira de Liquidação e Custódia)**: entidade responsável por garantir a segurança e a eficiência das operações no mercado financeiro brasileiro.
+  - Nos EUA não é assim: uma empresa privada faz esse gerenciamento e cobra taxas caso você queira migrar a conta (em geral seguro, mas caro).
+- Procurar uma corretora com suporte em PT-BR - não só pela língua, mas pelos documentos necessários para o IR.
+- **FINRA (Financial Industry Regulatory Authority)**: instituição privada das corretoras para combater crimes no mercado financeiro.
+- **SEC**: órgão do governo que regula o mercado de capitais americano.
+- **FDIC**: equivalente ao FGC (US$ 250 mil em bancos).
+- **SIPC**: entidade privada das corretoras, para indenizar em caso de falência.
+
+**Tributação:**
+
+- No BR sempre é cobrado IOF.
+- Os EUA cobram imposto sobre herança de até 40%; em caso de morte, os herdeiros precisam abrir um processo (ou manter conta conjunta com outra pessoa).
+  - Não americano: isento até US$ 60 mil, depois progressivo.
+- Em geral, investir no exterior só depois de ~R$ 100 mil investidos no BR.
+
+**Mercado dos EUA:**
+
+- Só a Nvidia vale 4,7× toda a B3.
+- Mais de 5 mil empresas, muitos IPOs e ~4 mil ETFs.
+- **ADRs**: recibos (depósitos) bancários americanos para investir em empresas do mundo todo (China, Japão etc.).
+- Em geral, preferir **ETFs** a *stock picking*.
+- O ticker não segue um padrão (V = Visa, KO = Coca-Cola).
+- Tipos de ação:
+  - **Common Stocks**: ordinárias.
+  - **Preferred Stocks**: similares a debêntures (valores fixos, renda fixa).
+- **Classe A × Classe B**: a B é mais barata na mesma empresa (a Berkshire Hathaway criou a B para não fazer *split*).
+- Taxa de 30% sobre os dividendos.
+- **AMC**: investe em empresas americanas reinvestindo os dividendos com menos impostos.
+
+Referências:
+
+- ETFs internacionais (comunidade AUVP): <https://comunidade.auvp.com.br/artigos/investimentos-internacionais/etfs-internacionais-r3/>
+
+
+### Tese do investidor de bom senso
+
+- Investidores leigos se dão melhor investindo em ETFs.
+- Até grandes gestores acabam perdendo para os ETFs.
+
+**ETFs:**
+
+- Efeito corrosivo das taxas: uma taxa de 2% a.a. pode reduzir a rentabilidade em ~17% em 10 anos, ~43% em 30 anos e ~61% em 50 anos.
+  - Importante manter abaixo de 1% a.a.
+- Fundos ativos não são negociados em bolsa (e não são recomendados).
