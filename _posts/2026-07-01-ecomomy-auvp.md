@@ -1243,3 +1243,72 @@ Empresas com foco no setor imobiliário (o "FII americano"):
 Referências:
 
 - <https://www.reit.com/>
+
+### Stock USA
+
+- Em geral, os indicadores são maiores (mais caro) porque os EUA são estáveis → **baixo prêmio de risco** (P/L e P/VP mais altos).
+- As empresas também são mais endividadas - o que não é problema, já que os juros americanos são baixos.
+
+**Setor de consumo**
+
+- Essencial → demanda recorrente (ex.: alimentos básicos, pasta de dente, produtos do dia a dia).
+- Requer atenção: as margens costumam ser baixas.
+- **Varejo**: Walmart (WMT), Costco (COST, equivale ao atacadão), P&G.
+- **Cigarro**: Philip Morris (PM) e Altria (MO - Marlboro, Souza Cruz) - o consumo está em queda, mas os clientes são "reféns" da marca.
+- **Alimentos/bebidas**: Mondelez (MDLZ - Bubaloo, Halls, Oreo, Trident, Tang), Coca-Cola (KO), PepsiCo (PEP).
+- **Higiene**: Colgate-Palmolive (CL - Ajax etc.).
+- **Monster (MNST)**: sem dívidas, crescente.
+
+**Setor financeiro**
+
+- Berkshire Hathaway, J.P. Morgan.
+- Visa, Mastercard, American Express (pouco aceito no mundo, mas forte nos EUA).
+- No Brasil, o setor financeiro é mais estável (quase monopólio).
+
+**Energia** (elétrica, petróleo etc.)
+
+- Petróleo tem **correlação direta com a inflação mundial** → funciona como **hedge natural**:
+  - Correlação positiva com a inflação das commodities.
+  - Protege parte do portfólio em choques de oferta.
+  - 80%–90% da energia ainda vem do petróleo.
+  - Forte geração de caixa e dividendos.
+- Idealmente é preciso entender macroeconomia, setor, empresa e tese - aqui vamos focar na **empresa**.
+
+**Fatores a acompanhar:**
+
+- Petróleo Brent (preço de referência).
+- Decisões da **OPEP** (Organização dos Países Exportadores de Petróleo).
+- Tensões geopolíticas.
+- Estoques globais.
+
+**Indicadores (setor de petróleo):**
+
+- **P/L**: em setores cíclicos o lucro pode inflar e reduzir o P/L artificialmente → analisar se o lucro é **estável ou pontual** (comparar com a manchete do petróleo é furada).
+- **P/VP**: o setor exige muitos ativos reais → o valor dos ativos da empresa pesa mais.
+- **EV/EBITDA** (valor total sobre geração de caixa): ideal < ~6,4×.
+- **ROIC** (pode vir inflado).
+- **Margem EBITDA** (mostra quando a empresa fica deficitária).
+- **Margem líquida**.
+- **Earnings Yield** (lucro/preço) ~8,6% → comparar com o Treasury americano de 30 anos.
+
+**Tipos de empresa (do mais seguro ao mais arriscado):**
+
+- **Integradas** (XOM, SHEL, TTE): refino + distribuição - diluem a margem, mas trazem estabilidade e diversificação.
+- **Midstream** (dutos e infraestrutura, menos exposta ao preço): margem de 35% a 50%.
+- **E&P puro** (COP, CNQ, EOG): extração, margens altíssimas (40% a 55%), totalmente ligada ao preço do Brent.
+
+Segurança: **Integradas > Midstream > E&P puro**.
+
+**Custos a verificar:** Lifting Cost (custo de extração) + royalties e impostos + logística + refino e manutenção.
+
+- Historicamente, o barril gira em torno de US$ 100.
+
+**ETFs:**
+
+- XLE (setor de petróleo).
+- USO, USL (seguem o preço do barril - não tão recomendados).
+
+Referências:
+
+- <https://tradingeconomics.com/>
+- <https://br.tradingview.com/>
