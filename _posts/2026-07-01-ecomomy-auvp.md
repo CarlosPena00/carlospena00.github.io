@@ -1139,3 +1139,107 @@ Referências:
 - Efeito corrosivo das taxas: uma taxa de 2% a.a. pode reduzir a rentabilidade em ~17% em 10 anos, ~43% em 30 anos e ~61% em 50 anos.
   - Importante manter abaixo de 1% a.a.
 - Fundos ativos não são negociados em bolsa (e não são recomendados).
+
+**Qual ETF você está buscando?**
+
+- Critérios objetivos ou ideológicos (ex.: empresas lideradas por mulheres, católicos etc.).
+- **Equal weighted** (peso igual para todas as empresas) × **market cap weighted** (peso pelo tamanho da empresa).
+- Gestão ativa × **passiva**.
+- Função geral ou setorial.
+- Usar para obter **correlação neutra** dos investimentos.
+- Sempre analisar o **tamanho do ETF** para evitar o spread do market maker.
+  - ETFs internacionais com AUM > US$ 100 milhões.
+- **Tracking error/difference**: o quanto o ETF se distancia do índice - ruim tanto para mais quanto para menos (ideal abaixo de 1%).
+- Pelo menos US$ 1 milhão negociado por dia.
+
+**Exemplos de índices:**
+
+- **IVV, SPY, VOO**: maiores empresas dos EUA (variam na taxa de administração).
+- **ASHR, MCHI, FXI, AAXJ** (Ásia ex-Japão): maiores empresas da China.
+- Buscador de ETFs: <https://www.etf.com/>
+
+
+### Exemplos
+
+**SPHQ** (Invesco S&P 500 Quality ETF):
+
+- Replica o **S&P 500 Quality Index**.
+- Analisa empresas com **ROI elevado**, baixa alavancagem e lucros consistentes.
+- Assemelha-se à análise de ações da AUVP.
+- A ponderação é feita conforme a **pontuação de qualidade** - reduz o risco de balanços fracos em ciclos voláteis.
+- Viés defensivo.
+
+**VOO** (Vanguard S&P 500):
+
+- Muito concentrado em tecnologia (peso das big techs no topo do S&P 500).
+
+**VEA** (mercados desenvolvidos ex-EUA):
+
+- Índice FTSE.
+- Exposição a Europa, Japão, Canadá e região do Pacífico.
+- Ponderado por capitalização.
+
+**VNQ** (real estate EUA):
+
+- Índice MSCI US Investable Market Real Estate 25/50.
+- REITs (imobiliário), foco em geração de renda.
+- Exposição descorrelacionada de tecnologia.
+
+**IXC** (iShares Global Energy ETF):
+
+- Replica o iShares Global Energy ETF, focando em empresas de energia, petróleo e gás.
+- Peso definido por capitalização de mercado.
+- **Hedge**: proteção contra a inflação e diversificação fora do setor tecnológico.
+
+**VWO** (Vanguard FTSE Emerging Markets):
+
+- China, Taiwan, Índia e outros (inclui o BR).
+
+**IAU / SLV** (ouro / prata):
+
+- ETF de ouro (IAU) / prata (SLV).
+- Recomendado apenas para quem tem > US$ 250 mil.
+
+### Exemplo de carteira internacional
+
+Alocação sugerida por perfil de risco (cada coluna soma 100%):
+
+- **Obs.**: para os perfis moderado/arrojado, recomenda-se complementar com stock picking.
+
+| Ticker | Setor / Classe de ativo | Conservador | Moderado | Arrojado |
+|--------|-------------------------|:-----------:|:--------:|:--------:|
+| SPHQ | S&P 500 (fator qualidade) | 50% | 40% | 40% |
+| VEA | Mercados desenvolvidos (ex-EUA) | 30% | 30% | 20% |
+| IAU | Commodities (ouro físico) | 10% | 10% | 10% |
+| XLP | Consumo básico (defensivo) | - | 10% | 10% |
+| IXC | Energia global (óleo e gás) | - | - | 10% |
+| VWO | Ações de mercados emergentes | 5% | 5% | 5% |
+| VNQ | Real estate (REITs EUA) | 5% | 5% | 5% |
+
+
+### REITs
+
+Empresas com foco no setor imobiliário (o "FII americano"):
+
+- 75% dos ativos devem ser de origem imobiliária.
+- 95% da receita deve vir de fontes imobiliárias.
+- Precisam distribuir 90% do lucro.
+- Tipos: **Equity** (equivalente aos fundos de tijolo) ou **Mortgage** (dívida imobiliária / CRIs).
+- Distribuem proventos, em geral, trimestralmente.
+- Podem se alavancar de forma agressiva.
+- Podem performar acima de algumas empresas americanas.
+- O **DY é numericamente menor** que o dos FIIs brasileiros → o perfil conservador deve preferir FIIs BR, pois os REITs têm risco maior pela alavancagem.
+- O **P/VP americano** costuma ficar próximo de 2,5.
+
+**Exemplo:** PLD (logística):
+
+- Maior fundo de logística e infraestrutura do mundo.
+- Baixo custo de administração.
+- Boa recorrência e retenção.
+- ROIC de 8 a 10%; endividamento controlado (4 a 5×, normal para o mercado americano devido à baixa taxa de juros).
+
+**Opinião do Raul:** não vale a pena fazer stock picking de REITs - mais interessante usar ETFs como **VNQ** (ou **VNQI**, sem os Estados Unidos).
+
+Referências:
+
+- <https://www.reit.com/>
