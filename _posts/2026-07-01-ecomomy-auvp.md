@@ -15,6 +15,7 @@ Minhas anotações do curso da AUVP.
 - [Módulo 4 - Renda variável](#modulo-4)
 - [Módulo 5 - Reserva de valor](#modulo-5)
 - [Módulo 6 - Exterior](#modulo-6)
+- [Módulo 7 - Operar a carteira](#modulo-7)
 
 ---
 
@@ -1078,6 +1079,8 @@ Links:
 - Não se deve investir 100% em um único país (caso da Argentina).
 - O Brasil tem um *rank* de segurança baixo.
 - Diversificar no exterior gera correlação neutra - o ideal do investimento (Ray Dalio: o ideal são 15 investimentos não correlacionados).
+- O **CPI** Consumer Price Index (Índice de Preços ao Consumidor) e é o indicador oficial que mede a inflação nos Estados Unidos, funcionando como o equivalente ao IPCA brasileiro. Ele é uma das métricas mais vigiadas pelo FED para ajustar a taxa de juros.
+- Federal Funds Rate: É a taxa básica de juros dos EUA, que equivale à nossa Taxa Selic.
 
 **BDR (Brazilian Depositary Receipts):**
 
@@ -1230,6 +1233,7 @@ Empresas com foco no setor imobiliário (o "FII americano"):
 - Podem performar acima de algumas empresas americanas.
 - O **DY é numericamente menor** que o dos FIIs brasileiros → o perfil conservador deve preferir FIIs BR, pois os REITs têm risco maior pela alavancagem.
 - O **P/VP americano** costuma ficar próximo de 2,5.
+- Os REITs podem dar imóveis como garantia das dívidas e os FIIIs não.
 
 **Exemplo:** PLD (logística):
 
@@ -1450,4 +1454,37 @@ Referências:
 - **Moderado**: mix equilibrado entre investment grade e fundos/ETFs de high yield.
 - **Arrojado**: high yield / América Latina.
 
-Exige acompanhamento de macroeconomica, juros globais, inflacao, etc
+- Exige acompanhar a macroeconomia, os juros globais, a inflação etc.
+
+## Módulo 7 - Operar a carteira {#modulo-7}
+
+- Quem aporta no fim do mês na RF costuma pegar mais rentabilidade nos títulos secundários.
+- Aportar sempre e lançar no diagrama.
+
+**Agenda:**
+
+- **Diariamente**: nada.
+- **Mensalmente**: aportar (preferencialmente nos últimos dias úteis do mês).
+- **Trimestralmente**: ler os resultados das empresas.
+- **Anualmente**: revisar e rebalancear; preparar para o IR.
+
+**O que medir:**
+
+- Proporção RF × RV.
+- Número de classes de ativos em ações (mínimo 7).
+- Integridade do cadastro no sistema.
+- Fundamentos.
+- Proventos recebidos (somar ao aporte do mês).
+- Meta da reserva de emergência (ajustada pela inflação).
+
+**O que ignorar:**
+
+- Cotação.
+- Rentabilidade dos outros.
+- Notícias/dicas.
+- Topos e fundos.
+
+**Lemas:**
+
+- Controle o que é da sua competência (aporte, estudo, trabalho) e não dependa tanto do incontrolável.
+- Mais vale ser livre do que rico.
