@@ -1312,3 +1312,142 @@ Referências:
 
 - <https://tradingeconomics.com/>
 - <https://br.tradingview.com/>
+
+
+### Tecnologia
+
+- Setor recente, sem garantias.
+- Sempre teve histórias de estagnação que acabaram superadas.
+- Empresas podem desaparecer do dia para a noite.
+- No longo prazo, foque mais em **setores** do que em empresas.
+- Empresas só de aplicativo (ML, Uber, iFood) têm segurança ainda menor.
+- Google, Oracle, IBM e Microsoft se posicionam como empresas de **ferramentas**, não de tecnologia-fim.
+- Em todo case, sempre há alguma empresa de tech ganhando dinheiro por trás (restaurantes, lojas, carros etc.).
+
+**O que analisar:**
+
+- **Motor de produtividade**: o que ela faz (software, nuvem, IA).
+- Crescimento estrutural e digitalização de novos setores.
+- Lógica de nuvem, IA e custos.
+- Peso e concentração de mercado (boa parte já está no S&P 500).
+- **Efeito de rede**: *winner takes most* (costuma existir só uma empresa ganhadora por setor).
+
+**Modelos de tech:**
+
+- **Semicondutores**: as "pás e picaretas" do mercado.
+- **Software em nuvem**: assinatura e alta previsibilidade (Microsoft, Oracle, Salesforce).
+- **Plataformas de anúncio** (Google, Meta).
+- **Hardware e ecossistema**: modelos fechados que fidelizam o usuário (Apple).
+- **E-commerce e nuvem** (Amazon, Mercado Livre).
+- **Mobilidade**: Tesla.
+
+**CAPEX:**
+
+- CAPEX (Capital Expenditure / despesa de capital) = investimentos em bens de longo prazo (máquinas, imóveis, equipamentos).
+- Altos investimentos em CAPEX **sem promessas** - o que importa é a garantia de geração de caixa futuro.
+- Quem ganha com o CAPEX alheio: **Nvidia** (muito valorizada; chega a financiar os players para comprarem seus produtos).
+
+**Indicadores:**
+
+- **P/L** (caso extremo: Tesla).
+- **P/VP** (média 14,7x; Apple em ~42x).
+- **EV/EBITDA** (Enterprise Value / EBITDA).
+- **ROIC** ~24,6%; **ROE** ~47,7%; **ROA** ~17,4%.
+- **Margem EBITDA** ~38,1%; **margem líquida** ~26%.
+
+**Métricas específicas de tecnologia:**
+
+- **Regra dos 40**: crescimento (%) + margem (%) > 40.
+- **ARR (Receita Recorrente Anual)**: quanto da receita vem de assinaturas (mais previsível).
+- **Margem bruta** (70% a 90%).
+- **SBC (Stock-Based Compensation)**: pagar funcionários com ações dilui o acionista → deve ser descontado para achar o fluxo de caixa real.
+
+**Checklist:**
+
+- Qual o modelo de negócio?
+- Receita recorrente ou cíclica?
+- Vantagem competitiva?
+- **Múltiplos × crescimento**: o múltiplo cobrado faz sentido frente ao crescimento (**PEG ratio**)?
+- **Rentabilidade**: a margem de lucro e o ROI sustentam o valuation pago?
+- **Ajustes de caixa e diluição**: quanto o pagamento em ações (SBC) dilui o acionista; monitorar se o CAPEX está virando receita ou é investimento genérico.
+
+- **Raul**: pegou as empresas campeãs dos ETFs e aprofundou nelas.
+
+**As 10 large caps de tecnologia (TTM):**
+
+| Empresa | P/L | P/VP | EV/EBITDA | ROE | ROIC | ROA | M. EBITDA | M. Líq | D. Yield | E. Yield |
+|---------|----:|-----:|----------:|----:|-----:|----:|----------:|-------:|---------:|---------:|
+| Nvidia (NVDA) | 36,2x | 22,0x | 30,5x | 75% | 60% | 45% | 65% | 55% | 0,0% | 2,8% |
+| Microsoft (MSFT) | 23,3x | 9,5x | 18,0x | 35% | 25% | 18% | 48% | 36% | 0,9% | 4,3% |
+| Apple (AAPL) | 32,4x | 42,5x | 22,0x | 178% | 45% | 28% | 33% | 27% | 0,4% | 3,1% |
+| Amazon (AMZN) | 29,2x | 7,5x | 16,0x | 18% | 12% | 8% | 16% | 8% | 0,0% | 3,4% |
+| Meta (META) | 17,5x | 6,5x | 12,0x | 32% | 22% | 18% | 45% | 32% | 0,4% | 5,7% |
+| Alphabet (GOOGL) | 27,1x | 8,6x | 15,0x | 36% | 32% | 25% | 35% | 26% | 0,4% | 3,7% |
+| Tesla (TSLA) | 335,0x | 16,5x | 112,9x | 5% | 8% | 6% | 12% | 4% | 0,0% | 0,3% |
+| Salesforce (CRM) | 30,0x | 4,5x | 18,0x | 12% | 9% | 6% | 30% | 15% | 0,3% | 3,3% |
+| Oracle (ORCL) | 25,7x | N/A | 16,0x | N/A | 15% | 8% | 42% | 22% | 1,2% | 3,9% |
+| **Média do Grupo** | **61,8x** | **14,7x** | **29,5x** | **47,7%** | **24,6%** | **17,4%** | **38,1%** | **26,0%** | **0,5%** | **3,2%** |
+
+
+### Renda Fixa EUA
+
+- Conservadorismo absoluto → em rentabilidade, o BR costuma pagar mais.
+- Faz sentido para quem **tem muito dinheiro** ou precisa de uma **proteção maior**.
+- Ao comprar um **bond**, você vira **credor**: empresta capital ao emissor em troca de juros periódicos e do principal no vencimento.
+- Semelhante às debêntures BR.
+- Emitidos por empresas, governos, bancos e instituições financeiras do mundo todo.
+- **Para quem**: renda passiva em dólar, diversificação, proteção parcial em crises, preservação patrimonial.
+- É a **maior e mais líquida** classe de ativos.
+
+**Conceitos:**
+
+- **Cupom**: os juros pagos pelo bond.
+- **Yield**: retorno real calculado sobre o preço atual de mercado (similar à marcação a mercado).
+- **Maturity**: prazo até o vencimento - quanto mais longo, mais risco.
+- **Duration**: sensibilidade do preço a juros - maior duration = maior volatilidade e sensibilidade às decisões do Federal Reserve.
+
+**Treasury como base:**
+
+- O Treasury americano é a base de tudo: se os EUA se financiam a 5% a.a., nenhuma empresa consegue captar pagando muito menos (salvo casos como o Japão). Investidores ricos fazem **carry trade**.
+- Dívida atual: 10 anos ~4,38%; 20 anos ~5,08%.
+- **Spread**: diferença entre um bond e um Treasury de mesmo prazo.
+  - Ex.: se os EUA pagam 4,4%, uma empresa teria que pagar ao menos ~6% para compensar o risco (crédito, liquidez, setorial etc.).
+
+**Grau de investimento (estáveis):**
+
+- Rating AAA, A, BBB.
+- Spreads reduzidos, menor risco de calote, mais estável.
+- Ex.: Microsoft (yield ~4,41%).
+- Microsoft, Apple e Johnson & Johnson têm spread baixíssimo (0,01–0,1) - são tão grandes que os próprios EUA sofreriam se elas quebrassem.
+
+**High Yield:**
+
+- Rating BB, B, CCC.
+- Spreads maiores, maior volatilidade.
+- Ex.: Occidental (spread ~5,21%), Petrobras (vs. Treasury americano), Ford (spread ~1,26%).
+
+**Mercados desenvolvidos:** investidores institucionais às vezes aceitam spreads negativos para montar defesa geográfica ou diversificar além do Treasury americano.
+
+**Spread Latam:** Peru +0,85%; Chile +0,89%; BR +1,4%; Colômbia +2,07%.
+
+- Em geral, melhor relação risco-retorno.
+- A combinação de duration longa, baixo diferencial de spread, risco de crédito e risco de liquidez torna o título **desvantajoso** frente ao Treasury americano puro.
+
+**Tributação e ETFs:**
+
+- Imposto de herança altíssimo acima de US$ 60 mil.
+- Recomendação: ETFs **UCITS** (Irlanda ou Luxemburgo, por eficiência tributária).
+  - **IEF**: Treasuries de 7 a 10 anos.
+  - **TLT**: Treasuries de 20 anos, duration elevada, alta volatilidade - aposta em queda de juros / hedge macroeconômico.
+  - **LQD**: acima do Treasury sem correr risco de high yield, foco em grandes empresas americanas (investment grade).
+  - **HYG**: high yield, sensível a ciclos, empresas alavancadas.
+  - **JNK**: high yield, ainda mais agressivo.
+  - **EMB**: soberanos emergentes (BR, México e Colômbia).
+
+**Bonds na carteira (por perfil):**
+
+- **Conservador**: Treasuries + empresas investment grade de curto prazo.
+- **Moderado**: mix equilibrado entre investment grade e fundos/ETFs de high yield.
+- **Arrojado**: high yield / América Latina.
+
+Exige acompanhamento de macroeconomica, juros globais, inflacao, etc
