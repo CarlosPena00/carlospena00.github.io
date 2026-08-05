@@ -168,6 +168,7 @@ Ferramentas:
 
 - É o equilíbrio (a "balança") entre **preço** e **taxa**: quando a taxa sobe, o preço do título cai, e vice-versa.
 - Melhor cenário: **comprar com taxa alta** e **antecipar a venda quando a taxa cai** (o preço sobe, gerando ganho de capital).
+- IPCA+: Os titulos do tesouro começaram a ser emitidos em 7/01/2002 de lá para cá tivemos uma inflação de 284% e por esse ajuste, pode aparecer na plataforma titulos que superam mil reais
 
 Ferramentas:
 
@@ -185,6 +186,8 @@ Ferramentas:
   - Use a calculadora de juros compostos para estimar o valor final.
   - Vender quando: rentabilidade contratada << rentabilidade acumulada anualizada.
 - Só vale vender considerando o **custo de oportunidade** (ou ao atingir ~80% do valor): é preciso ter outro investimento que renderá mais.
+
+
 
 ### Aula 8: Juros semestrais
 
@@ -616,27 +619,37 @@ Ele transformou seus critérios em **15 perguntas**:
     - Bazin e outros gostam do DY, pois é mais difícil a empresa "maquiar" o valor que envia aos acionistas.
   - **LPA (Lucro por Ação)** = lucro líquido / número de ações.
     - Usado para comparar qual ação está mais barata.
-  - **P/L (Preço / Lucro)**: pagando X pela empresa, recupero esse valor em lucro em P/L anos.
-    - P/L alto → expectativa de crescimento alta (ou acionistas muito otimistas/emocionados).
-  - **P/VP** = preço / valor patrimonial.
+  - **P/L (Preço / Lucro)**F: pagando X pela empresa, recupero esse valor em lucro em P/L anos.
+    - P/L alto → expectativa de crescimento alta (ou acionistas muito otimistas/emocionados). Na pratica é calculado na forma P/LA (por ação)
+  - **P/VP** = preço / valor patrimonial. Na pratica é calculado na forma P/VPA (por ação)
   - **VPA (Valor Patrimonial por Ação)** = patrimônio / número de ações (não entra o lucro).
     - Caso do Banco do Brasil (BB): VPA > cotação; P/VP = 0,87.
       - Assimetria de mercado: teoricamente seria melhor construir um banco do zero do que investir no BB - mesmo sem considerar marca, clientes etc.
-  - **P/EBIT** (EBIT = lucro antes de juros e impostos; lucro operacional):
-    - Uma empresa pode ter operação lucrativa (gera caixa, vende bem), mas entrar no vermelho depois de pagar os juros da dívida.
 - **Indicadores de endividamento:**
   - Para bancos: **Basileia** (mín. 10,5%).
+  - **P/EBIT** (EBIT = lucro antes de juros e impostos; lucro operacional):
+    - Uma empresa pode ter operação lucrativa (gera caixa, vende bem), mas entrar no vermelho depois de pagar os juros da dívida, ou ter um valor positivo pois realizou emprestimos/investimentos com o dinheiro do caixa.
+  - **P/EBITDA** (EBIT + desconsideções de Deprecisação e amortizações)
+    - Algumas empresas lançam a depreciação de 1a, 3a em um unico mẽs; ela não ficou pior por conta disto. O EBITDA mostra se algo grave aconteceu na operção
+    - Importante para setor de tecnologia/industria
+    - Obs. se a empresa tiver lucro negativo a empresa não paga imposto, e por isso é um valor interessante para saber quando pagar a divida
 - **Indicadores de eficiência:**
   - **Margem bruta** = lucro bruto / receita.
   - **Margem EBIT** = EBIT / receita líquida.
     - A empresa pode se alavancar e, temporariamente, tomar um empréstimo (reduzindo a margem líquida).
-  - **Margem líquida**: a verdadeira.
+  - **Margem líquida**: a verdadeira (lucro líquido / receita líquida).
     - Vários mercados operam com margem líquida pequena → risco.
     - Margem curta pode ser um fator protetivo (no caso de empresas grandes).
+  - **EV/EBITDA** (Enterprise Value / EBITDA):
+    - EV = capitalização de mercado + dívida líquida da empresa.
+    - Mostra qual empresa está barata em relação ao seu lucro.
 - **Indicadores de rentabilidade:**
-  - **ROE**: retorno sobre o patrimônio.
-  - **ROIC (Return on Invested Capital)**: retorno sobre o capital investido, considerando dívidas (todo o capital à disposição da empresa).
+  - **ROE**: retorno sobre o patrimônio (lucro líquido / patrimônio líquido).
+  - **ROIC (Return on Invested Capital; Nopat (lucro operacional liq apos impostos)/capital total da companhia)**: retorno sobre o capital investido, considerando dívidas (todo o capital à disposição da empresa).
+    - Geralmente: Utiliza o ROE para empresas sem dividas e o ROIC para empresas endividadas
   - **ROA**: lucro líquido / total de ativos (geralmente relacionado à eficiência de publicidade).
+    - Ao comparar empresas do mesmo setor: Empresas do mesmo setor com o mesmo ativos, podemos saber qual é eficiente
+    - Não é o melhor indicador para empresas que não tem relação direta com os ativos, ex: Tecnologia, Bancos etc
   - **Payout**: quantos % do caixa a empresa distribui em dividendos.
 - **Indicadores de crescimento:**
   - **CAGR Receita** (Taxa de Crescimento Anual Composta em 5 anos).
@@ -877,7 +890,7 @@ Referências:
 
 **Indicadores:**
 
-- **P/VP**: para FIIs é **extremamente relevante** (ao contrário das empresas, principalmente as de TI).
+- **P/VP**: para FIIs é **extremamente relevante** (ao contrário das empresas, principalmente as de TI). Obs.: na prática, o cálculo é feito como P/VPA (por ação).
   - Na compra/venda/aluguel dos imóveis, eles seguem o valor patrimonial, para mais ou para menos.
 - **Taxa de administração**: em geral perto de 1%.
 - Lista de imóveis / estados.
@@ -1488,3 +1501,47 @@ Referências:
 
 - Controle o que é da sua competência (aporte, estudo, trabalho) e não dependa tanto do incontrolável.
 - Mais vale ser livre do que rico.
+
+
+### Como arrumar a bagunça
+
+- **Fundos de investimento** (taxa de 2% + performance): melhor vender e realizar o prejuízo.
+- **COE**: conversar com a assessoria para vender no mercado secundário (segunda mão).
+- **Consórcios**:
+  - É possível anular, mas o dinheiro pode ficar preso até o final.
+  - Costuma exigir advogado para anular.
+- **Ações ruins**:
+  - Posição < R$ 20 mil e fora do verde/azul do Diagrama: encerrar a posição.
+  - Acima disso: vender gradualmente (~5% por vez).
+- **BDRs**: manter.
+- **Ações demais**:
+  - Fazer a limpeza e reinvestir até ~R$ 20 mil/mês.
+  - Reduzir a carteira para cerca de 10 ativos.
+- **Caso de herança**: dividir o dinheiro em aportes mensais.
+
+Referência:
+
+- Fórum de relações profissionais / network (AUVP): <https://comunidade.auvp.com.br/forum/55-%F0%9F%A4%B5-rela%C3%A7%C3%B5es-profissionais-network/>
+
+### Planejamento
+
+- Determinar a expectativa de vida e/ou a idade de parar de trabalhar (etapa pesada).
+
+**1) Calculadora de juros compostos** (<https://investidorsardinha.r7.com/calculadoras/calculadora-de-juros-compostos/>):
+
+- Preencher: valor inicial, aporte mensal, taxa de juros **nominal** (em geral ~8%) e período (delta entre a idade atual e a aposentadoria).
+- Obter o **montante final** e usar na próxima etapa.
+
+**2) Calculadora de renda** (<https://investidorsardinha.r7.com/calculadoras/calculadora-de-renda/>):
+
+- Reduzir a taxa de juros para ~6%.
+- Tempo de retirada = delta entre a aposentadoria e a expectativa de vida.
+- Verificar se o montante se mantém.
+
+**3) Valor do dinheiro no tempo:**
+
+- A **utilidade marginal** do dinheiro cai pela metade a cada década. Ex.:
+  - Aos 20 anos, R$ 50 mil é muita coisa (viagens etc.).
+  - Aos 30 anos, R$ 50 mil é um carro melhorzinho, um hotel melhor.
+  - Aos 40 anos, R$ 50 mil é um divórcio, cuidados com a saúde etc.
+- **Zona de acúmulo máximo**: indicada para quem tem renda acima de R$ 50 mil; para os demais, limitar o aporte a ~25%–30%.
