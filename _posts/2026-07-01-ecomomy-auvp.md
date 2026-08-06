@@ -1552,15 +1552,42 @@ Referência:
 
 ### Target / Organização
 
-| Tipo | Alvo |
-|------|-----:|
-| Ações internacionais | 17% |
-| Ações nacionais | 25% |
-| Fundos imobiliários | 4% |
-| REITs | 0% |
-| Criptomoedas | 4% |
-| Renda fixa | 50% |
-| Renda fixa internacional | 0% |
+| Tipo | Atual | Alvo | Diferença |
+|------|------:|-----:|----------:|
+| Ações internacionais | 13,23% | 17% | +3,77% |
+| Ações nacionais | 20,48% | 25% | +4,52% |
+| Fundos imobiliários | 3,29% | 4% | +0,71% |
+| REITs | 0,00% | 0% | 0,00% |
+| Criptomoedas | 3,56% | 4% | +0,44% |
+| Renda fixa | 59,44% | 50% | -9,44% |
+| Renda fixa internacional | 0,00% | 0% | 0,00% |
+
+#### Estatal × privado (ações nacionais)
+
+Ponto de atenção: empresas estatais compartilham o **mesmo risco político** (governo), então não são apostas independentes. Percentuais sobre o book de ações nacionais.
+
+| Bloco | % |
+|-------|--:|
+| Estatal BR (governo federal/estadual) | 43,85% |
+| Privado BR | 42,85% |
+| Estatal estrangeiro (State Grid - China) | 0,87% |
+| ETFs + BDRs | 12,43% |
+
+Estatais BR (detalhe):
+
+| Ticker | Empresa | Controle | % |
+|--------|---------|----------|--:|
+| BBSE3 | BB Seguridade | União (via BB) | 12,40% |
+| PETR4 | Petrobras | União | 11,53% |
+| BBAS3 | Banco do Brasil | União | 7,22% |
+| SAPR3 | Sanepar | Paraná | 5,92% |
+| CXSE3 | Caixa Seguridade | União (via Caixa) | 2,89% |
+| TAEE3 | Taesa | Indireto (via Cemig/MG) | 1,98% |
+| CMIG3 | Cemig | Minas Gerais | 1,91% |
+| **Total** | | | **43,85%** |
+
+- **BBAS3 + BBSE3** (ecossistema BB) e **CXSE3** (Caixa) têm controlador correlacionado → tratar como quase a mesma aposta.
+- **CPFE3** (CPFL, 0,87%): controlada pela State Grid (estatal chinesa) → tem risco político, mas não do governo BR.
 
 ---
 
@@ -1569,7 +1596,7 @@ Referência:
 ```text
 USA (86,25% → alvo 80%)
 ├── SCHV (2,87%)
-├── VOO (68,09%) - não aportar (bolha de IA; retomar no futuro)
+├── VOO (68,09%) - não aportar (bolha de IA; retomar no futuro, quando SCHV chegar em 20%)
 ├── NOBL (3,72%) - não aportar (favorecer SCHV)
 ├── SPHQ (2,39%) - não aportar (favorecer SCHV)
 └── Outras empresas (14,41%) - não aportar (favorecer ETF)
@@ -1606,11 +1633,14 @@ Financeiro (39,37%)
 
 Utilidade Pública (15,33%)
 ├── Energia Elétrica (9,41%)
-│   ├── CPLE3 (2,43%)
-│   ├── TAEE3 (1,98%)
-│   ├── CPFE3 (0,87%)
-│   ├── CMIG3 (1,91%) - não aportar
-│   └── EGIE3 (2,22%) - não aportar
+│   ├── Transmissão (1,98%)
+│   │   └── TAEE3 (1,98%)
+│   ├── Geração (2,22%)
+│   │   └── EGIE3 (2,22%)
+│   └── Distribuição (5,21%)
+│       ├── CPLE3 (2,43%)
+│       ├── CPFE3 (0,87%) - não aportar
+│       └── CMIG3 (1,91%) - não aportar
 │
 └── Água e Saneamento (5,92%)
     └── SAPR3 (5,92%)
@@ -1680,14 +1710,14 @@ BDRs (2,96%) - não aportar
 ### FIIs (3.29% -> 4%)
 
 ```text
-Shoppings (51,16%)
+Shoppings (51,16% → alvo 50%)
 ├── Shopping Centers (51,16%)
 │   ├── VISC11 (23,25%)
 │   ├── PMLL11 (18,90%)
 │   └── XPML11 (9,01%)
 
 
-Logística (28,39%)
+Logística (28,39% → alvo 50%)
 ├── Galpões Logísticos (28,39%)
 │   ├── KNRI11 (10,96%)
 │   ├── BTLG11 (9,41%)
@@ -1695,7 +1725,7 @@ Logística (28,39%)
 │   └── VILG11 (1,97%)
 
 
-Renda Urbana / Imóveis Corporativos (9,89%)
+Renda Urbana / Imóveis Corporativos (9,89%) - não aportar
 ├── Renda Urbana (1,44%)
 │   └── ALZR11 (1,44%)
 │
@@ -1724,7 +1754,7 @@ Papel (8,07%) - não aportar
 │   ├── IPCA (20,93%) (Força: 7)
 │   ├── Selic (23,68%)  (Força: 6)
 │   ├── Selic Nubank (4,06%) - não aportar
-│   └── Prefixado (0,00%) (Força: 0) - não aportar
+│   └── Prefixado (0,00%) (Força: 1)
 │
 └── Tesouro Direto (25,90%)
     ├── Tesouro IPCA (20,70%) (Força: 9)
