@@ -619,20 +619,20 @@ Ele transformou seus critérios em **15 perguntas**:
     - Bazin e outros gostam do DY, pois é mais difícil a empresa "maquiar" o valor que envia aos acionistas.
   - **LPA (Lucro por Ação)** = lucro líquido / número de ações.
     - Usado para comparar qual ação está mais barata.
-  - **P/L (Preço / Lucro)**F: pagando X pela empresa, recupero esse valor em lucro em P/L anos.
-    - P/L alto → expectativa de crescimento alta (ou acionistas muito otimistas/emocionados). Na pratica é calculado na forma P/LA (por ação)
-  - **P/VP** = preço / valor patrimonial. Na pratica é calculado na forma P/VPA (por ação)
+  - **P/L (Preço / Lucro)**: pagando X pela empresa, recupero esse valor em lucro em P/L anos.
+    - P/L alto → expectativa de crescimento alta (ou acionistas muito otimistas/emocionados). Na prática, é calculado como P/LA (por ação).
+  - **P/VP** = preço / valor patrimonial. Na prática, é calculado como P/VPA (por ação).
   - **VPA (Valor Patrimonial por Ação)** = patrimônio / número de ações (não entra o lucro).
     - Caso do Banco do Brasil (BB): VPA > cotação; P/VP = 0,87.
       - Assimetria de mercado: teoricamente seria melhor construir um banco do zero do que investir no BB - mesmo sem considerar marca, clientes etc.
 - **Indicadores de endividamento:**
   - Para bancos: **Basileia** (mín. 10,5%).
   - **P/EBIT** (EBIT = lucro antes de juros e impostos; lucro operacional):
-    - Uma empresa pode ter operação lucrativa (gera caixa, vende bem), mas entrar no vermelho depois de pagar os juros da dívida, ou ter um valor positivo pois realizou emprestimos/investimentos com o dinheiro do caixa.
-  - **P/EBITDA** (EBIT + desconsideções de Deprecisação e amortizações)
-    - Algumas empresas lançam a depreciação de 1a, 3a em um unico mẽs; ela não ficou pior por conta disto. O EBITDA mostra se algo grave aconteceu na operção
-    - Importante para setor de tecnologia/industria
-    - Obs. se a empresa tiver lucro negativo a empresa não paga imposto, e por isso é um valor interessante para saber quando pagar a divida
+    - Uma empresa pode ter operação lucrativa (gera caixa, vende bem), mas entrar no vermelho depois de pagar os juros da dívida - ou ter valor positivo por ter feito empréstimos/investimentos com o caixa.
+  - **P/EBITDA** (EBITDA = EBIT + depreciação e amortização):
+    - Algumas empresas lançam a depreciação de 1 a 3 anos em um único mês; isso não as deixa piores. O EBITDA mostra se algo grave aconteceu na operação.
+    - Importante para os setores de tecnologia e indústria.
+    - Obs.: com lucro negativo a empresa não paga imposto - por isso é um valor interessante para decidir quando pagar a dívida.
 - **Indicadores de eficiência:**
   - **Margem bruta** = lucro bruto / receita.
   - **Margem EBIT** = EBIT / receita líquida.
@@ -645,11 +645,11 @@ Ele transformou seus critérios em **15 perguntas**:
     - Mostra qual empresa está barata em relação ao seu lucro.
 - **Indicadores de rentabilidade:**
   - **ROE**: retorno sobre o patrimônio (lucro líquido / patrimônio líquido).
-  - **ROIC (Return on Invested Capital; Nopat (lucro operacional liq apos impostos)/capital total da companhia)**: retorno sobre o capital investido, considerando dívidas (todo o capital à disposição da empresa).
-    - Geralmente: Utiliza o ROE para empresas sem dividas e o ROIC para empresas endividadas
+  - **ROIC (Return on Invested Capital)** = NOPAT (lucro operacional líquido após impostos) / capital total da companhia: retorno sobre o capital investido, considerando dívidas (todo o capital à disposição da empresa).
+    - Em geral: use o **ROE** para empresas sem dívidas e o **ROIC** para empresas endividadas.
   - **ROA**: lucro líquido / total de ativos (geralmente relacionado à eficiência de publicidade).
-    - Ao comparar empresas do mesmo setor: Empresas do mesmo setor com o mesmo ativos, podemos saber qual é eficiente
-    - Não é o melhor indicador para empresas que não tem relação direta com os ativos, ex: Tecnologia, Bancos etc
+    - Ao comparar empresas do mesmo setor com ativos parecidos, mostra qual é mais eficiente.
+    - Não é o melhor indicador para empresas sem relação direta com ativos (ex.: tecnologia, bancos etc.).
   - **Payout**: quantos % do caixa a empresa distribui em dividendos.
 - **Indicadores de crescimento:**
   - **CAGR Receita** (Taxa de Crescimento Anual Composta em 5 anos).
@@ -1246,7 +1246,7 @@ Empresas com foco no setor imobiliário (o "FII americano"):
 - Podem performar acima de algumas empresas americanas.
 - O **DY é numericamente menor** que o dos FIIs brasileiros → o perfil conservador deve preferir FIIs BR, pois os REITs têm risco maior pela alavancagem.
 - O **P/VP americano** costuma ficar próximo de 2,5.
-- Os REITs podem dar imóveis como garantia das dívidas e os FIIIs não.
+- Os REITs podem dar imóveis como garantia das dívidas; os FIIs não.
 
 **Exemplo:** PLD (logística):
 
@@ -1545,3 +1545,188 @@ Referência:
   - Aos 30 anos, R$ 50 mil é um carro melhorzinho, um hotel melhor.
   - Aos 40 anos, R$ 50 mil é um divórcio, cuidados com a saúde etc.
 - **Zona de acúmulo máximo**: indicada para quem tem renda acima de R$ 50 mil; para os demais, limitar o aporte a ~25%–30%.
+
+
+
+## Minha Carteira
+
+### Target / Organização
+
+| Tipo | Alvo |
+|------|-----:|
+| Ações internacionais | 17% |
+| Ações nacionais | 25% |
+| Fundos imobiliários | 4% |
+| REITs | 0% |
+| Criptomoedas | 4% |
+| Renda fixa | 50% |
+| Renda fixa internacional | 0% |
+
+---
+
+### Internacional (13.23% -> 17%)
+
+```text
+USA (86,25% → alvo 80%)
+├── SCHV (2,87%)
+├── VOO (68,09%) - não aportar (bolha de IA; retomar no futuro)
+├── NOBL (3,72%) - não aportar (favorecer SCHV)
+├── SPHQ (2,39%) - não aportar (favorecer SCHV)
+└── Outras empresas (14,41%) - não aportar (favorecer ETF)
+
+
+Europa (10,91% → alvo 10%)
+└── VGK (10,91%)
+
+
+Ásia / Emergentes (0% → alvo 10%)
+└── IEMG (0%)
+```
+
+---
+
+### Ações nacionais (20.48% -> 25%)
+
+```text
+Financeiro (39,37%)
+├── Previdência e Seguros (15,29%)
+│   ├── BBSE3 (12,40%)
+│   └── CXSE3 (2,89%) - não aportar
+│
+├── Intermediários Financeiros (11,96%)
+│   ├── BBAS3 (7,22%)
+│   └── BBDC3 (4,74%) - não aportar
+│
+├── Serviços Financeiros Diversos (6,13%)
+│   └── B3SA3 (6,13%)
+│
+└── Holdings Financeiras (5,99%)
+    └── ITSA3 (5,99%)
+
+
+Utilidade Pública (15,33%)
+├── Energia Elétrica (9,41%)
+│   ├── CPLE3 (2,43%)
+│   ├── TAEE3 (1,98%)
+│   ├── CPFE3 (0,87%)
+│   ├── CMIG3 (1,91%) - não aportar
+│   └── EGIE3 (2,22%) - não aportar
+│
+└── Água e Saneamento (5,92%)
+    └── SAPR3 (5,92%)
+
+
+Petróleo, Gás e Biocombustíveis (11,53%)
+└── Exploração, Refino e Distribuição (11,53%)
+    └── PETR4 (11,53%)
+
+Bens Industriais (6,26%)
+└── Máquinas e Equipamentos (6,26%)
+    ├── WEGE3 (4,71%)
+    └── ROMI3 (1,55%) - não aportar
+
+
+Saúde (6,20%)
+├── Serviços Médico-Hospitalares (3,46%)
+│   └── RDOR3 (3,46%)
+│
+├── Comércio e Distribuição de Medicamentos (1,59%)
+│   └── RADL3 (1,59%)
+│
+└── Serviços de Apoio e Diagnóstico (1,15%)
+    └── FLRY3 (1,15%)
+
+
+Materiais Básicos (4,95%)
+├── Siderurgia (3,55%)
+│   └── GOAU4 (3,55%)
+│
+├── Mineração (0,89%)
+│   └── VALE3 (0,89%)
+│
+└── Madeira e Papel (0,51%)
+    └── KLBN11 (0,51%)
+
+
+Consumo Não Cíclico (2,28%)
+└── Bebidas (2,28%)
+    └── ABEV3 (2,28%)
+
+
+Consumo Cíclico (1,30%)
+└── Construção Civil (1,30%)
+    └── CURY3 (1,30%)
+
+
+Comunicações (0,37%)
+└── Telecomunicações (0,37%)
+    └── VIVT3 (0,37%)
+
+Fundos (9,47%) - não aportar
+└── ETFs (9,47%)
+    ├── AUVP11 (6,19%)
+    ├── SMAL11 (1,39%)
+    ├── BOVA11 (1,02%)
+    └── XINA11 (0,87%)
+
+BDRs (2,96%) - não aportar
+└── Tecnologia da Informação (2,96%)
+    ├── GOGL34 (1,70%)
+    └── M1TA34 (1,26%)
+```
+
+---
+
+### FIIs (3.29% -> 4%)
+
+```text
+Shoppings (51,16%)
+├── Shopping Centers (51,16%)
+│   ├── VISC11 (23,25%)
+│   ├── PMLL11 (18,90%)
+│   └── XPML11 (9,01%)
+
+
+Logística (28,39%)
+├── Galpões Logísticos (28,39%)
+│   ├── KNRI11 (10,96%)
+│   ├── BTLG11 (9,41%)
+│   ├── XPLG11 (8,56%)
+│   └── VILG11 (1,97%)
+
+
+Renda Urbana / Imóveis Corporativos (9,89%)
+├── Renda Urbana (1,44%)
+│   └── ALZR11 (1,44%)
+│
+└── Híbrido (Escritórios + Logística) (8,45%)
+    └── GGRC11 (8,45%)
+
+
+Papel (8,07%) - não aportar
+├── CRIs High Yield (4,99%)
+│   ├── CPTS11 (3,24%)
+│   └── XPCI11 (1,75%)
+│
+└── CRIs High Grade / CDI (3,08%)
+    └── KNCR11 (3,08%)
+```
+
+---
+
+### Renda Fixa (59.44% -> 50%)
+
+```text
+├── Previdência Privada (25,44%)  (Força: 6)
+│   └── VGBL e PGBL (25,44%)
+│
+├── Bancários (44,61%)
+│   ├── IPCA (20,93%) (Força: 7)
+│   ├── Selic (23,68%)  (Força: 6)
+│   ├── Selic Nubank (4,06%) - não aportar
+│   └── Prefixado (0,00%) (Força: 0) - não aportar
+│
+└── Tesouro Direto (25,90%)
+    ├── Tesouro IPCA (20,70%) (Força: 9)
+    └── Tesouro Prefixado (5,20%) (Força: 6)
+```
