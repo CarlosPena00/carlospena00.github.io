@@ -1747,16 +1747,17 @@ Papel (8,07%) - não aportar
 ### Renda Fixa (59.44% -> 50%)
 
 ```text
-├── Previdência Privada (25,44%)  (Força: 6)
-│   └── VGBL e PGBL (25,44%)
-│
-├── Bancários (44,61%)
-│   ├── IPCA (20,93%) (Força: 7)
-│   ├── Selic (23,68%)  (Força: 6)
-│   ├── Selic Nubank (4,06%) - não aportar
-│   └── Prefixado (0,00%) (Força: 1)
-│
-└── Tesouro Direto (25,90%)
-    ├── Tesouro IPCA (20,70%) (Força: 9)
-    └── Tesouro Prefixado (5,20%) (Força: 6)
+IPCA+ (41,63% -> 37,5%)
+├── Tesouro IPCA (20,70%) (Força: 9)
+└── Bancário IPCA (20,93%) (Força: 7)
+
+Pós-fixado / Selic (27,74% -> 30%)
+└── Bancário Selic (27,74%) (Força: 6)
+
+Prefixado (5,20% -> 7,5%)
+├── Tesouro Prefixado (5,20%) (Força: 6)
+└── Bancário Prefixado (0,00%) (Força: 1)
+
+Previdência (25,44% -> 25%) (Força: 6)
+└── VGBL e PGBL (25,44%)
 ```
