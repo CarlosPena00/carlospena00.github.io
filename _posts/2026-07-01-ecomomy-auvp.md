@@ -1595,10 +1595,10 @@ Estatais BR (detalhe):
 
 ```text
 USA (86,25% → alvo 80%)
-├── SCHV (2,87%)
-├── VOO (68,09%) - não aportar (bolha de IA; retomar no futuro, quando SCHV chegar em 20%)
-├── NOBL (3,72%) - não aportar (favorecer SCHV)
-├── SPHQ (2,39%) - não aportar (favorecer SCHV)
+├── SPHQ (2,39%) - foco em qualidade
+├── SCHV (2,87%) - não aportar (favorecer SPHQ)
+├── VOO (68,09%) - não aportar (bolha de IA; retomar no futuro, quando SPHQ chegar em 20%)
+├── NOBL (3,72%) - não aportar (favorecer SPHQ)
 └── Outras empresas (14,41%) - não aportar (favorecer ETF)
 
 
@@ -1607,7 +1607,7 @@ Europa (10,91% → alvo 10%)
 
 
 Ásia / Emergentes (0% → alvo 10%)
-└── IEMG (0%)
+└── VWO (0%)
 ```
 
 ---
