@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Diagrama de investimentos — Carteira</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <h1>Diagrama de investimentos</h1>
+    <div id="user-box" class="hidden">
+      <span id="username-label"></span>
+      <button id="logout-btn">Sair</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- AUTH -->
+    <section id="auth-view">
+      <div class="card auth-card">
+        <div class="tabs">
+          <button type="button" data-auth-tab="login" class="active">Entrar</button>
+          <button type="button" data-auth-tab="signup">Criar conta</button>
+        </div>
+        <form id="auth-form">
+          <label>E-mail
+            <input id="auth-email" type="email" required autocomplete="email">
+          </label>
+          <label>Senha
+            <input id="auth-password" type="password" required minlength="6" autocomplete="current-password">
+          </label>
+          <button type="submit" id="auth-submit">Entrar</button>
+          <p id="auth-msg" class="msg"></p>
+        </form>
+      </div>
+    </section>
+
+    <!-- APP -->
+    <section id="app-view" class="hidden">
+      <div class="card">
+        <div class="portfolio-bar">
+          <label>Carteira
+            <select id="portfolio-select"></select>
+          </label>
+          <form id="new-portfolio-form" class="inline">
+            <input id="new-portfolio-name" placeholder="Nova carteira" required>
+            <button type="submit">+ Criar</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Alocação atual</h2>
+        <div id="allocation-view"></div>
+      </div>
+
+      <div class="card">
+        <h2>Sugestão de aporte <small>(no máx. 5 ativos)</small></h2>
+        <form id="aporte-form" class="inline">
+          <input id="aporte-value" type="number" min="0" step="0.01" placeholder="Valor do aporte R$" required>
+          <button type="submit">Calcular</button>
+        </form>
+        <div id="aporte-result"></div>
+      </div>
+
+      <div class="card">
+        <h2>Metas por categoria (%)</h2>
+        <div id="targets-view"></div>
+        <p id="targets-sum" class="msg"></p>
+      </div>
+
+      <div class="card">
+        <h2>Tetos de subcategoria <small>(opcional, % da categoria)</small></h2>
+        <div id="caps-view"></div>
+        <form id="cap-form" class="inline">
+          <select id="cap-category"></select>
+          <input id="cap-subcategory" placeholder="Subcategoria" required>
+          <input id="cap-maxpct" type="number" min="0" max="100" step="0.1" placeholder="Máx %" required>
+          <button type="submit">+ Adicionar teto</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Ativos</h2>
+        <div id="assets-view"></div>
+        <form id="asset-form" class="asset-form">
+          <input id="asset-name" placeholder="Nome (ex.: BBSE3)" required>
+          <input id="asset-value" type="number" min="0" step="0.01" placeholder="Valor R$" required>
+          <input id="asset-nota" type="number" min="-1" max="10" step="1" placeholder="Nota (-1..10)" required>
+          <select id="asset-category"></select>
+          <input id="asset-subcategory" placeholder="Subcategoria" list="subcat-list">
+          <input id="asset-subsub" placeholder="Subsubcategoria" list="subsub-list">
+          <button type="submit">+ Adicionar ativo</button>
+        </form>
+        <datalist id="subcat-list"></datalist>
+        <datalist id="subsub-list"></datalist>
+      </div>
+
+      <div class="card">
+        <h2>Importar ativos (CSV)</h2>
+        <p class="msg">Cole do seu CSV/planilha. Colunas na ordem <code>Categoria;Ticker;Valor;Nota</code>
+          (cabeçalho opcional). Casa por nome — atualiza os existentes (preservando a subcategoria) e insere os novos.</p>
+        <textarea id="csv-input" rows="6" placeholder="Categoria;Ticker;Valor;Nota&#10;Ações Nacionais;BBSE3;R$ 9.671,76;7"></textarea>
+        <div class="inline">
+          <button type="button" id="csv-preview-btn">Pré-visualizar</button>
+          <button type="button" id="csv-confirm-btn" disabled>Confirmar importação</button>
+        </div>
+        <div id="csv-preview"></div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+
+</html>
