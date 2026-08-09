@@ -4,10 +4,28 @@ layout: default
 order: 2
 ---
 <content>
+{% comment %} Tópicos (prefixo do título antes do ":") que NÃO são de programação. Adicione novos aqui: Receitas, Economia, etc. {% endcomment %}
+{% assign nonprog = "Economy,Economia,Finanças,Receitas,Cozinha,Culinária,Pessoal,Vida,Saúde" | split: "," %}
+{% assign sort_post = site.posts | sort: 'title' %}
+
+<h2>Programação</h2>
 <ul>
-    {% assign sort_post = site.posts | sort: 'title' %}
     {% for post in sort_post %}
+    {% assign topic = post.title | split: ":" | first | strip %}
+    {% unless nonprog contains topic %}
     <li class='list_padding'><a href='{{ site.baseurl }}{{ post.url }}'>{{ post.title }}</a></li>
+    {% endunless %}
+    {% endfor %}
+</ul>
+
+<h2>Outros</h2>
+<p>Economia, receitas e demais assuntos.</p>
+<ul>
+    {% for post in sort_post %}
+    {% assign topic = post.title | split: ":" | first | strip %}
+    {% if nonprog contains topic %}
+    <li class='list_padding'><a href='{{ site.baseurl }}{{ post.url }}'>{{ post.title }}</a></li>
+    {% endif %}
     {% endfor %}
 </ul>
 
