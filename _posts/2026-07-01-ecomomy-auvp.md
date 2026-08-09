@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Economy: AUVP - PTBR"
+title: "Investimentos: AUVP"
 author: Carlos Pena
 date: 2026-07-01
 ---
