@@ -47,6 +47,7 @@ List of repositories with minimal examples of some application/library
     <li>Some decisions are consequential and irreversible (one-way doors) and these decisions must be made methodically, carefully, slowly, with great deliberation and consultation. But most decisions aren't like that, they are changeable, reversible (two-way doors). If you've made a suboptimal decision, you don't have to live with the consequences for that long. You can reopen the door and go back through. - Jeff Bezos (adapted)</li>
     <li>All of your employees are adults and you must trust them. If you don't trust them, it's better to fire than manage. - ?</li>
     <li>Not everyone is an adult</li>
+    <li>You can't be more interested than the interested party.</li>
 
 </ul>
 
