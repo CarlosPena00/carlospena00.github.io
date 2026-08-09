@@ -8,7 +8,7 @@ order: 2
 {% assign nonprog = "Economy,Economia,Finanças,Receitas,Cozinha,Culinária,Pessoal,Vida,Saúde" | split: "," %}
 {% assign sort_post = site.posts | sort: 'title' %}
 
-<h2>Programação</h2>
+<h2>Programming</h2>
 <ul>
     {% for post in sort_post %}
     {% assign topic = post.title | split: ":" | first | strip %}
