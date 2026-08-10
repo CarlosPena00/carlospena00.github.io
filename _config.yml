@@ -1,1 +1,6 @@
 name: Example
+
+# CV sources are oh-my-cv Markdown, not site content.
+# Jekyll would otherwise render them as broken pages.
+exclude:
+  - assets/cv
