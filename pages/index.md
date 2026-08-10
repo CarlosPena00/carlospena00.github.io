@@ -10,8 +10,8 @@ order: 1
 <div class="profile">
     <img class="avatar" src="https://avatars.githubusercontent.com/u/14184997">
     <div class="profiletext">
-    <strong>AI Architect | Senior Data Scientist | Master’s Research Fellow | Team Lider | R&D </strong> <br><br>
-    Passionate R&D specialist with a Master’s in Computer Science from UFPE and deep expertise in AI, machine/deep learning, and computer vision. Proven ability to design and deploy custom AI solutions that address complex business challenges at scale. Adept at bridging technical and business needs, leading cross-functional teams in agile environments, and translating research into high-impact, production-ready systems. Known for aligning innovation with strategic goals and accelerating product development in high-performance environments.
+    <strong>Lead Data Engineer | AI &amp; Computer Vision | Team Leader | R&amp;D</strong> <br><br>
+    Lead Data Engineer with 8+ years and a Master’s in Computer Science from UFPE, currently leading a multi-squad R&amp;D group at a top-5 Brazilian retailer. My work spans both sides of the data/AI boundary: dimensional warehouses, event-driven services and search platforms on one side, computer vision and LLM systems on the other, all running in production at retail scale. Adept at bridging technical and business needs, leading cross-functional teams in agile environments, and translating research into high-impact, production-ready systems.
     <br><br>
     <a href="https://www.linkedin.com/in/chcp" target="_blank"><svg width="24" height="24" viewBox="0 0 24 24" ><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"></path></svg></a>
     <a href="https://github.com/CarlosPena00" target="_blank">
@@ -30,11 +30,13 @@ order: 1
 
   <h1 id="skills">Skills and interests</h1>
   <ul>
+    <li>Data Engineering, Dimensional Modeling and Analytics Platforms</li>
     <li>AI, Neural Networks and Deep Learning</li>
     <li>Computer Vision</li>
+    <li>Generative AI, RAG and LLM systems</li>
     <li>Robotics</li>
     <li>Agile Management</li>
-    <li>Pytorch, OpenCV, Pandas, Polars, FastAPI, Git, Docker, ElasticSearch, AWS/Boto3, Unix/Bash, 3D printing</li>
+    <li>Python, SQL, PyTorch, OpenCV, Pandas, Polars, FastAPI, BigQuery, SQLMesh, Dagster, Elasticsearch, MongoDB, Redis, RabbitMQ, Git, Docker, Kubernetes, AWS/Boto3, Unix/Bash, 3D printing</li>
   </ul>
 </div>
 
@@ -44,8 +46,8 @@ order: 1
     <li ><a href="https://robocin.com.br/">Co-founder of RobôCIn - UFPE</a>, a research group in Centro de Informática of UFPE, that uses robotics to solve problems (exited in 2021).</li>
     <ul>
       <li><strong>Led teams</strong> in robot soccer AI research, applying <strong>Deep Learning</strong> and <strong>Reinforcement Learning</strong>.</li>
-      <li><strong>Developed</strong> vision and control systems using <strong>OpenCV, QT, and ROS</strong>.</li>
-      <li><strong>Developed</strong> a software system with <strong>ROS</strong> to control a human-size domestic robot for the @Home category on RoboCup.</li>
+      <li><strong>Developed</strong> vision and control systems using <strong>OpenCV, Qt, and ROS</strong>.</li>
+      <li><strong>Developed</strong> a software system with <strong>ROS</strong> to control a human-size domestic robot for the <strong>RoboCup@Home</strong> category.</li>
       <li><strong>Presented</strong> multiple workshops on <strong>computer vision, 3D modeling and printing, and robotics simulation</strong>.</li>
    </ul>
 </ul>
