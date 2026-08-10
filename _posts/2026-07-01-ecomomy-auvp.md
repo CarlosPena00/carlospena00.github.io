@@ -16,6 +16,7 @@ Minhas anotações do curso da AUVP.
 - [Módulo 5 - Reserva de valor](#modulo-5)
 - [Módulo 6 - Exterior](#modulo-6)
 - [Módulo 7 - Operar a carteira](#modulo-7)
+- [Minha carteira](#minha-carteira)
 
 ---
 
@@ -1548,7 +1549,7 @@ Referência:
 
 
 
-## Minha Carteira
+## Minha Carteira {#minha-carteira}
 
 ### Target / Organização
 
