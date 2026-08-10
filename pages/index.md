@@ -71,7 +71,7 @@ order: 1
     </div>
     <div class="paper-text-col">
         <h3><a class="text-link" href="https://ieeexplore.ieee.org/abstract/document/9307069" target="_blank">An analysis of Reinforcement Learning applied to Coach task in IEEE Very Small Size Soccer</a></h3>
-        <div><strong><span>Carlos H. C. Pena, M. G. Machado, M. S. Barris, J. D. P. Silva, L. D. Maciel, T. Ing Ren, E. N. S. Barros, <b>P. H. M. Braga</b> and H. F. Bassani</span></strong></div>
+        <div><strong><span>Carlos H. C. Pena, M. G. Machado, M. S. Barros, J. D. P. Silva, L. D. Maciel, T. Ing Ren, E. N. S. Barros, <b>P. H. M. Braga</b> and H. F. Bassani</span></strong></div>
         <div><strong class="date">2020</strong>, Proceedings of the Latin American Robotics Symposium (<strong>LARS</strong>)</div>
     </div>
 </div>
