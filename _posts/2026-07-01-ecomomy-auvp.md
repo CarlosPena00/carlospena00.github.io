@@ -1595,16 +1595,24 @@ Estatais BR (detalhe):
 ### Internacional (13.23% -> 17%)
 
 ```text
-USA (86,25% → alvo 80%)
-├── SPHQ (2,39%) - foco em qualidade
-├── SCHV (2,87%) - não aportar (favorecer SPHQ)
-├── VOO (68,09%) - não aportar (bolha de IA; retomar no futuro, quando SPHQ chegar em 20%)
-├── NOBL (3,72%) - não aportar (favorecer SPHQ)
-└── Outras empresas (14,41%) - não aportar (favorecer ETF)
+USA (89,01% → alvo 80%)
+├── ETFs (80,59%)
+│   ├── SPHQ (2,36%) - foco em qualidade
+│   ├── VOO (68,41%) - não aportar (bolha de IA; retomar no futuro, quando SPHQ chegar em 20%)
+│   ├── NOBL (3,74%) - não aportar (favorecer SPHQ)
+│   ├── BIVB39 (3,21%) - não aportar (BDR do IVV, mesmo S&P 500 do VOO)
+│   └── SCHV (2,87%) - não aportar (favorecer SPHQ)
+│
+└── Stock picking (8,42%) - não aportar (preferir ETFs)
+    ├── GOOGL (3,27%)
+    ├── AMD (2,58%)
+    ├── AMZN (1,25%)
+    ├── KO (1,00%)
+    └── DISB34 (0,32%)
 
 
-Europa (10,91% → alvo 10%)
-└── VGK (10,91%)
+Europa (10,98% → alvo 10%)
+└── VGK (10,98%)
 
 
 Ásia / Emergentes (0% → alvo 10%)
@@ -1616,94 +1624,94 @@ Europa (10,91% → alvo 10%)
 ### Ações nacionais (20.48% -> 25%)
 
 ```text
-Financeiro (39,37%)
-├── Previdência e Seguros (15,29%)
-│   ├── BBSE3 (12,40%)
-│   └── CXSE3 (2,89%) - não aportar
+Financeiro (37,97%)
+├── Previdência e Seguros (14,45%)
+│   ├── BBSE3 (11,60%)
+│   └── CXSE3 (2,85%) - não aportar
 │
-├── Intermediários Financeiros (11,96%)
-│   ├── BBAS3 (7,22%)
-│   └── BBDC3 (4,74%) - não aportar
+├── Intermediários Financeiros (11,70%)
+│   ├── BBAS3 (7,09%)
+│   └── BBDC3 (4,61%) - não aportar
 │
-├── Serviços Financeiros Diversos (6,13%)
-│   └── B3SA3 (6,13%)
+├── Holdings Financeiras (5,92%)
+│   └── ITSA3 (5,92%)
 │
-└── Holdings Financeiras (5,99%)
-    └── ITSA3 (5,99%)
+└── Serviços Financeiros Diversos (5,90%)
+    └── B3SA3 (5,90%)
 
 
-Utilidade Pública (15,33%)
-├── Energia Elétrica (9,41%)
-│   ├── Transmissão (1,98%)
-│   │   └── TAEE3 (1,98%)
+Utilidade Pública (15,04%)
+├── Energia Elétrica (9,33%)
+│   ├── Transmissão (2,00%)
+│   │   └── TAEE3 (2,00%)
 │   ├── Geração (2,22%)
 │   │   └── EGIE3 (2,22%)
-│   └── Distribuição (5,21%)
-│       ├── CPLE3 (2,43%)
-│       ├── CPFE3 (0,87%) - não aportar
-│       └── CMIG3 (1,91%) - não aportar
+│   └── Distribuição (5,11%)
+│       ├── CPLE3 (2,39%)
+│       ├── CPFE3 (0,86%) - não aportar
+│       └── CMIG3 (1,86%) - não aportar
 │
-└── Água e Saneamento (5,92%)
-    └── SAPR3 (5,92%)
+└── Água e Saneamento (5,71%)
+    └── SAPR3 (5,71%)
 
 
-Petróleo, Gás e Biocombustíveis (11,53%)
-└── Exploração, Refino e Distribuição (11,53%)
-    └── PETR4 (11,53%)
+Petróleo, Gás e Biocombustíveis (11,79%)
+└── Exploração, Refino e Distribuição (11,79%)
+    └── PETR4 (11,79%)
 
-Bens Industriais (6,26%)
-└── Máquinas e Equipamentos (6,26%)
-    ├── WEGE3 (4,71%)
-    └── ROMI3 (1,55%) - não aportar
+Bens Industriais (6,85%)
+└── Máquinas e Equipamentos (6,85%)
+    ├── WEGE3 (5,27%)
+    └── ROMI3 (1,58%) - não aportar
 
 
-Saúde (6,20%)
-├── Serviços Médico-Hospitalares (3,46%)
-│   └── RDOR3 (3,46%)
+Saúde (6,42%)
+├── Serviços Médico-Hospitalares (3,52%)
+│   └── RDOR3 (3,52%) - Atenção (forte regulação estatal)
 │
-├── Comércio e Distribuição de Medicamentos (1,59%)
-│   └── RADL3 (1,59%)
+├── Comércio e Distribuição de Medicamentos (1,63%)
+│   └── RADL3 (1,63%) - Atenção (margem pequena, esticada)
 │
-└── Serviços de Apoio e Diagnóstico (1,15%)
-    └── FLRY3 (1,15%)
+└── Serviços de Apoio e Diagnóstico (1,27%)
+    └── FLRY3 (1,27%)
 
 
-Materiais Básicos (4,95%)
-├── Siderurgia (3,55%)
-│   └── GOAU4 (3,55%)
+Materiais Básicos (5,00%)
+├── Siderurgia (3,57%)
+│   └── GOAU4 (3,57%) - Atenção (Setor cíclico)
 │
-├── Mineração (0,89%)
-│   └── VALE3 (0,89%)
+├── Mineração (0,91%)
+│   └── VALE3 (0,91%)
 │
-└── Madeira e Papel (0,51%)
-    └── KLBN11 (0,51%)
+└── Madeira e Papel (0,52%)
+    └── KLBN11 (0,52%)
 
 
-Consumo Não Cíclico (2,28%)
-└── Bebidas (2,28%)
-    └── ABEV3 (2,28%)
+Consumo Não Cíclico (2,83%)
+└── Bebidas (2,83%)
+    └── ABEV3 (2,83%)
 
 
-Consumo Cíclico (1,30%)
-└── Construção Civil (1,30%)
-    └── CURY3 (1,30%)
+Consumo Cíclico (1,34%)
+└── Construção Civil (1,34%)
+    └── CURY3 (1,34%)
 
 
 Comunicações (0,37%)
 └── Telecomunicações (0,37%)
     └── VIVT3 (0,37%)
 
-Fundos (9,47%) - não aportar
-└── ETFs (9,47%)
-    ├── AUVP11 (6,19%)
-    ├── SMAL11 (1,39%)
+Fundos (9,46%) - não aportar
+└── ETFs (9,46%)
+    ├── AUVP11 (6,16%)
+    ├── SMAL11 (1,37%)
     ├── BOVA11 (1,02%)
-    └── XINA11 (0,87%)
+    └── XINA11 (0,91%)
 
-BDRs (2,96%) - não aportar
-└── Tecnologia da Informação (2,96%)
-    ├── GOGL34 (1,70%)
-    └── M1TA34 (1,26%)
+BDRs (2,95%) - não aportar
+└── Tecnologia da Informação (2,95%)
+    ├── GOGL34 (1,64%)
+    └── M1TA34 (1,31%)
 ```
 
 ---
@@ -1711,36 +1719,36 @@ BDRs (2,96%) - não aportar
 ### FIIs (3.29% -> 4%)
 
 ```text
-Shoppings (51,16% → alvo 50%)
-├── Shopping Centers (51,16%)
-│   ├── VISC11 (23,25%)
-│   ├── PMLL11 (18,90%)
-│   └── XPML11 (9,01%)
+Shoppings (49,66% → alvo 50%)
+├── Shopping Centers (49,66%)
+│   ├── XPML11 (19,71%) - Preferivel
+│   ├── VISC11 (16,49%)
+│   └── PMLL11 (13,46%) - Preferivel
 
 
-Logística (28,39% → alvo 50%)
-├── Galpões Logísticos (28,39%)
-│   ├── KNRI11 (10,96%)
-│   ├── BTLG11 (9,41%)
-│   ├── XPLG11 (8,56%)
-│   └── VILG11 (1,97%)
+Logística (37,65% → alvo 50%)
+├── Galpões Logísticos (37,65%)
+│   ├── VILG11 (17,11%) - Preferivel
+│   ├── KNRI11 (7,75%)
+│   ├── BTLG11 (6,71%)
+│   └── XPLG11 (6,08%)
 
 
-Renda Urbana / Imóveis Corporativos (9,89%) - não aportar
-├── Renda Urbana (1,44%)
-│   └── ALZR11 (1,44%)
+Renda Urbana / Imóveis Corporativos (6,97%) - não aportar
+├── Renda Urbana (1,02%)
+│   └── ALZR11 (1,02%)
 │
-└── Híbrido (Escritórios + Logística) (8,45%)
-    └── GGRC11 (8,45%)
+└── Híbrido (Escritórios + Logística) (5,95%)
+    └── GGRC11 (5,95%)
 
 
-Papel (8,07%) - não aportar
-├── CRIs High Yield (4,99%)
-│   ├── CPTS11 (3,24%)
-│   └── XPCI11 (1,75%)
+Papel (5,71%) - não aportar
+├── CRIs High Yield (3,53%)
+│   ├── CPTS11 (2,31%)
+│   └── XPCI11 (1,22%)
 │
-└── CRIs High Grade / CDI (3,08%)
-    └── KNCR11 (3,08%)
+└── CRIs High Grade / CDI (2,18%)
+    └── KNCR11 (2,18%)
 ```
 
 ---
