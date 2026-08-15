@@ -1560,7 +1560,8 @@ Referência:
 | Fundos imobiliários | 3,29% | 4% | +0,71% |
 | REITs | 0,00% | 0% | 0,00% |
 | Criptomoedas | 3,56% | 4% | +0,44% |
-| Renda fixa | 59,44% | 50% | -9,44% |
+| Renda fixa | 44,32% | 37,5% | -6,82% |
+| Previdência | 15,12% | 12,5% | -2,62% |
 | Renda fixa internacional | 0,00% | 0% | 0,00% |
 
 #### Estatal × privado (ações nacionais)
@@ -1753,20 +1754,25 @@ Papel (5,71%) - não aportar
 
 ---
 
-### Renda Fixa (59.44% -> 50%)
+### Renda Fixa (44.32% -> 37.5%)
 
 ```text
-IPCA+ (41,63% -> 37,5%)
-├── Tesouro IPCA (20,70%) (Força: 9)
-└── Bancário IPCA (20,93%) (Força: 7)
+IPCA+ (55,83% -> 50%)
+├── Tesouro IPCA (27,76%) (Força: 9)
+└── Bancário IPCA (28,07%) (Força: 7)
 
-Pós-fixado / Selic (27,74% -> 30%)
-└── Bancário Selic (27,74%) (Força: 6)
+Pós-fixado / Selic (37,20% -> 40%)
+└── Bancário Selic (37,20%) (Força: 6)
 
-Prefixado (5,20% -> 7,5%)
-├── Tesouro Prefixado (5,20%) (Força: 6)
+Prefixado (6,97% -> 10%)
+├── Tesouro Prefixado (6,97%) (Força: 6)
 └── Bancário Prefixado (0,00%) (Força: 1)
+```
 
-Previdência (25,44% -> 25%) (Força: 6)
-└── VGBL e PGBL (25,44%)
+---
+
+### Previdência (15.12% -> 12.5%)
+
+```text
+VGBL e PGBL (100%) (Força: 6)
 ```
