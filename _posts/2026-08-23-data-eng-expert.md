@@ -528,3 +528,81 @@ done
 deletion request means rewriting every partition rather than deleting one row. Mitigations:
 key the table on a pseudonymous id with the mapping held in a separate deletable table, or
 keep retention short enough that the data ages out on its own.
+
+---
+
+# Chapter 2
+
+## Idempotency
+
+A pipeline should produce the same result regardless of the day, the time, or the number of tries.
+
+Rules:
+- Use `MERGE` or `INSERT OVERWRITE`
+- Never use `INSERT INTO` without a truncate: a rerun appends instead of replacing
+- A `start_date >` must have the corresponding `end_date <`. An open-ended window grows with
+  wall-clock time, so the same run date gives a different answer tomorrow
+- Use `depends_on_past` for cumulative pipelines (Dagster: a self-dependency via
+  `TimeWindowPartitionMapping(start_offset=-1, end_offset=-1)`)
+- Do not join to the `latest` partition of a dimension. Backfilling 2024 would pick up today's
+  values, so the run stops being a function of `ds`. SCD Type 2 with a validity window is the fix
+  for this, not an exception to it - reading your own *previous* partition is a different thing,
+  and that one is `depends_on_past`
+- Use a **full** set of partition sensors: one per upstream table, blocking until the data is
+  ready. The usual failure is not zero sensors, it is a sensor on the one obvious upstream and
+  nothing on the other three
+
+Obs. A sensor and a check answer different questions, and you need both:
+
+| Mechanism | Question |
+|---|---|
+| Partition sensor | Has the upstream partition arrived? |
+| Asset check | Is the partition that arrived actually complete? |
+
+Existence is not completeness: a partition directory appears as soon as the first file lands.
+`blocking=True` is what makes a check a gate rather than a dashboard.
+
+```python
+@dg.asset_check(asset="bookings", blocking=True)
+def bookings_row_count(context):
+    n = query(f"SELECT count(*) FROM bookings WHERE ds = '{context.partition_key}'")
+    return dg.AssetCheckResult(passed=n > 100_000, metadata={"rows": n})
+```
+
+---
+
+## Slowly Changing Dimensions (SCD)
+
+Dimensions whose value changes over time: age (every year), country (on a move).
+
+Options:
+- SCD proper (Types 1, 2, 3)
+- Daily/monthly/latest snapshot - simpler, and often enough
+
+**Type 1** - overwrite with the latest value
+- One row per dimension, no history
+- Makes the pipeline non-idempotent: a backfill sees today's value, not the value as of `ds`
+- Acceptable only when history has no analytical meaning (a corrected spelling, a fixed
+  data-entry error). Never for an attribute you might filter or group by *as of* a past date
+
+**Type 2** - one row per value, bounded by `start_date` and `end_date`. The Airbnb favorite
+- Idempotent when rebuilt from a source that retains full history
+- The incremental form (close the open row, insert a new one) is **not** idempotent: a rerun
+  either double-closes a record or leaves two open rows for the same key
+- More than one row per dimension, so every join needs the validity window or it fans out
+- Decide what an open record carries as `end_date`: `NULL` breaks the `<` comparison,
+  `9999-12-31` does not
+
+```sql
+ON  d.host_id = f.host_id
+AND f.event_date >= d.start_date
+AND f.event_date <  d.end_date
+```
+
+**Type 3** - original value and current value, side by side in two columns
+- One row per dimension
+- Loses everything between the first value and the current one
+
+Obs. Incremental Type 2 is sequential and stateful, so it fights the rerun-any-task-any-time
+model - the same problem as the cumulative tables in Chapter 1. Dagster's self-dependency makes
+the ordering explicit, but it does not make it parallel.
