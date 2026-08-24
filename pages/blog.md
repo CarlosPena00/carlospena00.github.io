@@ -29,16 +29,6 @@ order: 2
     {% endfor %}
 </ul>
 
-<h2>Sandboxes</h2>
-List of repositories with minimal examples of some application/library
-
-<ul>
-    <li class='list_padding'><a href='https://github.com/CarlosPena00/template_python'>Python - New Project Template</a></li>
-    <li class='list_padding'><a href='https://github.com/CarlosPena00/sandbox_celery'>Python - Celery</a></li>
-    <li class='list_padding'><a href='https://github.com/CarlosPena00/sandbox_kafka'>Python - Kafka</a></li>
-    <li class='list_padding'><a href='https://github.com/CarlosPena00/sandbox_rabbitmq'>Python - RabbitMQ</a></li>
-</ul>
-
 <h2>Some Quotes To Remember</h2>
 <ul>
     <li> Without data you’re just a person with an opinion - W. Edwards Deming</li>
