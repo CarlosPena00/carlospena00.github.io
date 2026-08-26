@@ -606,3 +606,160 @@ AND f.event_date <  d.end_date
 Obs. Incremental Type 2 is sequential and stateful, so it fights the rerun-any-task-any-time
 model - the same problem as the cumulative tables in Chapter 1. Dagster's self-dependency makes
 the ordering explicit, but it does not make it parallel.
+
+---
+
+# Chapter 3 - Graph and Additive Dimensions
+
+## Additive dimensions
+
+Addition only works when the pieces do not overlap. The values of a dimension have to form a
+partition of the entities: every entity lands in exactly one bucket, never zero, never two.
+When that holds, the parts sum to the whole. When it does not, summing overcounts.
+
+So additivity is not a property of the numbers. It is a property of the relationship between
+the entity and the dimension.
+
+| Entity to dimension | Additive? |
+|---|---|
+| One driver, one age | Yes |
+| One driver, one country of registration | Yes |
+| One driver, many car models owned | No |
+| One driver, many languages spoken | No |
+
+The question to ask every time: *can a single entity hold two values of this dimension at once?*
+If yes, stop adding.
+
+```text
+Honda drivers != Civic drivers + Corolla drivers + CR-V drivers + ...
+```
+
+Someone who owns both a Civic and a CR-V is counted twice. Nothing in the per-model numbers
+says so, which is what makes this bug quiet.
+
+### The time window is part of the claim
+
+The same dimension flips between additive and non-additive depending on the window.
+
+| Window for "device type" | Can one user have two values? | Additive? |
+|---|---|---|
+| One page view | No, one request has one device | Yes |
+| One day | Usually not | Mostly |
+| One month | Yes: phone on the train, laptop at work | No |
+| Lifetime | Almost certainly | No |
+
+> A dimension is additive over a time window if and only if, within that window, each entity
+> can hold exactly one value of it.
+
+"Device type is additive" is an incomplete sentence; "device type is additive per page view"
+is a true one. So put the window in the name: `daily_active_by_device` is honest,
+`active_by_device` invites the bug.
+
+### COUNT DISTINCT has the same disease
+
+The sum of daily distinct users is not monthly distinct users - a user active on Monday and
+Tuesday is one person in the month and two rows in the daily table. This is why `SUM` is safe
+in pre-aggregated tables and `COUNT(DISTINCT ...)` is not: sums of disjoint things compose,
+distinct counts do not.
+
+### Both grains, same question
+
+"How many Honda drivers?" asked against the two grains from Chapter 1.
+
+```sql
+-- compact: one row per driver, models in an array
+-- additive, because each driver appears exactly once
+SELECT count(*) AS honda_drivers
+FROM drivers
+WHERE array_contains(models_owned, 'Honda');
+```
+
+```sql
+-- exploded: one row per driver per model
+-- non-additive, so the per-model counts cannot be summed
+SELECT count(DISTINCT driver_id) AS honda_drivers
+FROM driver_models
+WHERE brand = 'Honda';
+```
+
+Exploding is what created the duplication, and `COUNT DISTINCT` is what undoes it.
+
+Rules of thumb:
+- Pre-aggregate only on additive dimensions. A summary table keyed by a non-additive dimension
+  cannot be rolled up further, and someone will roll it up anyway
+- To roll up over a non-additive dimension, store the entity-level set (array, bitmap,
+  HyperLogLog sketch). The set is what makes deduplication possible later
+- `datelist_int` in Chapter 1 is exactly that trick: keep the set, so the count stays correct
+
+---
+
+## Enums
+
+Good for low-to-medium cardinality, roughly up to ~15 values. Country is usually too high.
+
+- Better data quality: the pipeline fails on an unexpected value instead of silently
+  absorbing it
+- Static field, so the schema itself documents the full list of possible values
+- An exhaustive list chunks a big-data problem into manageable pieces: one branch per value,
+  each handled and tested on its own
+
+Reference: [little-book-of-pipelines](https://github.com/EcZachly/little-book-of-pipelines)
+
+### Modeling diverse sources into a shared schema
+
+The problem: many upstream sources, each with its own fields, feeding one table.
+
+| Approach | Pros | Cons |
+|---|---|---|
+| Rigid schema, one column per field | Compression, readability, queryability | ALTER TABLE for every new source, and a lot of NULLs |
+| Flexible schema, `other_properties MAP<STRING, STRING>` | No DDL per source, no NULL columns | Worse compression (especially JSON), worse readability, worse queryability |
+
+Common practice: keep the map for the long tail, and promote a field into a real column once
+enough sources send it.
+
+---
+
+## Graph modeling
+
+Relationship-focused rather than entity-focused. The schema stops describing *what a thing is*
+and starts describing *how things connect*, which is why the same two tables hold every entity
+type.
+
+Vertex:
+
+```text
+identifier:  STRING
+type:        STRING                  -- player, team, game
+properties:  MAP<STRING, STRING>
+```
+
+Edge:
+
+```text
+subject_identifier: STRING
+subject_type:       VERTEX_TYPE
+object_identifier:  STRING
+object_type:        VERTEX_TYPE
+edge_type:          EDGE_TYPE             -- plays_on, plays_against
+properties:         MAP<STRING, STRING>   -- how many years, points scored
+```
+
+```text
+                    plays_against
+   Michael Jordan ------------------- John Stockton
+         |                                  |
+         | plays_on                         | plays_on
+         |                                  |
+   Chicago Bulls                        Utah Jazz
+```
+
+| subject | edge_type | object |
+|---|---|---|
+| Michael Jordan | plays_on | Chicago Bulls |
+| Michael Jordan | plays_against | John Stockton |
+| John Stockton | plays_on | Utah Jazz |
+
+Obs. The edges mix vertex types on purpose: `plays_on` is player-to-team, `plays_against` is
+player-to-player. That is the tradeoff - the model answers "who is connected to whom" across
+any pair of types, and gives up the column-level typing, compression and pushdown a star
+schema would have.
