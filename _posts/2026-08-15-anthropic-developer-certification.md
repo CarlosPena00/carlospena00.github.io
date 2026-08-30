@@ -5,20 +5,27 @@ author: Carlos Pena
 date: 2026-08-15
 ---
 
-<!-- Intro: um parágrafo. Quando fez a prova, por que fez, e o resultado. Três frases. -->
+Passei na certificação de desenvolvedor da Anthropic. Este post não é um guia de estudo:
+é o registro dos meus erros e do que cada um deles me ensinou.
 
-<!-- Aviso: as imagens deste post são do Practice Exam, não da prova real. -->
+O padrão dos erros foi consistente o bastante para virar o fio condutor do texto. Em
+quase toda questão que errei, eu marquei a alternativa **verdadeira** - mas que não
+atacava a **causa raiz**. Havia sempre uma opção que era um fato correto sobre o sistema
+e outra, menos óbvia, que resolvia o problema descrito no enunciado. Foi só quando esse
+padrão ficou claro que minha nota começou a subir.
+
+As telas de questão que aparecem aqui são do **simulado oficial**, não da prova real.
+É ele que mostra a resposta certa junto com a explicação do erro, e foi lendo essas
+explicações que o padrão apareceu. Sobre a prova em si eu falo mais adiante, sem
+reproduzir questões.
+
 
 ---
 
----
-
-### As opções de hoje
+## As opções de hoje
 
 A oferta mudou desde que eu prestei. Hoje são quatro certificações Claude, e a escolha
 entre elas importa mais do que parece - os domínios cobrados são bem diferentes.
-
-<!-- Opcional: uma frase dizendo o que existia na época vs. o que existe agora. -->
 
 Todas compartilham o mesmo formato base: **120 minutos**, em **inglês**, válidas por
 **12 meses**, aplicadas online com proctoring ou em centro de testes Pearson.
@@ -32,7 +39,13 @@ O que muda é o número de questões, o preço e - principalmente - o peso de ca
 | Claude Certified Architect - Foundations | Foundations | 60 | US$ 125 |
 | Claude Certified Architect - Professional | Professional | 63 | US$ 175 |
 
-<!-- Falta ainda: política de retake. -->
+**Retake:** reprovando, há carência antes de tentar de novo - 14 dias após a primeira
+reprovação, 30 após a segunda e 90 após a terceira. São no máximo 4 tentativas por
+período móvel de 12 meses, contadas por prova: reprovar em uma não impede se inscrever
+em outra. A taxa é cobrada a cada tentativa - inclusive em caso de no-show ou atraso
+além da tolerância, que ainda exigem nova inscrição.
+
+Uma observação que vale: quando eu prestei, a carência era de **6 meses**.
 
 ### Os domínios de cada prova
 
@@ -132,7 +145,7 @@ prompt. Seja direto.
 
 ---
 
-## O Simulado
+## O simulado
 
 Números concretos do simulado:
 
@@ -167,9 +180,10 @@ Minha evolução entre a primeira e a última tentativa:
 
 ---
 
-## O dia da prova
+## A prova
 
-São 120 minutos. Terminei a primeira passada em torno de **90min** e usei o resto revisando: entreguei faltando **2 minutos**.
+São 120 minutos. Terminei a primeira passada em torno de **90 minutos** e usei o resto revisando:
+entreguei faltando **2 minutos**.
 
 Vale registrar isso porque contraria a intuição. Mesmo com quase o dobro do tempo por
 questão que o simulado dá, o tempo não sobrou. Três coisas explicam.
@@ -178,7 +192,7 @@ questão que o simulado dá, o tempo não sobrou. Três coisas explicam.
 percentuais, o que já foi tentado - antes de chegar à pergunta de fato. As imagens mais
 adiante neste post dão a dimensão: é normal ler dois parágrafos densos e só então avaliar
 quatro alternativas que também são longas. Uma questão assim, isolada, não seria problema.
-Uma atrás da outra, por 120 minutos, cansam.
+Uma atrás da outra, por 120 minutos, cansa.
 
 **Boa parte das questões é ambígua.** É nítido que os enunciados são escritos por IA:
 alternativas que se sobrepõem, cenários cheios de detalhe que não muda a resposta, e
@@ -205,17 +219,25 @@ seguir em frente.
 O cansaço também é cumulativo: o teto de tempo protege mais no fim da prova, quando a
 leitura já está pesando, do que no começo.
 
+### O resultado não sai na hora
+
+Esse foi o ponto que mais me incomodou, e o que menos aparece documentado.
+
+Não existe consenso sobre o prazo: em alguns lugares se fala em 2 a 14 dias úteis, em
+outros 5 a 14. Esperei os 14 dias úteis, não recebi nada, e mandei um email para a
+Anthropic. O resultado chegou uns 3 dias depois.
+
+Suspeito que seja efeito da fase de migração das certificações - a mesma que trocou os
+nomes das trilhas - e que o prazo normalize. Mas fica o aviso: o retorno não é imediato,
+e se estourar o prazo, cobrar por email funciona.
+
 ---
 
 ## As questões, por tópico
 
 Para cada cenário escolhi as questões que mais mudaram meu modelo mental - com o que
-eu marquei, qual era a correta, e por quê.
-
-Minhas duas maiores evoluções (CI e Multi-Agent) vieram do mesmo padrão de erro: eu
-escolhia a alternativa **verdadeira**, mas que não atacava a **causa raiz**. Quase
-sempre havia uma opção que era um fato correto sobre o sistema - e outra, menos
-óbvia, que resolvia o problema descrito no enunciado.
+eu marquei, qual era a correta, e por quê. Meus dois maiores saltos foram em CI e
+Multi-Agent, e é neles que o padrão descrito na abertura fica mais evidente.
 
 ---
 
@@ -357,8 +379,8 @@ Hoje, quando a segunda tentativa falha, eu paro de descrever e mostro um exemplo
 
 <img src="/assets/images/certification/questions/customer-support_q04_keyword-triggered-tool-selection-discrepancy.png" alt="Questão sobre discrepância na seleção de tools" width="100%">
 
-O cenário: quando o cliente escreve "conta" na mensagem, o agente chama `get_customer`
-primeiro em 78% dos casos. Sem a palavra "conta", ele chama `lookup_order` primeiro em
+O cenário: quando o cliente escreve "account" na mensagem, o agente chama `get_customer`
+primeiro em 78% dos casos. Sem a palavra "account", ele chama `lookup_order` primeiro em
 93%. As descrições das tools são boas e não ambíguas. Qual a causa raiz?
 
 Eu marquei **C** - associações do treinamento base entre "conta" e operações de cliente.
