@@ -412,6 +412,36 @@ a probabilidade do erro. Nenhuma elimina.
 Quando a consequência é reembolso na conta errada, 12% não vira 2% - tem que virar 0%. E
 0% só se consegue tirando a decisão do LLM e colocando em código.
 
+#### Escalar para humano é decisão operacional, não emocional
+
+<img src="/assets/images/certification/questions/customer-support_q01_escalate-to-human-trigger.png" alt="Questão sobre gatilho de escalonamento para humano" width="100%">
+
+O cenário: depois de chamar `get_customer` e `lookup_order`, o agente já tem todos os
+dados do sistema. Qual situação é o gatilho mais apropriado para `escalate_to_human`?
+
+Eu marquei **A** - o cliente diz que não recebeu o pedido, mas o rastreio mostra entrega
+assinada há três dias; escalar porque apresentar evidência contraditória pode desgastar a
+relação. A correta é **C** - o cliente pede price match contra um concorrente, e a
+política cobre queda de preço no site próprio em 14 dias mas é **silente** sobre preço de
+concorrente.
+
+O que aprendi: minha resposta escalava por receio de desgastar o cliente. A explicação
+chama isso pelo nome - é evitação emocional, não necessidade operacional. No caso A o
+agente tem o dado factual do rastreio e o procedimento padrão para comunicá-lo; não falta
+nada para ele agir. No caso C falta **autoridade**: a política não cobre a situação, e o
+agente não pode inventar política.
+
+Os gatilhos de escalonamento precisam ser determinísticos:
+
+- acabou o limite de iterações e o problema não foi resolvido;
+- o cliente pediu um humano explicitamente;
+- existe uma lacuna real de política ou de alçada, como em C.
+
+O que **não** serve como gatilho é análise de sentimento ou qualquer julgamento
+probabilístico do tipo "o cliente pode ficar irritado". É a mesma lógica da questão do
+reembolso: quando o critério precisa ser confiável, ele sai do julgamento do LLM e vira
+regra.
+
 **Também caiu neste cenário**, com a mesma lógica: para normalizar formatos de dados
 vindos de MCP servers de terceiros que você não controla, a resposta é um hook
 `PostToolUse` interceptando o resultado - não documentar os formatos no system prompt e
@@ -470,6 +500,36 @@ agregação de subagents passa de ~75K tokens, o agente de síntese cita bem os 
 15K e os últimos 10K, e ignora os 50K do meio. A correção não é resumir tudo para caber -
 é colocar um **sumário de key findings no início** e usar cabeçalhos de seção explícitos
 para o modelo navegar. Efeito de primazia é aliado, não inimigo.
+
+---
+
+## Detalhes de API que caíram
+
+Dois pontos que não aparecem nas telas acima, mas caíram na prova e valem ter decorados.
+
+**Os tipos de `tool_choice`.** Controlam se, e qual, tool o Claude pode chamar:
+
+| Valor | Comportamento |
+|---|---|
+| `{"type": "auto"}` | O Claude decide se usa tool (padrão) |
+| `{"type": "any"}` | Obriga a usar ao menos uma tool |
+| `{"type": "tool", "name": "..."}` | Obriga a usar a tool indicada |
+| `{"type": "none"}` | Proíbe o uso de tools |
+
+Qualquer um deles aceita também `"disable_parallel_tool_use": true`, que limita a uma
+tool por resposta - por padrão o Claude pode pedir várias de uma vez.
+
+**Forçar saída em JSON via tool.** O padrão que a prova cobra: você declara uma tool cujo
+`input_schema` é exatamente o formato desejado e força
+`tool_choice: {"type": "tool", "name": "..."}`. O modelo é obrigado a chamar aquela tool,
+e os argumentos chegam como JSON válido dentro do schema - você nunca faz parse de texto
+livre.
+
+Uma ressalva para quem for aplicar isso hoje: a API ganhou **structured outputs**
+(`output_config.format`, ou `client.messages.parse()`), que resolve o mesmo problema
+diretamente, sem o rodeio da tool. Para garantir os argumentos de uma tool de verdade,
+existe `strict: true` na definição dela. A técnica da prova continua funcionando, mas já
+não é o caminho recomendado.
 
 ---
 
