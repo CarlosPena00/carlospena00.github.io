@@ -13,9 +13,10 @@
         <nav>
             <span class="logo"><a href="/">Carlos Pena</a></span>
             <ul class="navigation">
+                <li><a href="https://carlospena.com.br/kana-training/">Kana</a></li>
                 {% assign sorted = site.pages | sort: 'order' %}
                 {% for page in sorted %}
-                {% if page.title != 'Home' %}
+                {% if page.title and page.title != 'Home' %}
                 <li><a href="{{ site.baseurl }}{{ page.url }}">{{ page.title }}</a></li>
                 {% endif %}
                 {% endfor %}
