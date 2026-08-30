@@ -552,6 +552,9 @@ não adianta o review acertar 92% em segurança se o time já parou de ler.
 
 São dois princípios que valem bem além da prova.
 
+Os slides da palestra baseada neste post estão
+[aqui](https://claude.ai/code/artifact/c539ca42-bc16-41df-b9bb-cc77514d3bb9).
+
 Qualquer dúvida, podem me perguntar: [carlospena.com.br](https://carlospena.com.br/)
 
 ---
