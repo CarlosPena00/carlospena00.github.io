@@ -115,6 +115,11 @@ Notes:
 ```
 This compresses the current conversation so you can keep working with a cleaner context window.
 
+You can also append instructions to steer what survives the summary:
+```txt
+/compact focus on the migration work, drop the CSS debugging
+```
+
 
 
 ## 7) Custom commands (`.claude/commands/`)
@@ -390,6 +395,38 @@ Claude Code SDK supports automation from:
 
 - Default behavior is **read-only** for safety.
 - Useful for batch analysis, automation, or integrating Claude Code into your workflows.
+
+### CLI: non-interactive mode (`-p`)
+
+By default `claude` starts an **interactive session** and waits for input. In a CI
+pipeline that hangs the job until it times out.
+
+Use `-p` / `--print` to run headless - Claude answers, prints to stdout, and the
+process exits:
+
+```bash
+claude -p "Analyze this pull request for security issues"
+```
+
+Flags that usually go with it in automation:
+
+```bash
+# parseable output instead of loose text
+claude -p "..." --output-format json
+
+# cap how many agentic turns before stopping
+claude -p "..." --max-turns 5
+
+# without a TTY there is no way to approve a permission prompt
+claude -p "..." --allowed-tools "Bash(npm:*),Read,Grep"
+```
+
+Two gotchas:
+- `--output-format` and `--input-format` **only work together with `--print`**.
+  Passing `--output-format json` alone silently does nothing.
+- Non-interactive mode also kicks in when stdout is not a TTY (piped or
+  redirected), so `echo "..." | claude` already behaves like print mode. Relying
+  on that is fragile in CI - be explicit with `-p`.
 
 Example (async):
 ```python
