@@ -11,22 +11,7 @@ date: 2026-08-15
 
 ---
 
-## O veredito
-
-<!-- Comece pela conclusão, não pela construção.
-     - Vale o dinheiro e as horas? Sim / não / depende de que.
-     - Para quem é, em uma frase.
-     - A plateia deve poder sair depois desta seção e ainda ter levado valor. -->
-
 ---
-
-## A certificação
-
-### A prova que eu fiz
-
-<!-- Detalhar aqui a prova que você prestou: o nome que ela tinha na época, o preço
-     que pagou, o formato, e o que a trilha cobria. É esta a prova que gerou os
-     números e as questões do resto do post. -->
 
 ### As opções de hoje
 
@@ -158,9 +143,9 @@ Números concretos do simulado:
 | Questões | 60 (4 cenários x 15) |
 | Tempo | 70 minutos |
 
-Vale notar que o simulado é mais apertado que a prova real: as mesmas 60 questões, mas
-em 70 minutos em vez de 120. São 1min10 por questão contra 2min. Se você fecha o
-simulado dentro do tempo, tempo não vai ser o seu problema no dia.
+O ritmo do simulado é mais apertado que o da prova real: 60 questões em 70 minutos,
+pouco mais de 1 minuto cada, contra 2 minutos na prova. Isso é ótimo para treinar
+velocidade - mas, como conto adiante, não significa que o tempo sobre no dia.
 
 Os quatro cenários são sempre os mesmos:
 
@@ -179,6 +164,46 @@ Minha evolução entre a primeira e a última tentativa:
 | Multi-Agent Research | 12/15 (80%) | 15/15 (100%) |
 | **Total** | **744** (45/60) | **903** (54/60) |
 
+
+---
+
+## O dia da prova
+
+São 120 minutos. Terminei a primeira passada em torno de **90min** e usei o resto revisando: entreguei faltando **2 minutos**.
+
+Vale registrar isso porque contraria a intuição. Mesmo com quase o dobro do tempo por
+questão que o simulado dá, o tempo não sobrou. Três coisas explicam.
+
+**As questões são longas.** Cada enunciado é um cenário completo - contexto de produção,
+percentuais, o que já foi tentado - antes de chegar à pergunta de fato. As imagens mais
+adiante neste post dão a dimensão: é normal ler dois parágrafos densos e só então avaliar
+quatro alternativas que também são longas. Uma questão assim, isolada, não seria problema.
+Uma atrás da outra, por 120 minutos, cansam.
+
+**Boa parte das questões é ambígua.** É nítido que os enunciados são escritos por IA:
+alternativas que se sobrepõem, cenários cheios de detalhe que não muda a resposta, e
+mais de uma opção defensável. Você gasta tempo não resolvendo o problema, mas decidindo
+o que a questão está perguntando.
+
+**O vocabulário em inglês pesa.** A prova só existe em inglês, e aparecem termos
+técnicos pouco conhecidos - não é o inglês de quem lê documentação todo dia. Mesmo
+trabalhando com isso há anos, tem termo que você pode nunca ter cruzado.
+
+### A recomendação
+
+Estabeleça um limite interno de tempo por questão **antes** de começar, e respeite.
+
+Divida o tempo total pelo número de questões: essa é a sua média. Trabalhe com um teto
+abaixo dela - se estourar, marque a questão, escolha a melhor opção disponível e siga.
+Foi mais ou menos o que acabei fazendo: fechei a primeira passada em 75% do tempo e
+deixei 25% para revisão.
+
+O que consome tempo não é a questão difícil. É a questão ambígua, em que você relê pela
+quarta vez tentando adivinhar a intenção de quem escreveu. Essa é a hora de marcar e
+seguir em frente.
+
+O cansaço também é cumulativo: o teto de tempo protege mais no fim da prova, quando a
+leitura já está pesando, do que no começo.
 
 ---
 
@@ -241,6 +266,31 @@ O que quebra o viés é contexto novo, não mais instrução.
 
 Na prática: rodar review em uma sessão limpa, ou em um subagent que não herda o
 contexto, pega coisas que o auto-review inline nunca pega.
+
+#### Confiança se perde mais rápido do que se reconstrói
+
+<img src="/assets/images/certification/questions/ci_q08_code-review-confidence-assessment-inline.png" alt="Questão sobre falsos positivos e confiança do time" width="100%">
+
+O cenário: a taxa de falso positivo do review automático varia muito por categoria -
+8% em segurança e correção, 18% em performance, 52% em estilo e nomenclatura, 48% em
+documentação. Os desenvolvedores passaram a descartar achados sem ler, porque "metade
+está errada". As categorias ruidosas estão contaminando a credibilidade das boas.
+
+Eu marquei **A** - manter todas as categorias ligadas e ir melhorando a precisão de cada
+uma com few-shot ao longo das semanas seguintes. A correta é **C** - desligar
+temporariamente as categorias de alto falso positivo (estilo, nomenclatura, documentação)
+e rodar só as de alta precisão enquanto os prompts são corrigidos.
+
+O que aprendi: essa é a questão que mais mudou meu jeito de pensar em ferramenta interna.
+A alternativa A **ataca a causa raiz** - o problema é precisão, e few-shot melhora
+precisão. Tecnicamente não há nada de errado nela. O que ela ignora é o prazo: durante as
+semanas de melhoria, o time continua vendo 50% de ruído e continua descartando tudo -
+inclusive os achados de segurança, que estavam certos em 92% das vezes.
+
+Uma ferramenta que ninguém lê tem precisão efetiva de zero, por melhor que seja o modelo
+atrás dela. Confiança se perde rápido e se reconstrói devagar, então a jogada certa é
+sacrificar cobertura para preservar credibilidade - e religar as categorias depois de
+consertadas.
 
 ---
 
@@ -401,30 +451,26 @@ para o modelo navegar. Efeito de primazia é aliado, não inimigo.
 
 ---
 
-## O que me pegou
+## Considerações
 
-<!-- Ver seção acima - consolidar aqui o padrão dos erros, não repetir as questões. -->
+A prova em si foi interessante. Gostei muito de ver a Anthropic indo sempre na
+preferência pela solução mais simples primeiro. Não é um detalhe de estilo: é o critério
+que decide a resposta certa em boa parte das questões. Quase sempre existe a alternativa
+sofisticada que até funcionaria, e a alternativa simples que ataca a causa raiz - e é a
+segunda que pontua.
 
----
+O outro eixo que aparece o tempo todo é o foco em estabelecer confiança do usuário.
+A questão do reembolso é o exemplo mais claro: a resposta certa não é pedir ao modelo
+que verifique o cliente, é **bloquear** a operação até a verificação ter acontecido.
+Quando a consequência cai na conta de alguém, 12% de erro não vira 2% - tem que virar 0%.
 
-## Prova vs. trabalho real
+E a confiança aparece nos dois sentidos: a do cliente no seu produto, e a do seu próprio
+time na ferramenta que você entrega. A questão dos falsos positivos é esse outro lado -
+não adianta o review acertar 92% em segurança se o time já parou de ler.
 
-<!-- Seu material mais original: onde o peso da prova diverge do uso diário.
-     Colocar dois artefatos reais aqui - um hook do .claude/settings.json,
-     uma definição de subagent - em vez de descrever em prosa. -->
+São dois princípios que valem bem além da prova.
 
-```json
-```
-
-```markdown
-```
-
----
-
-## O que eu faria diferente
-
-<!-- Feche com honestidade. Passar mudou alguma coisa?
-     Se não mudou nada, diga - é um final mais forte do que fingir que mudou. -->
+Qualquer dúvida, podem me perguntar: [carlospena.com.br](https://carlospena.com.br/)
 
 ---
 
