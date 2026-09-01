@@ -503,9 +503,9 @@ para o modelo navegar. Efeito de primazia é aliado, não inimigo.
 
 ---
 
-## Detalhes de API que caíram
+## Detalhes de API que valem ter decorados
 
-Dois pontos que não aparecem nas telas acima, mas caíram na prova e valem ter decorados.
+Dois pontos que não aparecem nas telas acima, mas são conhecimentos importantes: detalhe de API que não dá para deduzir na hora, ou você sabe ou você chuta.
 
 **Os tipos de `tool_choice`.** Controlam se, e qual, tool o Claude pode chamar:
 
@@ -519,7 +519,7 @@ Dois pontos que não aparecem nas telas acima, mas caíram na prova e valem ter 
 Qualquer um deles aceita também `"disable_parallel_tool_use": true`, que limita a uma
 tool por resposta - por padrão o Claude pode pedir várias de uma vez.
 
-**Forçar saída em JSON via tool.** O padrão que a prova cobra: você declara uma tool cujo
+**Forçar saída em JSON via tool.** O padrão canônico: você declara uma tool cujo
 `input_schema` é exatamente o formato desejado e força
 `tool_choice: {"type": "tool", "name": "..."}`. O modelo é obrigado a chamar aquela tool,
 e os argumentos chegam como JSON válido dentro do schema - você nunca faz parse de texto
@@ -528,7 +528,7 @@ livre.
 Uma ressalva para quem for aplicar isso hoje: a API ganhou **structured outputs**
 (`output_config.format`, ou `client.messages.parse()`), que resolve o mesmo problema
 diretamente, sem o rodeio da tool. Para garantir os argumentos de uma tool de verdade,
-existe `strict: true` na definição dela. A técnica da prova continua funcionando, mas já
+existe `strict: true` na definição dela. A técnica acima continua funcionando, mas já
 não é o caminho recomendado.
 
 ---
