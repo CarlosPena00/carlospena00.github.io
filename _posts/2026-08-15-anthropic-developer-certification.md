@@ -46,9 +46,10 @@ atacava a **causa raiz**. Havia sempre uma opção que era um fato correto sobre
 e outra, menos óbvia, que resolvia o problema descrito no enunciado. Foi só quando esse
 padrão ficou claro que minha nota começou a subir.
 
-Os enunciados reproduzidos aqui são do **simulado oficial**, não da prova real - e de
+Os enunciados reproduzidos aqui são do **simulado**, não da prova real - e de
 cada questão eu mostro só o enunciado e as duas alternativas que interessam à discussão,
-a que eu marquei e a correta. É o simulado que mostra a resposta certa junto com a
+a que eu marquei e a correta. Traduzi tudo para português; a prova e o simulado
+existem só em inglês. É o simulado que mostra a resposta certa junto com a
 explicação do erro, e foi lendo essas explicações que o padrão apareceu. Sobre a prova em si eu falo mais adiante, sem
 reproduzir questões.
 
@@ -153,8 +154,6 @@ Três fontes, nessa ordem:
 2. Simulado oficial
 3. Simulado de terceiros - [CertSafari](https://www.certsafari.com/anthropic/claude-certified-architect-foundations)
 
-O simulado oficial foi o que mais rendeu: ele mostra a resposta correta **e** por que
-a sua estava errada. Foi lendo essas explicações que o padrão dos meus erros apareceu.
 
 ---
 
@@ -281,10 +280,10 @@ Multi-Agent, e é neles que o padrão descrito na abertura fica mais evidente.
 #### Batch API não suporta loop de tools
 
 <div class="qbox">
-  <p class="stem"><span class="src">Enunciado original · simulado oficial</span>The code review component works iteratively: Claude analyzes a changed file, then may request related files (imports, base classes, tests) via tool calling to understand context before providing final feedback. Your application defines a tool that lets Claude request file contents; Claude invokes this tool, receives results, and continues its analysis. You’re evaluating batch processing to reduce API costs. What is the primary technical constraint when considering batch processing for this workflow?</p>
+  <p class="stem"><span class="src">Enunciado traduzido · simulado</span>O componente de code review funciona de forma iterativa: o Claude analisa um arquivo alterado e pode então solicitar arquivos relacionados (imports, classes base, testes) via tool calling para entender o contexto antes de dar o feedback final. Sua aplicação define uma tool que permite ao Claude pedir o conteúdo de arquivos; o Claude invoca essa tool, recebe os resultados e continua a análise. Você está avaliando processamento em batch para reduzir custos de API. Qual é a principal restrição técnica ao considerar batch processing para esse workflow?</p>
   <ul class="opts">
-    <li class="opt mine"><span class="k">D</span><span>Batch processing latency of up to 24 hours is too slow for pull request feedback, though the workflow could otherwise function.</span><span class="tag">eu marquei</span></li>
-    <li class="opt right"><span class="k">B</span><span>The asynchronous model prevents executing tools mid-request and returning results for Claude to continue analysis.</span><span class="tag">correta</span></li>
+    <li class="opt mine"><span class="k">D</span><span>A latência de até 24 horas do batch processing é lenta demais para feedback em pull request, embora, fora isso, o workflow funcionasse normalmente.</span><span class="tag">eu marquei</span></li>
+    <li class="opt right"><span class="k">B</span><span>O modelo assíncrono impede executar tools no meio da requisição e devolver os resultados para o Claude continuar a análise.</span><span class="tag">correta</span></li>
   </ul>
 </div>
 
@@ -311,10 +310,10 @@ Acertei essa mesma questão numa tentativa seguinte - foi o erro que mais me ens
 #### Auto-review não corrige viés de confirmação
 
 <div class="qbox">
-  <p class="stem"><span class="src">Enunciado original · simulado oficial</span>Your team uses Claude Code to generate code suggestions, but you notice a pattern: subtle issues — performance optimizations that break edge cases, cleanups that change behavior unexpectedly — only surface when a different team member reviews the PR. Claude’s reasoning during generation shows it considered these cases but concluded its approach was correct. Which approach directly addresses the root cause of this self-review limitation?</p>
+  <p class="stem"><span class="src">Enunciado traduzido · simulado</span>Seu time usa o Claude Code para gerar sugestões de código, mas você nota um padrão: problemas sutis - otimizações de performance que quebram edge cases, limpezas que mudam o comportamento de forma inesperada - só aparecem quando outra pessoa do time revisa o PR. O raciocínio do Claude durante a geração mostra que ele considerou esses casos, mas concluiu que sua abordagem estava correta. Qual abordagem ataca diretamente a causa raiz dessa limitação de auto-revisão?</p>
   <ul class="opts">
-    <li class="opt mine"><span class="k">D</span><span>Add explicit self-review instructions to the generation prompt, asking Claude to critique its own suggestions before finalizing output.</span><span class="tag">eu marquei</span></li>
-    <li class="opt right"><span class="k">C</span><span>Have a second, independent Claude Code instance review the changes without seeing the generator’s reasoning.</span><span class="tag">correta</span></li>
+    <li class="opt mine"><span class="k">D</span><span>Adicionar instruções explícitas de auto-revisão ao prompt de geração, pedindo que o Claude critique as próprias sugestões antes de finalizar a saída.</span><span class="tag">eu marquei</span></li>
+    <li class="opt right"><span class="k">C</span><span>Fazer uma segunda instância independente do Claude Code revisar as mudanças sem ver o raciocínio de quem gerou.</span><span class="tag">correta</span></li>
   </ul>
 </div>
 
@@ -337,10 +336,10 @@ contexto, pega coisas que o auto-review inline nunca pega.
 #### Confiança se perde mais rápido do que se reconstrói
 
 <div class="qbox">
-  <p class="stem"><span class="src">Enunciado original · simulado oficial</span>Analysis of your automated code review shows significant variation in false positive rates across finding categories. Security and correctness findings have an 8% false positive rate, performance findings have 18%, style and naming findings have 52%, and documentation findings have 48%. Developer surveys indicate growing distrust — many have started dismissing findings without review because “half are wrong.” The high false positive categories are undermining confidence in the accurate categories. What approach best restores developer trust while improving the system?</p>
+  <p class="stem"><span class="src">Enunciado traduzido · simulado</span>A análise do seu code review automatizado mostra variação significativa na taxa de falsos positivos entre as categorias de achados. Achados de segurança e correção têm 8% de falso positivo, os de performance têm 18%, os de estilo e nomenclatura têm 52% e os de documentação têm 48%. Pesquisas com os desenvolvedores indicam desconfiança crescente - muitos passaram a descartar achados sem ler, porque “metade está errada”. As categorias de alto falso positivo estão minando a confiança nas categorias precisas. Qual abordagem melhor restaura a confiança dos desenvolvedores enquanto melhora o sistema?</p>
   <ul class="opts">
-    <li class="opt mine"><span class="k">A</span><span>Keep all categories enabled while adding few-shot examples to improve each category’s accuracy over the coming weeks.</span><span class="tag">eu marquei</span></li>
-    <li class="opt right"><span class="k">C</span><span>Temporarily disable high false positive categories (style, naming, documentation) and run only high-precision categories while improving prompts.</span><span class="tag">correta</span></li>
+    <li class="opt mine"><span class="k">A</span><span>Manter todas as categorias habilitadas e adicionar few-shot examples para melhorar a precisão de cada uma ao longo das próximas semanas.</span><span class="tag">eu marquei</span></li>
+    <li class="opt right"><span class="k">C</span><span>Desabilitar temporariamente as categorias de alto falso positivo (estilo, nomenclatura, documentação) e rodar só as categorias de alta precisão enquanto os prompts são melhorados.</span><span class="tag">correta</span></li>
   </ul>
 </div>
 
@@ -375,10 +374,10 @@ justamente porque eu já usava isso todo dia.
 #### A hierarquia do CLAUDE.md
 
 <div class="qbox">
-  <p class="stem"><span class="src">Enunciado original · simulado oficial</span>Your team has been using Claude Code for several months. Recently, three developers report that Claude correctly follows your “always include comprehensive error handling” guideline, but a fourth developer who just joined reports Claude isn’t following this guideline. All four developers are working in the same repository and have the latest code pulled. What’s the most likely cause and appropriate fix?</p>
+  <p class="stem"><span class="src">Enunciado traduzido · simulado</span>Seu time usa o Claude Code há vários meses. Recentemente, três desenvolvedores relatam que o Claude segue corretamente a diretriz “sempre inclua tratamento de erro abrangente”, mas um quarto desenvolvedor, que acabou de entrar, relata que o Claude não segue essa diretriz. Os quatro trabalham no mesmo repositório e estão com o código atualizado. Qual é a causa mais provável e a correção apropriada?</p>
   <ul class="opts">
-    <li class="opt mine"><span class="k">C</span><span>The new developer’s <code>~/.claude/CLAUDE.md</code> contains conflicting instructions that override the project settings. Have them remove the conflicting section from their user-level configuration.</span><span class="tag">eu marquei</span></li>
-    <li class="opt right"><span class="k">A</span><span>The guideline exists in the original developers’ <code>~/.claude/CLAUDE.md</code> files (user-level) instead of the project’s <code>.claude/CLAUDE.md</code>. Move the instruction to the project-level file so all team members receive it.</span><span class="tag">correta</span></li>
+    <li class="opt mine"><span class="k">C</span><span>O <code>~/.claude/CLAUDE.md</code> do novo desenvolvedor contém instruções conflitantes que sobrescrevem as configurações do projeto. Peça que ele remova a seção conflitante da configuração de nível de usuário.</span><span class="tag">eu marquei</span></li>
+    <li class="opt right"><span class="k">A</span><span>A diretriz está nos arquivos <code>~/.claude/CLAUDE.md</code> dos desenvolvedores originais (nível de usuário), e não no <code>.claude/CLAUDE.md</code> do projeto. Mova a instrução para o arquivo de nível de projeto para que todos do time a recebam.</span><span class="tag">correta</span></li>
   </ul>
 </div>
 
@@ -402,10 +401,10 @@ mim" é exatamente o que faz onboarding quebrar sem ninguém entender por quê.
 #### Prosa que já falhou duas vezes não melhora sendo mais precisa
 
 <div class="qbox">
-  <p class="stem"><span class="src">Enunciado original · simulado oficial</span>You’ve asked Claude Code to implement a function that transforms API responses into a normalized internal format. After two iterations, the output structure still doesn’t match expectations — some fields are nested differently and timestamps aren’t formatted correctly. You’ve been describing the requirements in prose, but Claude seems to interpret them differently each time. What’s the most effective approach for the next iteration?</p>
+  <p class="stem"><span class="src">Enunciado traduzido · simulado</span>Você pediu ao Claude Code para implementar uma função que transforma respostas de API em um formato interno normalizado. Depois de duas iterações, a estrutura de saída ainda não corresponde ao esperado - alguns campos estão aninhados de forma diferente e os timestamps não estão no formato correto. Você vem descrevendo os requisitos em prosa, mas o Claude parece interpretá-los de um jeito diferente a cada vez. Qual é a abordagem mais eficaz para a próxima iteração?</p>
   <ul class="opts">
-    <li class="opt mine"><span class="k">D</span><span>Rewrite your requirements with greater technical precision, specifying exact field mappings, nesting rules, and timestamp format strings.</span><span class="tag">eu marquei</span></li>
-    <li class="opt right"><span class="k">C</span><span>Provide 2-3 concrete input-output examples showing the expected transformation for representative API responses.</span><span class="tag">correta</span></li>
+    <li class="opt mine"><span class="k">D</span><span>Reescrever os requisitos com maior precisão técnica, especificando o mapeamento exato dos campos, as regras de aninhamento e as strings de formato dos timestamps.</span><span class="tag">eu marquei</span></li>
+    <li class="opt right"><span class="k">C</span><span>Fornecer de 2 a 3 exemplos concretos de entrada e saída mostrando a transformação esperada para respostas de API representativas.</span><span class="tag">correta</span></li>
   </ul>
 </div>
 
@@ -441,10 +440,10 @@ Hoje, quando a segunda tentativa falha, eu paro de descrever e mostro um exemplo
 #### O culpado é o seu prompt, não o modelo
 
 <div class="qbox">
-  <p class="stem"><span class="src">Enunciado original · simulado oficial</span>Production logs reveal a consistent pattern: when customers include “account” in messages (e.g., “I want to check my account for the order I placed yesterday”), the agent calls <code>get_customer</code> first 78% of the time. When customers phrase similar requests without “account” (e.g., “I want to check on the order I placed yesterday”), it calls <code>lookup_order</code> first 93% of the time. The tool descriptions are well-written and unambiguous. What is the most likely root cause of this discrepancy?</p>
+  <p class="stem"><span class="src">Enunciado traduzido · simulado</span>Os logs de produção revelam um padrão consistente: quando os clientes incluem “account” na mensagem (ex.: “I want to check my account for the order I placed yesterday”), o agente chama <code>get_customer</code> primeiro em 78% das vezes. Quando os clientes formulam pedidos parecidos sem “account” (ex.: “I want to check on the order I placed yesterday”), ele chama <code>lookup_order</code> primeiro em 93% das vezes. As descrições das tools são bem escritas e não ambíguas. Qual é a causa raiz mais provável dessa discrepância?</p>
   <ul class="opts">
-    <li class="opt mine"><span class="k">C</span><span>The model’s base training creates associations between “account” terminology and customer-related operations that override the tool descriptions</span><span class="tag">eu marquei</span></li>
-    <li class="opt right"><span class="k">A</span><span>The system prompt contains keyword-sensitive instructions that steer behavior based on terms like “account,” creating unintended tool selection patterns</span><span class="tag">correta</span></li>
+    <li class="opt mine"><span class="k">C</span><span>O treinamento base do modelo cria associações entre a terminologia “account” e operações relacionadas a cliente, que se sobrepõem às descrições das tools</span><span class="tag">eu marquei</span></li>
+    <li class="opt right"><span class="k">A</span><span>O system prompt contém instruções sensíveis a palavras-chave que direcionam o comportamento com base em termos como “account”, criando padrões não intencionais de seleção de tools</span><span class="tag">correta</span></li>
   </ul>
 </div>
 
@@ -467,9 +466,9 @@ produz degrau. Se o gráfico tem degrau, procure a instrução, não o modelo.
 #### Garantia determinística vence instrução
 
 <div class="qbox">
-  <p class="stem"><span class="src">Enunciado original · simulado oficial</span>Production data shows that in 12% of cases, your agent skips <code>get_customer</code> entirely and calls <code>lookup_order</code> using only the customer’s stated name, occasionally leading to misidentified accounts and incorrect refunds. What change would most effectively address this reliability issue?</p>
+  <p class="stem"><span class="src">Enunciado traduzido · simulado</span>Os dados de produção mostram que em 12% dos casos o seu agente pula <code>get_customer</code> completamente e chama <code>lookup_order</code> usando apenas o nome informado pelo cliente, o que às vezes leva a contas identificadas erradas e reembolsos incorretos. Qual mudança resolveria de forma mais eficaz esse problema de confiabilidade?</p>
   <ul class="opts">
-    <li class="opt right"><span class="k">D</span><span>Add a programmatic prerequisite that blocks <code>lookup_order</code> and <code>process_refund</code> calls until <code>get_customer</code> has returned a verified customer ID.</span><span class="tag">acertei</span></li>
+    <li class="opt right"><span class="k">D</span><span>Adicionar um pré-requisito programático que bloqueia as chamadas de <code>lookup_order</code> e <code>process_refund</code> até que <code>get_customer</code> tenha retornado um ID de cliente verificado.</span><span class="tag">acertei</span></li>
   </ul>
 </div>
 
@@ -489,10 +488,10 @@ Quando a consequência é reembolso na conta errada, 12% não vira 2% - tem que 
 #### Escalar para humano é decisão operacional, não emocional
 
 <div class="qbox">
-  <p class="stem"><span class="src">Enunciado original · simulado oficial</span>After calling <code>get_customer</code> and <code>lookup_order</code>, the agent has retrieved all available system data but faces uncertainty. Which situation represents the most appropriate trigger for calling <code>escalate_to_human</code>?</p>
+  <p class="stem"><span class="src">Enunciado traduzido · simulado</span>Depois de chamar <code>get_customer</code> e <code>lookup_order</code>, o agente já recuperou todos os dados disponíveis no sistema, mas ainda enfrenta incerteza. Qual situação representa o gatilho mais apropriado para chamar <code>escalate_to_human</code>?</p>
   <ul class="opts">
-    <li class="opt mine"><span class="k">A</span><span>The customer claims they never received their order, but tracking shows it was delivered and signed for at their address three days ago. The agent should escalate because presenting contradictory evidence might damage the customer relationship.</span><span class="tag">eu marquei</span></li>
-    <li class="opt right"><span class="k">C</span><span>The customer requests a price match against a competitor. Your policies allow adjustments for price drops on your own site within 14 days but are silent on competitor pricing. The agent should escalate for policy interpretation.</span><span class="tag">correta</span></li>
+    <li class="opt mine"><span class="k">A</span><span>O cliente afirma que nunca recebeu o pedido, mas o rastreio mostra que ele foi entregue e assinado no endereço dele há três dias. O agente deve escalar porque apresentar evidência contraditória pode desgastar a relação com o cliente.</span><span class="tag">eu marquei</span></li>
+    <li class="opt right"><span class="k">C</span><span>O cliente pede equiparação de preço com um concorrente. Suas políticas permitem ajuste por queda de preço no seu próprio site em até 14 dias, mas são silentes sobre preço de concorrente. O agente deve escalar para interpretação de política.</span><span class="tag">correta</span></li>
   </ul>
 </div>
 
@@ -537,10 +536,10 @@ claro: eu tratava sintoma, a resposta certa corrigia a origem.
 #### Nome de tool ambíguo se resolve renomeando
 
 <div class="qbox">
-  <p class="stem"><span class="src">Enunciado original · simulado oficial</span>Production logs reveal a consistent pattern: requests to “analyze the quarterly report I uploaded” are routed to the web search agent 45% of the time instead of the document analysis agent. Examining the tool definitions, you find the web search agent has an <code>analyze_content</code> tool described as “analyzes content and extracts key information,” while the document analysis agent has an <code>analyze_document</code> tool described as “analyzes documents and extracts key information.” How should you address this misrouting?</p>
+  <p class="stem"><span class="src">Enunciado traduzido · simulado</span>Os logs de produção revelam um padrão consistente: pedidos do tipo “analise o relatório trimestral que eu subi” são roteados para o agente de web search em 45% das vezes, em vez de irem para o agente de análise de documentos. Ao examinar as definições das tools, você descobre que o agente de web search tem uma tool <code>analyze_content</code> descrita como “analisa conteúdo e extrai informação chave”, enquanto o agente de análise de documentos tem uma tool <code>analyze_document</code> descrita como “analisa documentos e extrai informação chave”. Como você deve resolver esse roteamento errado?</p>
   <ul class="opts">
-    <li class="opt mine"><span class="k">D</span><span>Add few-shot examples to the coordinator’s prompt showing correct routing: “User uploads quarterly report → document analysis agent” and “User asks about a webpage → web search agent.”</span><span class="tag">eu marquei</span></li>
-    <li class="opt right"><span class="k">C</span><span>Rename the web search tool to <code>extract_web_results</code> and update its description to “processes and returns information retrieved from web searches and URLs.”</span><span class="tag">correta</span></li>
+    <li class="opt mine"><span class="k">D</span><span>Adicionar few-shot examples ao prompt do coordenador mostrando o roteamento correto: “Usuário sobe relatório trimestral → agente de análise de documentos” e “Usuário pergunta sobre uma página web → agente de web search”.</span><span class="tag">eu marquei</span></li>
+    <li class="opt right"><span class="k">C</span><span>Renomear a tool de web search para <code>extract_web_results</code> e atualizar sua descrição para “processa e retorna informação obtida de buscas na web e de URLs”.</span><span class="tag">correta</span></li>
   </ul>
 </div>
 
@@ -563,10 +562,10 @@ o problema está no vocabulário, não no exemplo.
 #### Subagent não deve engolir contexto de falha
 
 <div class="qbox">
-  <p class="stem"><span class="src">Enunciado original · simulado oficial</span>The web search subagent times out while researching a complex topic. You need to design how this failure information flows back to the coordinator agent. Which error propagation approach best enables intelligent recovery?</p>
+  <p class="stem"><span class="src">Enunciado traduzido · simulado</span>O subagent de web search dá timeout enquanto pesquisa um tópico complexo. Você precisa desenhar como essa informação de falha volta para o agente coordenador. Qual abordagem de propagação de erro melhor viabiliza uma recuperação inteligente?</p>
   <ul class="opts">
-    <li class="opt mine"><span class="k">A</span><span>Implement automatic retry logic with exponential backoff within the subagent, returning a generic “search unavailable” status only after all retries are exhausted.</span><span class="tag">eu marquei</span></li>
-    <li class="opt right"><span class="k">D</span><span>Return structured error context to the coordinator including the failure type, the attempted query, any partial results, and potential alternative approaches.</span><span class="tag">correta</span></li>
+    <li class="opt mine"><span class="k">A</span><span>Implementar retry automático com backoff exponencial dentro do subagent, retornando um status genérico de “search unavailable” apenas depois de esgotadas todas as tentativas.</span><span class="tag">eu marquei</span></li>
+    <li class="opt right"><span class="k">D</span><span>Retornar ao coordenador um contexto de erro estruturado, incluindo o tipo da falha, a query tentada, quaisquer resultados parciais e possíveis abordagens alternativas.</span><span class="tag">correta</span></li>
   </ul>
 </div>
 
