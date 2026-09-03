@@ -4,6 +4,17 @@
 
 <head>
     <title>Carlos Pena</title>
+    <script>
+        // Apply saved theme before paint to avoid a flash. Dark is the default.
+        (function () {
+            try {
+                var t = localStorage.getItem("theme");
+                document.documentElement.setAttribute("data-theme", t === "light" ? "light" : "dark");
+            } catch (e) {
+                document.documentElement.setAttribute("data-theme", "dark");
+            }
+        })();
+    </script>
     <link rel="stylesheet" type="text/css" href="{{ '/assets/style.css' | relative_url }}">
 </head>
 
@@ -11,7 +22,10 @@
 
     <header>
         <nav>
-            <span class="logo"><a href="/">Carlos Pena</a></span>
+            <div class="brand">
+                <span class="logo"><a href="/">Carlos Pena</a></span>
+                <button type="button" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+            </div>
             <ul class="navigation">
                 <li><a href="https://carlospena.com.br/kana-training/">Kana</a></li>
                 {% assign sorted = site.pages | sort: 'order' %}
@@ -25,6 +39,26 @@
     </header>
 
     {{ content }}
+
+    <script>
+        // Theme toggle: switches between dark (default) and light, persisted in localStorage.
+        (function () {
+            var btn = document.querySelector(".theme-toggle");
+            if (!btn) return;
+            function label() {
+                var dark = document.documentElement.getAttribute("data-theme") !== "light";
+                btn.textContent = dark ? "🌙" : "☀️";
+                btn.title = dark ? "Switch to light mode" : "Switch to dark mode";
+            }
+            label();
+            btn.addEventListener("click", function () {
+                var next = document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
+                document.documentElement.setAttribute("data-theme", next);
+                try { localStorage.setItem("theme", next); } catch (e) {}
+                label();
+            });
+        })();
+    </script>
 </body>
 
 </html>

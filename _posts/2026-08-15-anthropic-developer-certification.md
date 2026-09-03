@@ -8,10 +8,13 @@ lang: pt-br
 
 <style>
 .qbox{margin:1.6em 0;display:flex;flex-direction:column;gap:.75em;
-  --qsurface:#fff;--qrule:#d2d8e0;--qaccent:#1b3a6b;--qmuted:#5a6472;
+  --qsurface:#fff;--qrule:#d2d8e0;--qaccent:#1b3a6b;--qmuted:#5a6472;--qtext:#212529;
   --qright:#2f7a5a;--qright-bg:#e4f0ea;--qmine:#b4432e;--qmine-bg:#f7e7e2;
   --qmono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-.qbox .stem{background:var(--qsurface);border:1px solid var(--qrule);
+:root:not([data-theme="light"]) .qbox{
+  --qsurface:#2b3038;--qrule:#3f454e;--qaccent:#7aa7e0;--qmuted:#9aa2ad;--qtext:#dfe3e8;
+  --qright:#4caf82;--qright-bg:#1e3a30;--qmine:#d9694f;--qmine-bg:#3a231d}
+.qbox .stem{background:var(--qsurface);border:1px solid var(--qrule);color:var(--qtext);
   border-left:3px solid var(--qaccent);border-radius:8px;padding:16px;margin:0;
   font-size:.92rem;line-height:1.5}
 .qbox .stem code{font-size:.88em}
@@ -19,7 +22,7 @@ lang: pt-br
   letter-spacing:.13em;text-transform:uppercase;color:var(--qmuted);margin-bottom:.6em}
 .qbox .opts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.55em}
 .qbox .opt{display:grid;grid-template-columns:auto 1fr auto;gap:.85em;align-items:start;
-  border:1px solid var(--qrule);border-radius:8px;padding:.7em .9em;
+  border:1px solid var(--qrule);border-radius:8px;padding:.7em .9em;color:var(--qtext);
   background:var(--qsurface);font-size:.92rem;line-height:1.45}
 .qbox .opt .k{font-family:var(--qmono);font-weight:700;font-size:.8rem;width:1.7em;height:1.7em;
   border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
