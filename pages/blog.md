@@ -6,6 +6,7 @@ order: 2
 <content>
 {% comment %} Tópicos (prefixo do título antes do ":") que NÃO são de programação. Adicione novos aqui: Receitas, Economia, etc. {% endcomment %}
 {% assign nonprog = "Economy,Economia,Investimentos,Finanças,Receitas,Cozinha,Culinária,Pessoal,Vida,Saúde,Musica,Música,Music" | split: "," %}
+{% comment %} Idioma do post: defina `lang:` no front matter (ex.: `lang: pt-br`). Sem o campo, assume EN. {% endcomment %}
 {% assign sort_post = site.posts | sort: 'title' %}
 
 <h2>Programming</h2>
@@ -13,7 +14,8 @@ order: 2
     {% for post in sort_post %}
     {% assign topic = post.title | split: ":" | first | strip %}
     {% unless nonprog contains topic %}
-    <li class='list_padding'><a href='{{ site.baseurl }}{{ post.url }}'>{{ post.title }}</a></li>
+    {% assign post_lang = post.lang | default: "EN" | upcase %}
+    <li class='list_padding'><a href='{{ site.baseurl }}{{ post.url }}'>{{ post.title }}</a>{% unless post_lang == "EN" %} <span class='lang-tag'>{{ post_lang }}</span>{% endunless %}</li>
     {% endunless %}
     {% endfor %}
 </ul>

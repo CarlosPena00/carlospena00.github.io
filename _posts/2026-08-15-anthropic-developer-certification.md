@@ -3,6 +3,7 @@ layout: post
 title: "Anthropic Developer Certification: Como passei na prova"
 author: Carlos Pena
 date: 2026-08-15
+lang: pt-br
 ---
 
 <style>
