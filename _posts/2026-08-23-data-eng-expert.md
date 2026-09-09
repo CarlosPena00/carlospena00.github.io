@@ -763,3 +763,153 @@ Obs. The edges mix vertex types on purpose: `plays_on` is player-to-team, `plays
 player-to-player. That is the tradeoff - the model answers "who is connected to whom" across
 any pair of types, and gives up the column-level typing, compression and pushdown a star
 schema would have.
+
+# Chapter 4 - How to Model
+
+Fact data ~= 10-100x dimension data
+ex: 2B users --> 50B notifications
+
+Normalization: Dont have any dimensional attributes, just IDs
+  - Works better with small scale
+
+Denormalized: Have dimensional attributes (skip some joins, more storage)
+
+Raw Logs
+  - Ugly schemas, duplicates, shorter retation
+
+Fact Data
+  - wll defined schema/column, quality gate, longer retations
+  - Who, what, where, when, how
+  - Must have quality guarantees
+  - small than raw logs
+  - Should not have hard-to-understand columns, should not focus on complex data types (some are ok)
+
+  Spark Broadcast join:
+    - fast way to do join in spark
+    - Just when one size is small < 5Gbs
+
+  Logs (msg):
+    - Logging should conform to values specified; shared schema
+
+  Potencional Options to high volume fact data
+  - Sampling (not always)
+  - Bucketing
+    - Along one important dimension (ex: User)
+    - Bucket joins can be faster than shuffle joins
+    - Sorted-Merge Bucket (SMB) can joins without shuffle
+
+  How long to store:
+    < 10 TB: didnt matter
+    > 100TB: recommended short retantion (~14 days)
+
+---
+
+## Deduplication of fact data
+
+Duplicates are normal in a raw fact stream. At-least-once delivery, producer retries after a
+timeout, client resends on a flaky network, and consumers reprocessing after a crash all put
+the same logical event on the topic more than once. On top of that there are semantic
+near-duplicates: three clicks on the same notification within two seconds is probably one
+engagement, not three.
+
+Left alone, every duplicate inflates `COUNT`, `SUM` and revenue. Dedupe on a key - `event_id`,
+or a hash of the meaningful fields - keeping the first occurrence.
+
+**Start by looking at the distribution of duplicates.** Measure how far apart in time the
+copies land. That gap decides the window you need, and the window decides which approach is
+affordable.
+
+| Window | Catches | Cost |
+|---|---|---|
+| Minutes | Retries, immediate resends | Cheap |
+| Hour | + most client and consumer replays | Moderate |
+| Day | + slow stragglers | Expensive to hold in memory |
+| Week | Almost everything | Batch only |
+
+Most duplicates cluster within a short time of the first event, so a small window catches the
+large majority. The long-tail duplicate that arrives 18 hours later is rare, and chasing it in
+real time is what gets expensive.
+
+Two intraday approaches: **streaming** and **hourly microbatch**. Both are usually backed by a
+daily or multi-day batch pass that catches whatever the intraday window missed, before the
+partition is final.
+
+---
+
+### Streaming dedupe
+
+The processor keeps the set of keys it has already seen in bounded state (memory, or RocksDB
+on the workers) and drops any event whose key is already there. The **window** is how long a
+key is retained, which is exactly how far apart two copies can arrive and still be matched.
+
+- A few-minute window: small state, catches retries and immediate resends
+- A full-day window: the job must remember *every* key for 24 hours; on a high-volume stream
+  that state store is huge and grows with traffic
+- 15 minutes to 1 hour is the sweet spot - catches the large majority at a bounded, cheap
+  state size
+- Anything slower than the window slips through and is left for the batch backstop
+
+The watermark bounds the state: it tells the engine no event older than this will arrive, so
+that key can be evicted.
+
+```python
+# Spark Structured Streaming
+(events
+  .withWatermark("event_time", "1 hour")
+  .dropDuplicatesWithinWatermark("event_id"))
+```
+
+```sql
+-- Flink SQL: keep the first row per key, bounded by the watermark
+SELECT *
+FROM (
+  SELECT *,
+         ROW_NUMBER() OVER (PARTITION BY event_id ORDER BY event_time) AS rn
+  FROM events
+)
+WHERE rn = 1;
+```
+
+Kafka Streams does the same with a windowed state store: check-and-set on the key, store
+retention set to the window.
+
+---
+
+### Hourly microbatch dedupe with a daily merge
+
+Instead of holding streaming state all day, run a small batch job per hour, then combine the
+hours in a reduce tree.
+
+```text
+Wait HR1 -> Dedupe HR1 --\
+                          Merge 1-2 --\
+Wait HR2 -> Dedupe HR2 --/             \
+                                       Merge 1-4 --\
+Wait HR3 -> Dedupe HR3 --\             /            \
+                          Merge 3-4 -/               \
+Wait HR4 -> Dedupe HR4 --/                            Merge 1-8 -> ... -> Final Merge
+```
+
+**Per hour:** wait for the hour's partition (a sensor), then dedupe inside it with a
+`GROUP BY` on the key.
+
+**Between hours:** a `FULL OUTER JOIN` on the key catches duplicates that straddle an hour
+boundary - one copy at 10:59, the other at 11:01. For each column, decide how two copies
+collapse:
+
+| Column kind | Combine with |
+|---|---|
+| Additive measure (amount, count) | `SUM` |
+| Should be identical across copies | any of them - `MIN` / `MAX` / `FIRST` |
+| Might legitimately differ, keep all | `collect_list` into an array |
+
+**Why a binary tree and not one daily `GROUP BY`:**
+
+- Each merge is small, independent and parallel - a reduce tree instead of one wide shuffle
+- Each hour is usable the moment it lands, so results are incremental and low-latency
+- A single daily `GROUP BY` has to wait for all 24 hours and shuffle the whole day at once
+
+Obs. Streaming vs microbatch is a latency/complexity trade. Streaming gives seconds of latency
+but needs a running stateful job and careful watermarking. Microbatch gives ~1 hour of latency
+with ordinary batch jobs and a scheduler. Both still want the daily batch pass as the exact
+backstop.
