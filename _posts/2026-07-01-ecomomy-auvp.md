@@ -1555,13 +1555,13 @@ Referência:
 
 | Tipo | Atual | Alvo | Diferença |
 |------|------:|-----:|----------:|
-| Ações internacionais | 13,23% | 17% | +3,77% |
-| Ações nacionais | 20,48% | 25% | +4,52% |
-| Fundos imobiliários | 3,29% | 4% | +0,71% |
+| Ações internacionais | 13,05% | 17% | +3,95% |
+| Ações nacionais | 21,56% | 25% | +3,44% |
+| Fundos imobiliários | 4,84% | 4% | -0,84% |
 | REITs | 0,00% | 0% | 0,00% |
-| Criptomoedas | 3,56% | 4% | +0,44% |
-| Renda fixa | 44,32% | 37,5% | -6,82% |
-| Previdência | 15,12% | 12,5% | -2,62% |
+| Criptomoedas | 3,19% | 4% | +0,81% |
+| Renda fixa | 42,77% | 37,5% | -5,27% |
+| Previdência | 14,59% | 12,5% | -2,09% |
 | Renda fixa internacional | 0,00% | 0% | 0,00% |
 
 #### Estatal × privado (ações nacionais)
@@ -1570,191 +1570,192 @@ Ponto de atenção: empresas estatais compartilham o **mesmo risco político** (
 
 | Bloco | % |
 |-------|--:|
-| Estatal BR (governo federal/estadual) | 43,85% |
-| Privado BR | 42,85% |
-| Estatal estrangeiro (State Grid - China) | 0,87% |
-| ETFs + BDRs | 12,43% |
+| Estatal BR (governo federal/estadual) | 41,44% |
+| Privado BR | 44,44% |
+| Estatal estrangeiro (State Grid - China) | 2,30% |
+| ETFs + BDRs | 11,82% |
 
 Estatais BR (detalhe):
 
 | Ticker | Empresa | Controle | % |
 |--------|---------|----------|--:|
-| BBSE3 | BB Seguridade | União (via BB) | 12,40% |
-| PETR4 | Petrobras | União | 11,53% |
-| BBAS3 | Banco do Brasil | União | 7,22% |
-| SAPR3 | Sanepar | Paraná | 5,92% |
-| CXSE3 | Caixa Seguridade | União (via Caixa) | 2,89% |
-| TAEE3 | Taesa | Indireto (via Cemig/MG) | 1,98% |
-| CMIG3 | Cemig | Minas Gerais | 1,91% |
-| **Total** | | | **43,85%** |
+| PETR4 | Petrobras | União | 11,95% |
+| BBSE3 | BB Seguridade | União (via BB) | 10,79% |
+| BBAS3 | Banco do Brasil | União | 7,10% |
+| SAPR3 | Sanepar | Paraná | 5,20% |
+| CXSE3 | Caixa Seguridade | União (via Caixa) | 2,72% |
+| TAEE3 | Taesa | Indireto (via Cemig/MG) | 1,86% |
+| CMIG3 | Cemig | Minas Gerais | 1,83% |
+| **Total** | | | **41,44%** |
 
-- **BBAS3 + BBSE3** (ecossistema BB) e **CXSE3** (Caixa) têm controlador correlacionado → tratar como quase a mesma aposta.
-- **CPFE3** (CPFL, 0,87%): controlada pela State Grid (estatal chinesa) → tem risco político, mas não do governo BR.
+- **BBAS3 + BBSE3** (ecossistema BB) e **CXSE3** (Caixa) têm controlador correlacionado → tratar como quase a mesma aposta (20,61% combinado).
+- **CPFE3** (CPFL, 2,30%): controlada pela State Grid (estatal chinesa) → tem risco político, mas não do governo BR.
 
 ---
 
-### Internacional (13.23% -> 17%)
+### Internacional (13,05% -> 17%)
 
 ```text
-USA (89,01% → alvo 80%)
-├── ETFs (80,59%)
-│   ├── SPHQ (2,36%) - foco em qualidade
-│   ├── VOO (68,41%) - não aportar (bolha de IA; retomar no futuro, quando SPHQ chegar em 20%)
-│   ├── NOBL (3,74%) - não aportar (favorecer SPHQ)
-│   ├── BIVB39 (3,21%) - não aportar (BDR do IVV, mesmo S&P 500 do VOO)
-│   └── SCHV (2,87%) - não aportar (favorecer SPHQ)
+USA (86,64% → alvo 80%)
+├── ETFs (90,18%)
+│   ├── SPHQ (2,61%) - foco em qualidade
+│   ├── VOO (76,72%) - não aportar (bolha de IA; retomar no futuro, quando SPHQ chegar em 20%)
+│   ├── NOBL (4,08%) - não aportar (favorecer SPHQ)
+│   ├── BIVB39 (3,58%) - não aportar (BDR do IVV, mesmo S&P 500 do VOO)
+│   └── SCHV (3,19%) - não aportar (favorecer SPHQ)
 │
-└── Stock picking (8,42%) - não aportar (preferir ETFs)
-    ├── GOOGL (3,27%)
-    ├── AMD (2,58%)
-    ├── AMZN (1,25%)
-    ├── KO (1,00%)
-    └── DISB34 (0,32%)
+└── Stock picking (9,82%) - não aportar (preferir ETFs)
+    ├── GOOGL (3,62%)
+    ├── AMD (3,40%)
+    ├── AMZN (1,29%)
+    ├── KO (1,15%)
+    └── DISB34 (0,37%)
 
 
-Europa (10,98% → alvo 10%)
-└── VGK (10,98%)
+Europa (10,48% → alvo 10%)
+└── VGK (10,48%)
 
 
-Ásia / Emergentes (0% → alvo 10%)
-└── VWO (0%)
+Ásia / Emergentes (2,88% → alvo 10%)
+└── VWO (2,88%)
 ```
 
 ---
 
-### Ações nacionais (20.48% -> 25%)
+### Ações nacionais (21,56% -> 25%)
 
 ```text
-Financeiro (37,97%)
-├── Previdência e Seguros (14,45%)
-│   ├── BBSE3 (11,60%)
-│   └── CXSE3 (2,85%) - não aportar
+Financeiro (37,72%)
+├── Previdência e Seguros (13,51%)
+│   ├── BBSE3 (10,79%)
+│   └── CXSE3 (2,72%) - não aportar
 │
-├── Intermediários Financeiros (11,70%)
-│   ├── BBAS3 (7,09%)
-│   └── BBDC3 (4,61%) - não aportar
+├── Intermediários Financeiros (11,41%)
+│   ├── BBAS3 (7,10%)
+│   └── BBDC3 (4,31%) - não aportar
 │
-├── Holdings Financeiras (5,92%)
-│   └── ITSA3 (5,92%)
+├── Holdings Financeiras (6,58%)
+│   └── ITSA3 (6,58%)
 │
-└── Serviços Financeiros Diversos (5,90%)
-    └── B3SA3 (5,90%)
+└── Serviços Financeiros Diversos (6,23%)
+    └── B3SA3 (6,23%)
 
 
-Utilidade Pública (15,04%)
-├── Energia Elétrica (9,33%)
-│   ├── Transmissão (2,00%)
-│   │   └── TAEE3 (2,00%)
-│   ├── Geração (2,22%)
-│   │   └── EGIE3 (2,22%)
-│   └── Distribuição (5,11%)
-│       ├── CPLE3 (2,39%)
-│       ├── CPFE3 (0,86%) - não aportar
-│       └── CMIG3 (1,86%) - não aportar
+Utilidade Pública (16,24%)
+├── Energia Elétrica (11,04%)
+│   ├── Transmissão (1,86%)
+│   │   └── TAEE3 (1,86%)
+│   ├── Geração (2,68%)
+│   │   └── EGIE3 (2,68%)
+│   └── Distribuição (6,50%)
+│       ├── CPLE3 (2,37%)
+│       ├── CPFE3 (2,30%) - não aportar
+│       └── CMIG3 (1,83%) - não aportar
 │
-└── Água e Saneamento (5,71%)
-    └── SAPR3 (5,71%)
+└── Água e Saneamento (5,20%)
+    └── SAPR3 (5,20%)
 
 
-Petróleo, Gás e Biocombustíveis (11,79%)
-└── Exploração, Refino e Distribuição (11,79%)
-    └── PETR4 (11,79%)
+Petróleo, Gás e Biocombustíveis (11,95%)
+└── Exploração, Refino e Distribuição (11,95%)
+    └── PETR4 (11,95%)
 
-Bens Industriais (6,85%)
-└── Máquinas e Equipamentos (6,85%)
-    ├── WEGE3 (5,27%)
-    └── ROMI3 (1,58%) - não aportar
+Bens Industriais (6,43%)
+└── Máquinas e Equipamentos (6,43%)
+    ├── WEGE3 (4,98%)
+    └── ROMI3 (1,45%) - não aportar
 
 
-Saúde (6,42%)
-├── Serviços Médico-Hospitalares (3,52%)
-│   └── RDOR3 (3,52%) - Atenção (forte regulação estatal)
+Saúde (6,16%)
+├── Serviços Médico-Hospitalares (3,38%)
+│   └── RDOR3 (3,38%) - Atenção (forte regulação estatal)
 │
-├── Comércio e Distribuição de Medicamentos (1,63%)
-│   └── RADL3 (1,63%) - Atenção (margem pequena, esticada)
+├── Comércio e Distribuição de Medicamentos (1,51%)
+│   └── RADL3 (1,51%) - Atenção (margem pequena, esticada)
 │
 └── Serviços de Apoio e Diagnóstico (1,27%)
     └── FLRY3 (1,27%)
 
 
-Materiais Básicos (5,00%)
-├── Siderurgia (3,57%)
-│   └── GOAU4 (3,57%) - Atenção (Setor cíclico)
+Materiais Básicos (4,59%)
+├── Siderurgia (3,30%)
+│   └── GOAU4 (3,30%) - Atenção (Setor cíclico)
 │
-├── Mineração (0,91%)
-│   └── VALE3 (0,91%)
+├── Mineração (0,79%)
+│   └── VALE3 (0,79%)
 │
-└── Madeira e Papel (0,52%)
-    └── KLBN11 (0,52%)
+└── Madeira e Papel (0,50%)
+    └── KLBN11 (0,50%)
 
 
-Consumo Não Cíclico (2,83%)
-└── Bebidas (2,83%)
-    └── ABEV3 (2,83%)
+Consumo Não Cíclico (3,06%)
+└── Bebidas (3,06%)
+    └── ABEV3 (3,06%)
 
 
-Consumo Cíclico (1,34%)
-└── Construção Civil (1,34%)
-    └── CURY3 (1,34%)
+Consumo Cíclico (1,07%)
+└── Construção Civil (1,07%)
+    └── CURY3 (1,07%)
 
 
-Comunicações (0,37%)
-└── Telecomunicações (0,37%)
-    └── VIVT3 (0,37%)
+Comunicações (0,95%)
+└── Telecomunicações (0,95%)
+    └── VIVT3 (0,95%)
 
-Fundos (9,46%) - não aportar
-└── ETFs (9,46%)
-    ├── AUVP11 (6,16%)
-    ├── SMAL11 (1,37%)
-    ├── BOVA11 (1,02%)
-    └── XINA11 (0,91%)
+Fundos (9,08%) - não aportar
+└── ETFs (9,08%)
+    ├── AUVP11 (5,96%)
+    ├── AUPO11 (0,12%)
+    ├── SMAL11 (1,28%)
+    ├── BOVA11 (0,97%)
+    └── XINA11 (0,75%)
 
-BDRs (2,95%) - não aportar
-└── Tecnologia da Informação (2,95%)
-    ├── GOGL34 (1,64%)
-    └── M1TA34 (1,31%)
+BDRs (2,74%) - não aportar
+└── Tecnologia da Informação (2,74%)
+    ├── GOGL34 (1,42%)
+    └── M1TA34 (1,33%)
 ```
 
 ---
 
-### FIIs (3.29% -> 4%)
+### FIIs (4,84% -> 4%)
 
 ```text
-Shoppings (49,66% → alvo 50%)
-├── Shopping Centers (49,66%)
-│   ├── XPML11 (19,71%) - Preferivel
-│   ├── VISC11 (16,49%)
-│   └── PMLL11 (13,46%) - Preferivel
+Shoppings (48,00% → alvo 50%)
+├── Shopping Centers (48,00%)
+│   ├── XPML11 (17,73%) - Preferivel
+│   ├── VISC11 (17,61%)
+│   └── PMLL11 (12,66%) - Preferivel
 
 
-Logística (37,65% → alvo 50%)
-├── Galpões Logísticos (37,65%)
-│   ├── VILG11 (17,11%) - Preferivel
-│   ├── KNRI11 (7,75%)
-│   ├── BTLG11 (6,71%)
-│   └── XPLG11 (6,08%)
+Logística (37,87% → alvo 50%)
+├── Galpões Logísticos (37,87%)
+│   ├── VILG11 (15,98%) - Preferivel
+│   ├── XPLG11 (8,26%)
+│   ├── KNRI11 (7,50%)
+│   └── BTLG11 (6,13%)
 
 
-Renda Urbana / Imóveis Corporativos (6,97%) - não aportar
-├── Renda Urbana (1,02%)
-│   └── ALZR11 (1,02%)
+Renda Urbana / Imóveis Corporativos (8,92%) - não aportar
+├── Renda Urbana (3,77%)
+│   └── ALZR11 (3,77%)
 │
-└── Híbrido (Escritórios + Logística) (5,95%)
-    └── GGRC11 (5,95%)
+└── Híbrido (Escritórios + Logística) (5,15%)
+    └── GGRC11 (5,15%)
 
 
-Papel (5,71%) - não aportar
-├── CRIs High Yield (3,53%)
-│   ├── CPTS11 (2,31%)
-│   └── XPCI11 (1,22%)
+Papel (5,20%) - não aportar
+├── CRIs High Yield (3,20%)
+│   ├── CPTS11 (2,10%)
+│   └── XPCI11 (1,11%)
 │
-└── CRIs High Grade / CDI (2,18%)
-    └── KNCR11 (2,18%)
+└── CRIs High Grade / CDI (2,00%)
+    └── KNCR11 (2,00%)
 ```
 
 ---
 
-### Renda Fixa (44.32% -> 37.5%)
+### Renda Fixa (42,77% -> 37,5%)
 
 ```text
 IPCA+ (55,83% -> 50%)
@@ -1762,16 +1763,17 @@ IPCA+ (55,83% -> 50%)
 └── Bancário IPCA (28,07%) (Força: 7)
 
 Pós-fixado / Selic (37,20% -> 40%)
-└── Bancário Selic (37,20%) (Força: 6)
+├── Bancário Selic (31,76%) (Força: 6)
+└── CDB 120% CDI (5,44%) (Força: 5)
 
 Prefixado (6,97% -> 10%)
 ├── Tesouro Prefixado (6,97%) (Força: 6)
-└── Bancário Prefixado (0,00%) (Força: 1)
+└── Bancário Prefixado (0,00%) (Força: 4)
 ```
 
 ---
 
-### Previdência (15.12% -> 12.5%)
+### Previdência (14,59% -> 12,5%)
 
 ```text
 VGBL e PGBL (100%) (Força: 6)
