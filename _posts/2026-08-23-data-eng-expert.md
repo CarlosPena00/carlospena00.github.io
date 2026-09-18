@@ -766,41 +766,136 @@ schema would have.
 
 # Chapter 4 - How to Model
 
-Fact data ~= 10-100x dimension data
-ex: 2B users --> 50B notifications
+Fact data is usually 10-100x the volume of dimension data - 2B users can easily generate 50B
+notifications. That ratio is what drives most of the modeling choices in this chapter.
 
-Normalization: Dont have any dimensional attributes, just IDs
-  - Works better with small scale
+**Normalization** keeps only IDs, no dimensional attributes, so every read needs a join back to
+the dimension. Works better at small scale, where the extra joins are cheap.
 
-Denormalized: Have dimensional attributes (skip some joins, more storage)
+**Denormalization** carries the dimensional attributes alongside the fact, trading more storage
+for fewer joins.
 
-Raw Logs
-  - Ugly schemas, duplicates, shorter retation
+**Raw logs vs fact data**
 
-Fact Data
-  - wll defined schema/column, quality gate, longer retations
-  - Who, what, where, when, how
-  - Must have quality guarantees
-  - small than raw logs
-  - Should not have hard-to-understand columns, should not focus on complex data types (some are ok)
+| | Raw logs | Fact data |
+|---|---|---|
+| Schema | Ugly, inconsistent across sources | Well-defined schema/columns, a quality gate |
+| Duplicates | Common | Should not exist |
+| Retention | Short | Longer |
+| Size | Larger | Smaller than raw logs |
+| Columns | Whatever the source sent | Who, what, where, when, how - no hard-to-understand columns, avoid complex types where a simple one works |
 
-  Spark Broadcast join:
-    - fast way to do join in spark
-    - Just when one size is small < 5Gbs
+Fact data must carry quality guarantees raw logs don't: this is the layer other teams build on,
+so a bad row here propagates everywhere downstream.
 
-  Logs (msg):
-    - Logging should conform to values specified; shared schema
+Obs. Logging should conform to the schema the online team specifies - this is what
+[Thrift](#thrift) is for: a shared contract so the log producer and the fact-data pipeline agree
+on field names and types.
 
-  Potencional Options to high volume fact data
-  - Sampling (not always)
-  - Bucketing
-    - Along one important dimension (ex: User)
-    - Bucket joins can be faster than shuffle joins
-    - Sorted-Merge Bucket (SMB) can joins without shuffle
+**Spark broadcast join** - the fast way to join in Spark, but only when one side is small
+(under ~5 GB); broadcasting a bigger table blows up executor memory instead of speeding
+anything up.
 
-  How long to store:
-    < 10 TB: didnt matter
-    > 100TB: recommended short retantion (~14 days)
+**Options for high-volume fact data:**
+- Sampling - not always applicable, but cuts volume when an estimate is good enough
+- Bucketing along one important dimension (e.g. user) - bucket joins can be faster than shuffle
+  joins, and a Sorted-Merge Bucket (SMB) join skips the shuffle entirely
+
+**How long to store it:**
+
+| Table size | Retention |
+|---|---|
+| < 10 TB | Doesn't matter much |
+| > 100 TB | Keep it short - about 14 days |
+
+---
+
+## Thrift
+
+Apache Thrift is an interface definition language (IDL) plus an RPC framework. You describe a
+struct once in a `.thrift` file, and the compiler generates typed classes for many languages
+(Python, C#, Java, JS, Go, ...). Every service reads and writes the same binary shape, so a
+producer in one language and a consumer in another never hand-roll a parser or drift out of
+sync on field names and types.
+
+Schema for an order-created event:
+
+```thrift
+struct OrderCreated {
+  1: required string orderId,
+  2: required string userId,
+  3: required double amount,
+  4: required string currency,
+  5: optional list<string> itemIds,
+  6: required i64 createdAt
+}
+```
+
+The field numbers (`1`, `2`, ...) are the wire identifiers, not the field order - renaming a
+field is safe, reusing a number for a different type is not. `optional` fields can be added
+later without breaking old readers, which is what makes this safe across independently
+deployed microservices.
+
+Producing the same payload from three services generated off the schema above:
+
+```python
+# Python producer
+from order.ttypes import OrderCreated
+from thrift.transport import TTransport
+from thrift.protocol import TBinaryProtocol
+
+event = OrderCreated(
+    orderId="ord_9f3a1",
+    userId="usr_204",
+    amount=129.90,
+    currency="USD",
+    itemIds=["sku_001", "sku_042"],
+    createdAt=1755939600,
+)
+
+transport = TTransport.TMemoryBuffer()
+protocol = TBinaryProtocol.TBinaryProtocol(transport)
+event.write(protocol)
+payload = transport.getvalue()  # bytes ready to publish to Kafka/SQS/etc
+```
+
+```csharp
+// C# producer
+var order = new OrderCreated
+{
+    OrderId = "ord_9f3a1",
+    UserId = "usr_204",
+    Amount = 129.90,
+    Currency = "USD",
+    ItemIds = new List<string> { "sku_001", "sku_042" },
+    CreatedAt = 1755939600
+};
+
+var transport = new TMemoryBufferTransport();
+var protocol = new TBinaryProtocol(transport);
+await order.WriteAsync(protocol, CancellationToken.None);
+byte[] payload = transport.GetBuffer();
+```
+
+```javascript
+// Node.js consumer, reading bytes produced by either service above
+const thrift = require("thrift");
+const { OrderCreated } = require("./gen-nodejs/order_types");
+
+const transport = new thrift.TFramedTransport(payload);
+const protocol = new thrift.TBinaryProtocol(transport);
+
+const event = new OrderCreated();
+event.read(protocol);
+
+console.log(event.orderId, event.amount, event.itemIds);
+```
+
+The payload on the wire is identical no matter which service wrote it - that is the point.
+A Python order service, a C# billing service and a Node.js notification service all agree on
+`OrderCreated` without ever calling each other's code, because the contract lives in the
+`.thrift` schema instead of in each team's own serialization logic.
+
 
 ---
 
@@ -913,3 +1008,78 @@ Obs. Streaming vs microbatch is a latency/complexity trade. Streaming gives seco
 but needs a running stateful job and careful watermarking. Microbatch gives ~1 hour of latency
 with ordinary batch jobs and a scheduler. Both still want the daily batch pass as the exact
 backstop.
+
+
+## Lab
+
+1. Check if the data have duplicated data
+
+```sql
+select a, b, c, count(1) from X
+group by 1,2,3
+having count(1) > 1
+```
+2. Check for missing columns (join)
+
+## Fact vs Dimension
+
+**Dimensions**
+- Usually in the `GROUP BY`
+- Cardinality can be high or low
+- Come from a snapshot of state
+
+**Facts**
+- Usually aggregated (`SUM`, `AVG`, `COUNT`, ...)
+- Higher volume than dimensions
+- Events and logs
+
+Examples:
+- `dim_is_active` - the user used the app for ~1 min. A read of current state, so it's a dimension
+- `dim_is_activated` - state-driven (the account was deactivated), not an activity, so it's a
+  dimension too, even though the name has "activated" in it and sounds like an event
+
+### The blurry example: price of a night on Airbnb
+
+The intuitive test - *can this be summed/averaged/counted? how high is the cardinality?* - is
+misleading here:
+
+- The host sets the price, which sounds like an event
+- It can easily be `SUM`'d, `AVG`'d, `COUNT`'d, like a regular fact
+- Prices are doubles, so cardinality is extremely high
+
+All three point at "fact." They are the wrong signals - aggregability and cardinality describe
+how a value *behaves*, not what it *is*.
+
+The test that actually decides it: **a fact has to be logged, a dimension comes from the state
+of things.**
+
+- The **fact** is the host changing the price setting - a discrete event, the kind of thing a
+  logging pipeline captures at the moment it happens
+- **Price itself is a dimension** - derived from that setting, and what you get when you read
+  the listing's current (or historical) state, not something logged directly
+
+So a value can look exactly like a fact - aggregable, high-cardinality, changing often - and
+still be a dimension. Whether it was logged as an event or read as a state is what decides it,
+not how well it aggregates.
+
+Obs. Same instinct as the master data test from Chapter 1 (*if I delete all transactions, does
+this thing still need to exist?*), just applied one level down - at the value level instead of the entity level.
+
+## Operations
+
+Extremely Parallel:
+  - Select, From, Where
+
+Low Parallel:
+  - group by, join, having
+  -> Give some buckets and guarantees
+  -> Reduce the data volume as much as possible
+
+Not parallel
+  - Order by
+
+## How to reduce fact data
+- Daily aggregate -> user_id, metric_name, date, value
+- Add timerange aggregation -> 1 row per user per month/year
+  - user_id, metrics_name, month_start, value_array
+  - 1, "purchase", 2026-01-01, [10, 2, 1, 0, 10] (one value per daya)
