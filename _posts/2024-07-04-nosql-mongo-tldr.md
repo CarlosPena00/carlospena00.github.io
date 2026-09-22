@@ -226,16 +226,16 @@ for doc in collection.find({"$text": {"$search": "Carlos"}}):
 - Embedding:
   - Single operation to: retrieve data; Update/delete
   - Data duplication; large documents
-  - Used when data is acessed together frequently
+  - Used when data is accessed together frequently
     - One-to-One, One-to-Many (when many is small)
 - Referencing:
   - No duplication; smaller documents
   - Require to join data
-  - Used when data is not always needed when acessing the document:
+  - Used when data is not always needed when accessing the document:
     - many-to-many, one-to-many (when many is large/unbounded)
   - You (the code) need to maintain data consistency and avoid redundancy.
 
-Exemple: Products (1) vs (N) Reviews
+Example: Products (1) vs (N) Reviews
 
 ## Embedding "One" Side
 
@@ -849,7 +849,7 @@ from pymongoexplain import ExplainableCollection
 pipeline = [
     {
         "$lookup": {
-            "from": "reviews",  # "catalog c" (ommited) Join "reviews r"
+            "from": "reviews",  # "catalog c" (omitted) Join "reviews r"
             "localField": "review_ids",  # On (c.review_ids = r._id)
             "foreignField": "_id",
             "as": "reviews",  # select foo as reviews, *
@@ -858,3 +858,136 @@ pipeline = [
 ]
 pprint(ExplainableCollection(catalog).aggregate(pipeline))
 ```
+
+---
+
+# Workshop: Data Modeling for MongoDB
+
+The methodology is a cascade: each step feeds the next, and only the last one is
+about "tuning".
+
+```txt
+Entities  ->  Workloads  ->  Relationships  ->  Patterns
+(what)        (how it is     (embed or         (optimize /
+              used)          reference)         anti-patterns)
+```
+
+Unlike SQL, there is no "correct" schema derived from the data alone: the same
+entities produce different schemas depending on how they are read and written.
+
+## 1. Entities
+
+- Identify the entities
+- Describe their properties (with the PM)
+- Understand the relationships (cardinality, not only "A has B")
+
+Output: entity list + properties + cardinalities. Still no `_id`, no embedding
+decision.
+
+## 2. Workloads
+
+- Qualify the operations: who reads/writes what, and which fields are needed together
+- Quantify the operations: rate, and how much data each one moves
+
+| Entities         | Operation                                                           | Information Needed           | Type  | Rate     |
+| ---------------- | ------------------------------------------------------------------- | ---------------------------- | ----- | -------- |
+| Books\*          | Fetch book details                                                  | Book details + rating        | Read  | 1000/sec |
+| Authors, Books\* | Fetch an author and their books                                     | Book titles + author details | Read  | 50/sec   |
+| Print Books      | Fetch printed book titles where the stock level has fallen below 50 | Book details + stock level   | Read  | 2/day    |
+| Books\*          | Add/update book                                                     | Book details + stock level   | Write | 10/hour  |
+| Print Books      | Sell copy of printed book                                           | Stock level                  | Write | 5/sec    |
+| Reviews          | Fetch 10 reviews for a book                                         | Reviews + reviewer rating    | Read  | 200/sec  |
+| Reviews          | Add review                                                          | Review + book rating         | Write | 50/sec   |
+| Users            | Fetch user details                                                  | User details                 | Read  | 5/min    |
+| Users            | Add/update user                                                     | User details                 | Write | 1/sec    |
+
+\* eBooks, Audiobooks, and Printed Books
+
+Reading the table is the whole point; the numbers decide the schema:
+
+- `Fetch book details` at **1000/sec** is the dominant read: everything it needs
+  (including the rating) should live in one document, one query, no `$lookup`.
+- `rating` is read 1000/sec but written 50/sec (add review): compute it on write
+  and store it in the book (computed pattern), instead of aggregating on read.
+- `Fetch printed book titles below stock 50` runs **2/day**: a rare report should
+  not distort the schema, and probably does not deserve its own index.
+- Read/write ratios also tell where duplication is cheap: `Add/update book` at
+  10/hour makes denormalized book fields (title, author name) safe to copy.
+
+## 3. Relationships
+
+- Identify and quantify (how many "many"? bounded or unbounded?)
+- Embed or reference
+
+| Cardinality              | Default                   | Why                                          |
+| ------------------------ | ------------------------- | -------------------------------------------- |
+| 1:1                      | Embed                     | Always read together                         |
+| 1:1 (large / rarely read) | Reference                 | Keeps the hot document small                 |
+| 1:few (bounded)          | Embed                     | Single read, array cannot explode            |
+| 1:many (unbounded)       | Reference                 | 16 MB document limit + index cost            |
+| many:many                | Reference on the queried side | Avoids duplicating both sides            |
+
+Array of references goes on the **more often queried side**: if you always ask
+"which authors wrote this book?", the array lives in `book`.
+
+```js
+// Book document                      // Author documents
+{ title: "The Talisman", authors: [1, 2] }   { _id: 1, name: "Stephen King" }
+{ title: "It",           authors: [1]    }   { _id: 2, name: "Peter Straub" }
+{ title: "Floating Dragon", authors: [2] }
+```
+
+See [Embedding vs Referencing Pt 1: Theory](#embedding-vs-referencing-pt-1-theory)
+for the trade-offs and Pt 2 for the PyMongo code.
+
+## 4. Patterns
+
+- Optimize the schema
+- Avoid anti-patterns
+- Sometimes it is OK to duplicate info to reduce joins - consistency becomes your
+  application's job
+
+### Schema Design Anti-Patterns
+
+| Anti-Pattern                 | Definition                                                                                                                                                       | Usual fix                                               |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| Avoid Unbounded Arrays       | A document stores an unbounded array that can grow to be too large. The large array can exceed the document size limit and cause a decrease in index performance. | Reference, or bucket the array into chunks              |
+| Reduce Number of Collections | You create a large number of collections in your database. Having too many collections can decrease storage engine performance.                                  | Merge collections that share a shape/access path        |
+| Remove Unnecessary Indexes   | Your collection contains unnecessary indexes. Unnecessary indexes consume additional disk space and can degrade write performance.                               | Drop indexes no workload uses (check the `$indexStats`) |
+| Reduce Bloated Documents     | Your collection has excessively large documents. The large documents can degrade the performance of your most common queries.                                    | Subset pattern: keep the hot fields, move the rest      |
+| Reduce $lookup Operations    | You are running too many $lookup operations on your data. This increases query complexity and reduces query performance.                                         | Embed, or duplicate the few fields you join for         |
+
+Each anti-pattern is a workload problem, not a style problem: it only hurts if it
+sits on a hot operation of the table above.
+
+### Schema Validation
+
+MongoDB is schemaless, not validation-less - you can enforce a JSON Schema per
+collection.
+
+```py
+db.create_collection(
+    "books",
+    validator={
+        "$jsonSchema": {
+            "bsonType": "object",
+            "required": ["title", "authors"],
+            "properties": {
+                "title": {"bsonType": "string"},
+                "authors": {"bsonType": "array", "items": {"bsonType": "int"}},
+                "rating": {"bsonType": "double", "minimum": 0, "maximum": 5},
+            },
+        }
+    },
+    validationLevel="strict",   # "strict" | "moderate" | "off"
+    validationAction="error",   # "error" | "warn" (log only)
+)
+
+# Add/relax validation on an existing collection
+db.command("collMod", "books", validationLevel="moderate")
+```
+
+- **Strict**: applies to every insert and every update, on all documents
+- **Moderate**: only new documents and updates to documents that are already
+  valid - legacy documents that fail the rules keep accepting other changes
+  (useful while migrating a collection)
