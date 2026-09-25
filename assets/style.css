@@ -160,6 +160,11 @@ content {
     padding: 20px;
 }
 
+content img {
+    max-width: 100%;
+    height: auto;
+}
+
 .jobs-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
