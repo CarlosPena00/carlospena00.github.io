@@ -68,7 +68,7 @@ A built-in `Router` looks at the input's language/script and dispatches to one o
 522 ms ± 4.46 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 ```
 
-That first pass actually read 802ms, with a much wider spread. Turned out Chrome and Steam were both running in the background at the time, fighting the same cores - closing both and re-running twice in a row gave 522ms ± 4.46ms and 525ms ± 4.79ms, consistently, with the std dev dropping from ~16ms to ~5ms. Lesson worth stating plainly: a single wall-clock CPU timing on a normal desktop is not a benchmark, and the fix isn't a fancier flag on `timeit` - it's closing the other applications and rerunning until the number stops moving.
+That first pass actually read 802ms, with a much wider spread. Turned out other applications were competing for the same cores at the time - closing them and re-running twice in a row gave 522ms ± 4.46ms and 525ms ± 4.79ms, consistently, with the std dev dropping from ~16ms to ~5ms. Lesson worth stating plainly: a single wall-clock CPU timing on a normal desktop is not a benchmark, and the fix isn't a fancier flag on `timeit` - it's closing the other applications and rerunning until the number stops moving.
 
 That test had 3 options total across 3 questions. The README warns that high-cardinality `choice` (50+ options) needs "token-budget tuning," so I swept a single `choice` question from 2 to 64 options, same message, `timeit.repeat(repeat=7, number=1)` each time:
 
@@ -100,7 +100,7 @@ for n in [2, 4, 8, 16, 32, 64]:
 | 32 | 185 | 558.9 ms | 23.60 ms |
 | 64 | 277 | 774.9 ms | 7.43 ms |
 
-(Run with Chrome and Steam already closed - a couple of entries still show a wider std dev than the others, from VS Code and other `claude` sessions still competing for cores. Even a "clean" desktop benchmark isn't a lab bench.)
+(Run with the background load from above already closed - a couple of entries still show a wider std dev than the others. Even a "clean" desktop benchmark isn't a lab bench.)
 
 Latency tracks input tokens, not option count directly - the whole `criteria` dict goes into one forward pass, there's no per-option encoding step. 16 -> 32 options barely adds tokens (169 -> 185, since `"describes item number N"` reuses most of its subwords) and latency barely moves (517.8ms -> 558.9ms); 32 -> 64 nearly doubles the token count (185 -> 277) and latency jumps with it (558.9ms -> 774.9ms). The real lever on cost is criteria text length, not the number of buckets - ten verbose options can cost more than fifty terse ones.
 
