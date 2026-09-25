@@ -464,3 +464,36 @@ Numbers are one thing, actual listings are another:
 `noul` and `confidence` are the same number on every wrong `armas`/`moveis` row above (`confidence` is `max(p, 1-p)`, so a confidently-wrong call reads exactly as confident as a confidently-right one - the field cannot distinguish them, which is the same thing the aggregate FP-confidence table already showed). "Munição Chumbinho" and "Espingarda de Pressão" get blocked at 93-99% because the words sound dangerous even though these are legal air-gun accessories - a lexical trigger, not an understanding of what's actually for sale. "Cama Box Casal" (a mattress) blocked at 99.4% isn't even that: there's no dangerous-sounding word in the phrase at all, it's closer to noise than to over-caution.
 
 The misses run the same failure in reverse. "Cocaína" (0.995) is caught instantly - no ambiguity in the word. "Maconha" is the literal Portuguese word for marijuana and sits right in "OG Kush Maconha 5g 3g," and it still only pulled the score to 0.151 - not enough to cross 0.5. "Purple Haze" and "Crack" in the same row read as brand-shaped tokens, not drug references. Same story on the sexshop side: explicit terms like "Vibração Multivelocidade" get caught at 0.99-1.0, but "Chicote de Couro Aromatizado" (a leather whip) reads as generic and scores 0.004 - confidently wrong in the safe direction. This isn't a semantic judgment of "is this product prohibited" so much as a lookup against a specific vocabulary of trigger words, with real gaps on both sides of the boundary.
+
+---
+
+## 7. Trying to improve the filter
+
+Section 6's filter blocked `sexshop` and `drogas`. The realistic policy is broader - block weapons too, airsoft included - so widened the blocked set to `{sexshop, drogas, armas}` and tried three ways to do better, without retraining anything:
+
+| approach | new model calls | threshold | accuracy | F1 | MCC |
+|---|---|---|---|---|---|
+| section 6's `noul` scores, armas added to the label only | no | 0.50 | 0.555 | 0.553 | 0.181 |
+| same scores, threshold tuned on this data | no | 0.95 | 0.706 | 0.541 | 0.344 |
+| longer `noul` prompt, explicit list + "don't block electronics/furniture/..." | yes | 0.50 | 0.406 | 0.544 | 0.050 |
+| same longer prompt, threshold tuned | no | 0.95 | 0.660 | 0.553 | 0.278 |
+| predicted category from section 5's 9-way classifier, block if in `{sexshop, drogas, armas}` | no | argmax | **0.695** | **0.683** | **0.455** |
+
+First result before touching the prompt at all: just widening the label to include `armas` roughly doubled MCC over section 6 (0.127 -> 0.181) with the exact same model output. That's not an improvement - it's the label catching up to what the model was already doing (recall section 6: `armas` was getting blocked 75% of the time as a false positive; call it correct instead and the score jumps). Worth flagging as a trap in general: when hill-climbing on your own eval set, check whether a score went up because the model got better or because the definition of "correct" moved to match the model.
+
+Threshold tuning on those same scores is a real, free lever: sweeping the cutoff (still just `timeit`-cheap, no extra `router.predict()` calls) and picking by MCC lands on 0.95, not 0.5, and roughly doubles MCC again (0.181 -> 0.344). The trade is visible in the confusion matrix - true positives drop from 286 to 180, false positives drop from 359 to 96 - fewer legitimate products blocked, at the cost of missing more of what should be blocked. Whether that trade is worth it is a business call, not a modeling one.
+
+Writing a longer, more explicit prompt - naming airsoft and replicas outright, adding an explicit "don't block these" list - made the default-threshold result *worse* (MCC 0.050, barely above useless) and still underperformed the original short prompt even after the same threshold tuning (0.278 vs 0.344). The extra words seem to hand the model more surface area to react to, not more structure - consistent with section 6's read that this is closer to keyword-triggering than semantic judgment. More explicit instructions is not a reliable knob here; each prompt change is its own experiment, not an obvious win.
+
+The approach that actually won didn't touch the `noul` question at all:
+
+```python
+BLOCKED = {"sexshop", "drogas", "armas"}
+
+for product_name, true_category in dataset:
+    result = router.predict(product_name, CATEGORY_QUESTIONS)  # section 5's 9-way choice
+    predicted_category = result["answers"]["category"]["choice"]
+    blocked = predicted_category in BLOCKED
+```
+
+Reusing section 5's categorical classifier and applying the block/allow rule in code afterward beat every `noul`-based attempt: MCC 0.455, and - the number that actually matters for a safety filter - 87.7% recall on the blocked class (342/390 caught), against the best `noul` version's ~73% in section 6. Nine specific categories, each with its own short description, gave the model more to anchor on than one long blocklist crammed into a single yes/no question. It's still not production-grade (56% precision means almost half of what it blocks is a false alarm), but it's the clearest lever found here, and it cost zero additional model calls since section 5's run already had the data sitting in `predictions.csv`.
