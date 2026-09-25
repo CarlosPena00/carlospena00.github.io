@@ -294,3 +294,142 @@ router.predict(message, INTENT_QUESTIONS)
 ```
 
 Take the lesson from `confidence`, not just `choice`: don't build on `classify_intent`'s two-field return in production. Pull `confidence` alongside it, and fall back to the LLM (or a "not sure" branch) whenever it drops below some threshold you tune on your own data - the raw output already tells you which answers not to trust, `classify_intent` was just throwing that signal away.
+
+---
+
+## 5. A real accuracy check
+
+Everything above is anecdote - five messages, one accuracy claim from someone else's benchmark. Built a labeled set to get a real number: 1040 synthetic Portuguese product titles across 8 categories (`eletronicos`, `moveis`, `ferramentas`, `sexshop`, `armas`, `drogas`, `porcelanato`, `eletrodomesticos` - 130 each, templated from brand x product-type x spec), plus a 9th `outros` bucket that no real item maps to, as an escape hatch for "none of the above":
+
+```python
+CATEGORIES = {
+    "eletronicos": "eletrônicos e informática: celulares, notebooks, tvs, acessórios eletrônicos",
+    "moveis": "móveis para casa: sofás, camas, armários, mesas, cadeiras",
+    "ferramentas": "ferramentas manuais e elétricas para construção, marcenaria, jardinagem",
+    "sexshop": "produtos eróticos e de bem-estar sexual",
+    "armas": "armas de pressão, airsoft, facas táticas, coletes e equipamentos de tiro esportivo/defesa",
+    "drogas": "substâncias entorpecentes ilícitas",
+    "porcelanato": "pisos, revestimentos e porcelanatos para construção civil",
+    "eletrodomesticos": "eletrodomésticos: geladeira, fogão, máquina de lavar, ar-condicionado",
+    "outros": "qualquer produto que não se encaixe claramente em nenhuma categoria acima",
+}
+questions = {
+    "category": {
+        "type": "choice",
+        "instructions": "Qual categoria de produto de e-commerce melhor descreve este item?",
+        "criteria": CATEGORIES,
+    }
+}
+
+for product_name, true_category in dataset:  # 1040 rows
+    result = router.predict(product_name, questions)
+    y_pred.append(result["answers"]["category"]["choice"])
+```
+
+Portuguese input never touches the checkpoint used in every example so far. The router itself flags it - `routing.reason`: *"Latin script, language not identified but 3% non-English letters; not safe for the English checkpoint"* - and sends every one of these 1040 calls to `laya-multilingual` (mmBERT-base, 322M) instead of `laya` (ModernBERT-large, 421M). So this is zero-shot accuracy for the *smaller* checkpoint, on a 9-way task neither checkpoint was fine-tuned for:
+
+```text
+accuracy      : 0.3990
+f1 (macro)    : 0.3304
+f1 (weighted) : 0.3718
+mcc           : 0.3316
+```
+
+With 9 balanced classes, random guessing scores ~11% accuracy - 40% is clearly above chance, but the errors aren't randomly distributed, they're systematic:
+
+| true category | precision | recall | f1 |
+|---|---|---|---|
+| eletronicos | 0.43 | 0.83 | 0.57 |
+| moveis | 0.67 | 0.11 | 0.19 |
+| ferramentas | 0.50 | 0.10 | 0.17 |
+| sexshop | 0.36 | 0.63 | 0.46 |
+| armas | 0.62 | 0.47 | 0.54 |
+| drogas | 0.24 | 0.52 | 0.32 |
+| porcelanato | 0.65 | 0.39 | 0.49 |
+| eletrodomesticos | 0.86 | 0.15 | 0.25 |
+
+Two failure patterns stand out in the confusion matrix:
+
+- **`eletronicos` is the model's default.** 0.83 recall but only 0.43 precision - it absorbs misrouted `ferramentas` and `eletrodomesticos` items rather than committing to the right bucket. `eletrodomesticos` is the mirror image: 0.86 precision but 0.15 recall - when the model does say "eletrodomesticos" it's almost always right, it just rarely says it.
+- **`porcelanato` -> `drogas` in 60 of 130 cases (46%).** But mean `confidence` on those 60 is 0.136, against 0.263 on the ones it got right - low enough that a confidence floor would catch most of them. `drogas` -> `sexshop` (54/130, 42%) is the opposite: mean confidence 0.361, *higher* than the 0.313 on correct `drogas` calls. Same fix, applied to two different confusions, works on one and not the other.
+
+Overall, confidence still separates right from wrong on average - 0.415 mean confidence on correct calls vs. 0.225 on incorrect ones - which is the section 4 advice holding up under a thousand-row test, not just one anecdote. The `outros` bucket got picked 30 times out of 1040 (2.9%), thinly spread across categories - it exists, the model uses it sometimes, but it's not a safety net for the two big confusions above: it caught 6 of the 130 misrouted `eletrodomesticos` items and 13 of the 130 `moveis`, nowhere near enough to matter.
+
+Bottom line: this lines up with the "Bad" section's claim that base checkpoints sit near chance out-of-domain, just less dramatically, because 40% is meaningfully above the 11% floor for 9 classes. Zero-shot, unlabeled Portuguese, 9-way retail taxonomy - fine-tuning is not optional here, and `confidence`-based fallback is a real mitigation, not a complete one.
+
+---
+
+## 6. Reframed as an allow/block filter
+
+A 9-way router is an academic exercise; the actual product need behind a dataset like this is narrower: block `sexshop` and `drogas`, allow everything else. That's a `noul` question, not a `choice` - same 1040 rows, same product titles, one binary question instead of nine categories:
+
+```python
+BLOCKED_CATEGORIES = {"sexshop", "drogas"}
+
+QUESTIONS = {
+    "blocked": {
+        "type": "noul",
+        "instructions": (
+            "Este produto deve ser bloqueado por violar as politicas do "
+            "marketplace (conteudo sexual explicito, substancias ilicitas ou "
+            "outros itens proibidos para venda)?"
+        ),
+    }
+}
+
+for product_name, true_category in dataset:
+    result = router.predict(product_name, QUESTIONS)
+    noul = result["answers"]["blocked"]["noul"]
+    pred_blocked = noul >= 0.5
+```
+
+```text
+accuracy : 0.4933
+f1       : 0.4177
+mcc      : 0.1270
+```
+
+Worse on every metric than the 9-way version, and worse than it looks at first glance. The set is 780 `permitido` / 260 `bloqueado` (75/25 split) - a classifier that always says "allow everything" scores **75% accuracy** doing nothing, for free. This one scores 49%. Collapsing nine categories into two didn't make the problem easier; it made the failure mode worse and hid it behind a still-plausible-looking accuracy number.
+
+|  | predicted permitido | predicted bloqueado |
+|---|---|---|
+| **true permitido** (780) | 324 | 456 |
+| **true bloqueado** (260) | 71 | 189 |
+
+It does catch most of what it's supposed to: 189/260 blocked items correctly flagged (72.7% recall on the dangerous class). The cost is 456 of 780 legitimate products - 58.5% - wrongly blocked along with them. As an actual store-front filter this is unusable in either direction: it stops nearly a third of the illegal listings from being caught, and it would nuke most of the honest catalog to do it.
+
+And the `confidence` field, which held up as a real signal in section 5 (0.415 mean on correct calls vs. 0.225 on wrong ones), does **not** transfer to this framing:
+
+| outcome | mean confidence |
+|---|---|
+| correctly allowed (TN) | 0.816 |
+| wrongly blocked (FP) | 0.852 |
+| correctly blocked (TP) | 0.929 |
+| wrongly allowed (FN) | 0.809 |
+
+The false positives are *more* confident than the true negatives. There is no threshold on `confidence` that fixes this - it's flat across right and wrong, so the mitigation from section 4 and 5 simply isn't available here. Breaking the false positives down by true category shows why it's not just conservative miscalibration:
+
+- **`armas` false-blocked 97/130 times (75%).** The legal airsoft/tactical items - "arma" reads as a banned word regardless of what follows it.
+- **`moveis` false-blocked 97/130 times (75%).** Furniture. No plausible semantic reason - this is noise, not caution.
+- **`drogas` false-allowed 58/130 times (45%)** - the one category the instructions name outright, and it still gets waved through nearly half the time.
+
+The lesson isn't "the multiclass router works, the binary one doesn't" - it's that a result from one question framing doesn't transfer to another, even over the identical rows. A `confidence` floor that looked like a solid production mitigation in section 5 turned out to be worthless the moment the actual use case (a yes/no content filter) got tested directly, and that's only visible because it was tested directly - reasoning about it from the multiclass numbers would have gotten the wrong answer.
+
+Numbers are one thing, actual listings are another:
+
+| true category | product | `noul` | verdict |
+|---|---|---|---|
+| armas (permitido) | Condor Outdoor Munição Chumbinho Preto Fosco | 0.986 | blocked - **wrong** |
+| armas (permitido) | Rossi Espingarda de Pressão Camuflado 4.5mm | 0.935 | blocked - **wrong** |
+| moveis (permitido) | OPA Cama Box Casal Retrátil 6 Portas | 0.994 | blocked - **wrong** |
+| moveis (permitido) | Bertolini Escrivaninha Retrátil 3 Lugares | 0.963 | blocked - **wrong** |
+| drogas (bloqueado) | Purple Haze Crack 1g | 0.137 | allowed - **wrong** |
+| drogas (bloqueado) | OG Kush Maconha 5g 3g | 0.151 | allowed - **wrong** |
+| sexshop (bloqueado) | Erobella Chicote de Couro Aromatizado | 0.004 | allowed - **wrong** |
+| sexshop (bloqueado) | Pepper Blend Body Sensual Aromatizado Silicone | 0.090 | allowed - **wrong** |
+| drogas (bloqueado) | Nacional Cocaína 10g | 0.995 | blocked - correct |
+| sexshop (bloqueado) | Erobella Vela de Massagem Vibração Multivelocidade | 1.000 | blocked - correct |
+
+`noul` and `confidence` are the same number on every wrong `armas`/`moveis` row above (`confidence` is `max(p, 1-p)`, so a confidently-wrong call reads exactly as confident as a confidently-right one - the field cannot distinguish them, which is the same thing the aggregate FP-confidence table already showed). "Munição Chumbinho" and "Espingarda de Pressão" get blocked at 93-99% because the words sound dangerous even though these are legal air-gun accessories - a lexical trigger, not an understanding of what's actually for sale. "Cama Box Casal" (a mattress) blocked at 99.4% isn't even that: there's no dangerous-sounding word in the phrase at all, it's closer to noise than to over-caution.
+
+The misses run the same failure in reverse. "Cocaína" (0.995) is caught instantly - no ambiguity in the word. "Maconha" is the literal Portuguese word for marijuana and sits right in "OG Kush Maconha 5g 3g," and it still only pulled the score to 0.151 - not enough to cross 0.5. "Purple Haze" and "Crack" in the same row read as brand-shaped tokens, not drug references. Same story on the sexshop side: explicit terms like "Vibração Multivelocidade" get caught at 0.99-1.0, but "Chicote de Couro Aromatizado" (a leather whip) reads as generic and scores 0.004 - confidently wrong in the safe direction. This isn't a semantic judgment of "is this product prohibited" so much as a lookup against a specific vocabulary of trigger words, with real gaps on both sides of the boundary.
