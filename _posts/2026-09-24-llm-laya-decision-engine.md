@@ -151,6 +151,12 @@ for n in [1, 2, 4, 8, 16]:
 
 There is a real batching win on CPU too, just a much smaller one: per-question cost drops from 269.8ms solo to ~151-163ms once 4 or more share a call, roughly 40% - nowhere near the README's ~5x GPU figure, and it plateaus by 4 questions instead of continuing to improve out to 16. The 16-question row is also the one to distrust the most: `input_tokens` hit 928, comfortably past the 512-token limit the README states for this checkpoint, with no error and no warning printed. There's no way to tell from the outside whether it silently truncated the tail questions or scored the full sequence anyway - either way, that row is exactly the kind of result the "token-budget tuning" warning is about, and it's worth re-verifying against ground truth before trusting it, not just timing it.
 
+Both sweeps side by side, log-scaled on count:
+
+<img src="../../../assets/images/laya_perf_scaling.png" alt="Line chart comparing Laya CPU latency as option count grows (2 to 64, one question) versus question count grows (1 to 16, three options each). The option-count line rises gently from ~254ms to ~775ms. The question-count line rises much more steeply, from ~270ms to ~2593ms at 16 questions.">
+
+The two lines make the same point the numbers already did: stacking questions costs far more than stacking options, because the whole batch shares one forward pass and question text doesn't get the token reuse that similarly-worded options do.
+
 ---
 
 ## 2. Good
@@ -242,54 +248,49 @@ router.predict(message, INTENT_QUESTIONS)
 
 ```js
 {
-    "model": "laya-rl-agent",
+    "model": "laya-rl-agent", // the decision-engine wrapper, not the checkpoint - see routing.model below
     "answers": {
         "intent": {
             "type": "choice",
             "choice": "unrelated",
             "probabilities": {
+                // full distribution, not just the winner - "unrelated" barely beats
+                // "single_product" (0.3491 vs 0.3129), all four within 0.23 of each
+                // other. classify_intent's argmax throws this away.
                 "single_product": 0.3129,
                 "multi_product": 0.215,
                 "product_question": 0.123,
                 "unrelated": 0.3491,
             },
-            "confidence": 0.0484,
-            "answer_confidence": 0.3491,
-            "action": {"act_probability": 1.0},
+            "confidence": 0.0484, // separate from answer_confidence, and low - collapses when top options are bunched together, like here
+            "answer_confidence": 0.3491, // just the chosen option's own probability
+            "action": {"act_probability": 1.0}, // RL-agent hook to skip answering outright; 1.0 = it always acted here
         },
         "needs_human": {
             "type": "noul",
-            "noul": 0.0466,
-            "confidence": 0.9534,
+            "noul": 0.0466, // P(true)
+            "confidence": 0.9534, // high - 0.0466 is decisively close to 0, model is sure (and right, in this instance)
             "answer_confidence": 0.9534,
             "action": {"act_probability": 1.0},
         },
     },
-    "usage": {"input_tokens": 198, "output_tokens": 0},
+    "usage": {"input_tokens": 198, "output_tokens": 0}, // output_tokens: 0 is the concrete evidence for "no generation" from section 1
     "routing": {
-        "model": "english",
+        "model": "english", // the actual checkpoint that scored this text
         "repo": "convaiinnovations/laya",
-        "reason": "English Latin text",
+        "reason": "English Latin text", // log this in production so a misrouted non-English message doesn't fail silently
         "detection": {
             "script": "latin",
             "script_profile": {"latin": 1.0},
             "language": "en",
-            "is_english": True,
-            "language_undecided": False,
+            "is_english": true,
+            "language_undecided": false,
             "diacritic_rate": 0.0,
             "non_latin_fraction": 0.0,
         },
-        "workflow": None,
+        "workflow": null,
     },
 }
 ```
 
-Reading through it:
-
-- **`answers.intent.probabilities`** is the full distribution, not just the winner. `unrelated` (0.3491) barely beats `single_product` (0.3129) - all four options are within 0.23 of each other. This was never a confident call; taking `argmax` and stopping there, as `classify_intent` does, throws away exactly the information that would have flagged it.
-- **`confidence` vs `answer_confidence`.** `answer_confidence` is just the chosen option's own probability (0.3491). `confidence` (0.0484) is a separate, lower number - it collapses when the top options are bunched together, which is what happened here. For `needs_human`, both read high (0.9534) because 0.0466 is decisively close to 0 - the model is confident, and in that instance it happens to be right. The lesson: threshold on `confidence`, not on whichever option won, before you route on `choice` output.
-- **`model` (top level) vs `routing.model`.** The outer `'laya-rl-agent'` names the decision-engine wrapper, not the checkpoint that scored the text - that's `routing.model: 'english'`. `routing` also logs *why* it picked that checkpoint (`reason`, `detection.script`, `detection.language`) - useful to log in production so a misrouted non-English message doesn't fail silently.
-- **`usage.output_tokens: 0`.** This is the concrete evidence for the "no generation" claim in section 1 - `input_tokens` is nonzero (the encoder still tokenizes the prompt), but nothing is decoded.
-- **`action.act_probability: 1.0`** on every answer here is a hook from Laya's RL-agent framework for skipping a question outright (e.g., "don't answer, ask a follow-up instead"); at `1.0` it always acted in this run, but it's a lever this project exposes that a plain classifier wouldn't.
-
-Practical takeaway: don't build on `classify_intent`'s two-field return in production. Pull `confidence` alongside `choice`, and fall back to the LLM (or a "not sure" branch) whenever it drops below some threshold you tune on your own data - the raw output already tells you which answers not to trust, `classify_intent` was just throwing that signal away.
+Take the lesson from `confidence`, not just `choice`: don't build on `classify_intent`'s two-field return in production. Pull `confidence` alongside it, and fall back to the LLM (or a "not sure" branch) whenever it drops below some threshold you tune on your own data - the raw output already tells you which answers not to trust, `classify_intent` was just throwing that signal away.
