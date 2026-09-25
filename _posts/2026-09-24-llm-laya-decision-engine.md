@@ -70,6 +70,15 @@ A built-in `Router` looks at the input's language/script and dispatches to one o
 
 That first pass actually read 802ms, with a much wider spread. Turned out other applications were competing for the same cores at the time - closing them and re-running twice in a row gave 522ms ± 4.46ms and 525ms ± 4.79ms, consistently, with the std dev dropping from ~16ms to ~5ms. Lesson worth stating plainly: a single wall-clock CPU timing on a normal desktop is not a benchmark, and the fix isn't a fancier flag on `timeit` - it's closing the other applications and rerunning until the number stops moving.
 
+Re-ran everything in this section on a second machine, an Apple M4 Pro (14 cores, laya 0.3.20, torch 2.14), once pinned to CPU and once on the Apple GPU. One gotcha first: on a Mac, `Router()` silently picks MPS when it's available, so a CPU number needs an explicit `Router(device="cpu")`. The same warning about noisy runs applied here too - of four CPU runs, the second came out 10-20% slower across the board, and the third and fourth agreed within ~5%. Numbers below are from the third:
+
+```text
+M4 Pro CPU : 139.7 ms ± 4.20 ms
+M4 Pro MPS :  39.5 ms ± 2.55 ms
+```
+
+3.7x faster than the Ryzen on CPU alone, 13x on the GPU, same answers on all three (`billing`, `churn_risk` 0.879, routed to `english`).
+
 That test had 3 options total across 3 questions. The README warns that high-cardinality `choice` (50+ options) needs "token-budget tuning," so I swept a single `choice` question from 2 to 64 options, same message, `timeit.repeat(repeat=7, number=1)` each time:
 
 ```python
@@ -91,20 +100,22 @@ for n in [2, 4, 8, 16, 32, 64]:
     print(n, result["usage"]["input_tokens"], statistics.mean(times), statistics.stdev(times))
 ```
 
-| options | input tokens | mean | std |
-|---|---|---|---|
-| 2 | 43 | 254.4 ms | 19.40 ms |
-| 4 | 61 | 288.4 ms | 3.55 ms |
-| 8 | 97 | 361.7 ms | 6.62 ms |
-| 16 | 169 | 517.8 ms | 7.82 ms |
-| 32 | 185 | 558.9 ms | 23.60 ms |
-| 64 | 277 | 774.9 ms | 7.43 ms |
+| options | input tokens | Ryzen CPU | M4 Pro CPU | M4 Pro MPS |
+|---|---|---|---|---|
+| 2 | 43 | 254.4 ± 19.40 ms | 71.4 ± 1.70 ms | 19.9 ± 0.50 ms |
+| 4 | 61 | 288.4 ± 3.55 ms | 75.5 ± 1.13 ms | 22.6 ± 0.28 ms |
+| 8 | 97 | 361.7 ± 6.62 ms | 111.1 ± 6.32 ms | 28.3 ± 1.06 ms |
+| 16 | 169 | 517.8 ± 7.82 ms | 137.6 ± 6.56 ms | 35.5 ± 0.26 ms |
+| 32 | 185 | 558.9 ± 23.60 ms | 145.8 ± 10.31 ms | 38.2 ± 0.35 ms |
+| 64 | 277 | 774.9 ± 7.43 ms | 201.4 ± 5.43 ms | 55.1 ± 0.31 ms |
 
-(Run with the background load from above already closed - a couple of entries still show a wider std dev than the others. Even a "clean" desktop benchmark isn't a lab bench.)
+(Ryzen run with the background load from above already closed - a couple of entries still show a wider std dev than the others. Even a "clean" desktop benchmark isn't a lab bench. The GPU column is the only one with sub-millisecond spread across the board.)
 
-Latency tracks input tokens, not option count directly - the whole `criteria` dict goes into one forward pass, there's no per-option encoding step. 16 -> 32 options barely adds tokens (169 -> 185, since `"describes item number N"` reuses most of its subwords) and latency barely moves (517.8ms -> 558.9ms); 32 -> 64 nearly doubles the token count (185 -> 277) and latency jumps with it (558.9ms -> 774.9ms). The real lever on cost is criteria text length, not the number of buckets - ten verbose options can cost more than fifty terse ones.
+The input token counts are identical on both machines - same tokenizer, same prompt - so the columns are a like-for-like comparison. The M4 CPU runs a steady ~3.3-3.9x faster than the Ryzen, and MPS another ~3.3-3.9x on top of that.
 
-One of these runs also printed a `RuntimeWarning` straight from the library:
+Latency tracks input tokens, not option count directly - the whole `criteria` dict goes into one forward pass, there's no per-option encoding step. 16 -> 32 options barely adds tokens (169 -> 185, since `"describes item number N"` reuses most of its subwords) and latency barely moves (517.8ms -> 558.9ms); 32 -> 64 nearly doubles the token count (185 -> 277) and latency jumps with it (558.9ms -> 774.9ms). The M4 shows the same shape on both devices (137.6 -> 145.8 -> 201.4ms on CPU, 35.5 -> 38.2 -> 55.1ms on MPS), so this is a property of the model, not of one machine. The real lever on cost is criteria text length, not the number of buckets - ten verbose options can cost more than fifty terse ones.
+
+One of these runs also printed a `RuntimeWarning` straight from the library (and it prints again on the M4, at checkpoint load, so it's the checkpoint and not the machine):
 
 ```text
 laya: this checkpoint ships invalid temperatures or values outside [0.5, 5];
@@ -141,21 +152,41 @@ for n in [1, 2, 4, 8, 16]:
     print(n, result["usage"]["input_tokens"], mean_ms, mean_ms / n)
 ```
 
-| questions | input tokens | mean | std | ms/question |
+| questions | input tokens | Ryzen CPU | M4 Pro CPU | M4 Pro MPS |
 |---|---|---|---|---|
-| 1 | 58 | 269.8 ms | 6.29 ms | 269.8 ms |
-| 2 | 116 | 385.7 ms | 4.99 ms | 192.8 ms |
-| 4 | 232 | 651.8 ms | 13.52 ms | 162.9 ms |
-| 8 | 464 | 1212.0 ms | 11.10 ms | 151.5 ms |
-| 16 | 928 | 2593.4 ms | 26.27 ms | 162.1 ms |
+| 1 | 58 | 269.8 ± 6.29 ms | 80.0 ± 2.20 ms | 22.8 ± 0.92 ms |
+| 2 | 116 | 385.7 ± 4.99 ms | 123.5 ± 5.07 ms | 30.5 ± 0.24 ms |
+| 4 | 232 | 651.8 ± 13.52 ms | 152.6 ± 3.95 ms | 48.2 ± 0.61 ms |
+| 8 | 464 | 1212.0 ± 11.10 ms | 251.0 ± 9.26 ms | 94.7 ± 0.24 ms |
+| 16 | 928 | 2593.4 ± 26.27 ms | 425.1 ± 7.27 ms | 153.4 ± 0.43 ms |
 
-There is a real batching win on CPU too, just a much smaller one: per-question cost drops from 269.8ms solo to ~151-163ms once 4 or more share a call, roughly 40% - nowhere near the README's ~5x GPU figure, and it plateaus by 4 questions instead of continuing to improve out to 16. The 16-question row is also the one to distrust the most: `input_tokens` hit 928, comfortably past the 512-token limit the README states for this checkpoint, with no error and no warning printed. There's no way to tell from the outside whether it silently truncated the tail questions or scored the full sequence anyway - either way, that row is exactly the kind of result the "token-budget tuning" warning is about, and it's worth re-verifying against ground truth before trusting it, not just timing it.
+Divided by question count:
 
-Both sweeps side by side, log-scaled on count:
+| questions | Ryzen CPU ms/question | M4 Pro CPU ms/question | M4 Pro MPS ms/question |
+|---|---|---|---|
+| 1 | 269.8 | 80.0 | 22.8 |
+| 2 | 192.8 | 61.7 | 15.3 |
+| 4 | 162.9 | 38.2 | 12.0 |
+| 8 | 151.5 | 31.4 | 11.8 |
+| 16 | 162.1 | 26.6 | 9.6 |
+
+On the Ryzen there is a real batching win, just a small one: per-question cost drops from 269.8ms solo to ~151-163ms once 4 or more share a call, roughly 40% - nowhere near the README's ~5x GPU figure, and it plateaus by 4 questions instead of continuing to improve out to 16.
+
+The M4 says that plateau belongs to the Ryzen, not to Laya. On the M4 CPU, per-question cost falls 67% (80.0 -> 26.6ms) and is still dropping at 16 questions; MPS falls 58% (22.8 -> 9.6ms), which lands close to the README's ~7-16ms per question on GPU. My guess is that the 6-core laptop chip is already saturated at 4 questions (232 tokens) while 14 cores and a GPU still have room to spread a longer sequence over. That's an inference, not something I measured. Either way, "how much does batching buy you" depends on the hardware, so measure it on the machine you'll deploy to.
+
+The 16-question row is also the one to distrust the most: `input_tokens` hit 928, comfortably past the 512-token limit the README states for this checkpoint, with no error and no warning printed - same on the M4, CPU and MPS alike. There's no way to tell from the outside whether it silently truncated the tail questions or scored the full sequence anyway - either way, that row is exactly the kind of result the "token-budget tuning" warning is about, and it's worth re-verifying against ground truth before trusting it, not just timing it.
+
+Both sweeps side by side on the Ryzen, log-scaled on count:
 
 <img src="../../../assets/images/laya_perf_scaling.png" alt="Line chart comparing Laya CPU latency as option count grows (2 to 64, one question) versus question count grows (1 to 16, three options each). The option-count line rises gently from ~254ms to ~775ms. The question-count line rises much more steeply, from ~270ms to ~2593ms at 16 questions.">
 
 The two lines make the same point the numbers already did: stacking questions costs far more than stacking options, because the whole batch shares one forward pass and question text doesn't get the token reuse that similarly-worded options do.
+
+Same two sweeps on the M4 Pro, CPU and GPU on one chart:
+
+<img src="../../../assets/images/laya_perf_scaling_m4.png" alt="Line chart of Laya latency on an Apple M4 Pro, CPU (solid lines) versus MPS GPU (dashed lines), log-scaled on count. On CPU, the option-count line rises from ~71ms to ~201ms at 64 options and the question-count line from ~80ms to ~425ms at 16 questions. On MPS, the option-count line rises from ~20ms to ~55ms and the question-count line from ~23ms to ~153ms.">
+
+The shape is the same as on the Ryzen - the question line bends up far faster than the option line on both devices - just lower on CPU: about a quarter of the Ryzen's height at 64 options (201.4 vs. 774.9ms) and a sixth at 16 questions (425.1 vs. 2593.4ms), since that is where the M4's extra cores help most. The GPU compresses everything further: 64 options on MPS (55.1ms) is cheaper than 2 options on the M4 CPU (71.4ms).
 
 ---
 
