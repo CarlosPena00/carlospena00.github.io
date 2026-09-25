@@ -65,8 +65,91 @@ A built-in `Router` looks at the input's language/script and dispatches to one o
 **Perf.** No GPU handy, so ran the three-question example from section 1 with `%timeit` on CPU only (AMD Ryzen 5 5625U):
 
 ```text
-802 ms ± 3.94 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+522 ms ± 4.46 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 ```
+
+That first pass actually read 802ms, with a much wider spread. Turned out Chrome and Steam were both running in the background at the time, fighting the same cores - closing both and re-running twice in a row gave 522ms ± 4.46ms and 525ms ± 4.79ms, consistently, with the std dev dropping from ~16ms to ~5ms. Lesson worth stating plainly: a single wall-clock CPU timing on a normal desktop is not a benchmark, and the fix isn't a fancier flag on `timeit` - it's closing the other applications and rerunning until the number stops moving.
+
+That test had 3 options total across 3 questions. The README warns that high-cardinality `choice` (50+ options) needs "token-budget tuning," so I swept a single `choice` question from 2 to 64 options, same message, `timeit.repeat(repeat=7, number=1)` each time:
+
+```python
+def make_questions(n_options: int) -> dict:
+    criteria = {f"option_{i}": f"describes item number {i}" for i in range(n_options)}
+    return {
+        "choice": {
+            "type": "choice",
+            "instructions": "Pick the option that best matches this message.",
+            "criteria": criteria,
+        }
+    }
+
+
+for n in [2, 4, 8, 16, 32, 64]:
+    questions = make_questions(n)
+    result = router.predict(MESSAGE, questions)  # warm-up, also reads input_tokens
+    times = timeit.Timer(lambda: router.predict(MESSAGE, questions)).repeat(repeat=7, number=1)
+    print(n, result["usage"]["input_tokens"], statistics.mean(times), statistics.stdev(times))
+```
+
+| options | input tokens | mean | std |
+|---|---|---|---|
+| 2 | 43 | 254.4 ms | 19.40 ms |
+| 4 | 61 | 288.4 ms | 3.55 ms |
+| 8 | 97 | 361.7 ms | 6.62 ms |
+| 16 | 169 | 517.8 ms | 7.82 ms |
+| 32 | 185 | 558.9 ms | 23.60 ms |
+| 64 | 277 | 774.9 ms | 7.43 ms |
+
+(Run with Chrome and Steam already closed - a couple of entries still show a wider std dev than the others, from VS Code and other `claude` sessions still competing for cores. Even a "clean" desktop benchmark isn't a lab bench.)
+
+Latency tracks input tokens, not option count directly - the whole `criteria` dict goes into one forward pass, there's no per-option encoding step. 16 -> 32 options barely adds tokens (169 -> 185, since `"describes item number N"` reuses most of its subwords) and latency barely moves (517.8ms -> 558.9ms); 32 -> 64 nearly doubles the token count (185 -> 277) and latency jumps with it (558.9ms -> 774.9ms). The real lever on cost is criteria text length, not the number of buckets - ten verbose options can cost more than fifty terse ones.
+
+One of these runs also printed a `RuntimeWarning` straight from the library:
+
+```text
+laya: this checkpoint ships invalid temperatures or values outside [0.5, 5];
+using choice:11+=0.10058280825614929 -> 0.5. Treat confidence from the
+affected entries as uncalibrated.
+```
+
+Which is the checkpoint itself saying the `confidence` field from section 4 is not trustworthy for every option index on this build - another reason to verify `confidence` against your own labeled data rather than routing on it blindly out of the box.
+
+The benchmark table in the README also claims a "batched throughput" win - ~33-40ms for one question alone on GPU, down to ~7-16ms per question once 10 share a call. That is a different axis than option count: it means stacking more *questions* into one `router.predict()`, not more options inside one question. Worth checking on CPU rather than taking the GPU number on faith - held a fixed 3-option `choice` question per slot, varied how many of them go in one call:
+
+```python
+def make_questions(n_questions: int) -> dict:
+    base_criteria = {
+        "single_product": "wants to buy exactly one specific item",
+        "multi_product": "wants several different items for a project",
+        "unrelated": "no shopping intent at all",
+    }
+    return {
+        f"question_{i}": {
+            "type": "choice",
+            "instructions": "What is the customer's intent in this message?",
+            "criteria": base_criteria,
+        }
+        for i in range(n_questions)
+    }
+
+
+for n in [1, 2, 4, 8, 16]:
+    questions = make_questions(n)
+    result = router.predict(MESSAGE, questions)
+    times = timeit.Timer(lambda: router.predict(MESSAGE, questions)).repeat(repeat=7, number=1)
+    mean_ms = statistics.mean(times) * 1000
+    print(n, result["usage"]["input_tokens"], mean_ms, mean_ms / n)
+```
+
+| questions | input tokens | mean | std | ms/question |
+|---|---|---|---|---|
+| 1 | 58 | 269.8 ms | 6.29 ms | 269.8 ms |
+| 2 | 116 | 385.7 ms | 4.99 ms | 192.8 ms |
+| 4 | 232 | 651.8 ms | 13.52 ms | 162.9 ms |
+| 8 | 464 | 1212.0 ms | 11.10 ms | 151.5 ms |
+| 16 | 928 | 2593.4 ms | 26.27 ms | 162.1 ms |
+
+There is a real batching win on CPU too, just a much smaller one: per-question cost drops from 269.8ms solo to ~151-163ms once 4 or more share a call, roughly 40% - nowhere near the README's ~5x GPU figure, and it plateaus by 4 questions instead of continuing to improve out to 16. The 16-question row is also the one to distrust the most: `input_tokens` hit 928, comfortably past the 512-token limit the README states for this checkpoint, with no error and no warning printed. There's no way to tell from the outside whether it silently truncated the tail questions or scored the full sequence anyway - either way, that row is exactly the kind of result the "token-budget tuning" warning is about, and it's worth re-verifying against ground truth before trusting it, not just timing it.
 
 ---
 
