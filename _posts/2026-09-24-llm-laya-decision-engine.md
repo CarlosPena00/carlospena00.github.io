@@ -58,6 +58,56 @@ print(result["answers"]["churn_risk"]["noul"])     # 0.0-1.0
 print(result["routing"]["model"])                  # english
 ```
 
+The three prints only surface three numbers. The full `result`:
+
+```js
+{
+    "model": "laya-rl-agent", // decision-engine wrapper, not the checkpoint - see routing.model
+    "answers": {
+        "department": {
+            "type": "choice",
+            "choice": "billing",
+            "probabilities": {"billing": 0.9865, "technical": 0.008, "other": 0.0055}, // unambiguous message, unambiguous distribution
+            "confidence": 0.9267,
+            "answer_confidence": 0.9865,
+            "action": {"act_probability": 1.0},
+        },
+        "urgency": {
+            "type": "score", // first time this shape shows up - choice and noul were both covered in section 4
+            "score": 1.7722, // = 0*0.0389 + 1*0.15 + 2*0.8111 - literally the expected level under the probabilities below, not a separate estimate
+            "legend": {"0": "not urgent", "1": "soon", "2": "blocking"}, // maps level index -> your own criteria labels, so you don't have to hardcode them again on the way out
+            "probabilities": {"0": 0.0389, "1": 0.15, "2": 0.8111}, // "we will cancel our plan" reads as level 2 (blocking), correctly
+            "confidence": 0.4714, // same split as choice/noul: lower than answer_confidence, collapses when the distribution isn't a clean spike
+            "answer_confidence": 0.8111,
+            "action": {"act_probability": 1.0},
+        },
+        "churn_risk": {
+            "type": "noul",
+            "noul": 0.879,
+            "confidence": 0.879, // for noul, confidence == max(p, 1-p) == the noul value itself whenever p > 0.5
+            "answer_confidence": 0.879,
+            "action": {"act_probability": 1.0},
+        },
+    },
+    "usage": {"input_tokens": 164, "output_tokens": 0}, // output_tokens: 0 - no generation happened, just an encoder forward pass
+    "routing": {
+        "model": "english", // the checkpoint that actually scored this - see section 5 for what happens when the input isn't English
+        "repo": "convaiinnovations/laya",
+        "reason": "English Latin text",
+        "detection": {
+            "script": "latin",
+            "script_profile": {"latin": 1.0},
+            "language": "en",
+            "is_english": true,
+            "language_undecided": false,
+            "diacritic_rate": 0.0,
+            "non_latin_fraction": 0.0,
+        },
+        "workflow": null,
+    },
+}
+```
+
 A built-in `Router` looks at the input's language/script and dispatches to one of three checkpoints: `laya` (English, 421M params, 512 tokens), `laya-multilingual` (mmBERT-base, 322M params, up to 8192 tokens, 100+ languages), or `laya-typed-decisions` (English, domain fine-tuned on classification-style tasks).
 
 ---
