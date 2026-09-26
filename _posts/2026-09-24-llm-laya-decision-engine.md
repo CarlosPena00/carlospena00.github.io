@@ -330,7 +330,7 @@ Take the lesson from `confidence`, not just `choice`: don't build on `classify_i
 
 ## 5. A real accuracy check
 
-Everything above is anecdote - five messages, one accuracy claim from someone else's benchmark. Built a labeled set to get a real number: 1040 synthetic Portuguese product titles across 8 categories (`eletronicos`, `moveis`, `ferramentas`, `sexshop`, `armas`, `drogas`, `porcelanato`, `eletrodomesticos` - 130 each, templated from brand x product-type x spec), plus a 9th `outros` bucket that no real item maps to, as an escape hatch for "none of the above":
+Everything above is anecdote - five messages, one accuracy claim from someone else's benchmark. Built a labeled set to get a real number: 1040 synthetic Portuguese product titles across 8 categories (`eletronicos`, `moveis`, `ferramentas`, `sexshop`, `armas`, `drogas`, `porcelanato`, `eletrodomesticos` - 130 each, templated from brand x product-type x spec), plus a 9th `outros` bucket that no real item maps to, as an escape hatch for "none of the above". Dataset and generator (seed-fixed, reproducible): [`datasets/laya-products/`](https://github.com/CarlosPena00/carlospena00.github.io/tree/main/datasets/laya-products) in this site's repo.
 
 ```python
 CATEGORIES = {
