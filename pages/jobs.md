@@ -42,6 +42,29 @@ Fazemos parte do time de IA & Dados da FerreiraCosta (FCxLabs). Se você quer re
 
 <div class="job-card">
     <div class="job-header">
+        <h2>Cientista de Dados</h2>
+        <span class="job-company">FCxLabs · FerreiraCosta</span>
+        <span class="job-seniority">Todas as senioridades</span>
+        <p class="job-requisitos"><strong>Requisitos:</strong> Python · Git · SQL · Inglês básico</p>
+    </div>
+
+    <h3>Responsabilidades</h3>
+    <ul>
+        <li class='list_padding'>Coletar, limpar e preparar dados</li>
+        <li class='list_padding'>Treinar, avaliar e evoluir modelos de recomendação, acompanhando métricas offline e online</li>
+        <li class='list_padding'>Acompanhar a literatura científica e as tendências da área, propondo e testando novas abordagens que possam ser aplicadas ao produto</li>
+        <li class='list_padding'>Analisar dados e resultados de experimentos para gerar insights que orientem as decisões do time e das áreas de negócio</li>
+    </ul>
+
+    <h3>Diferenciais</h3>
+    <ul>
+        <li class='list_padding'>Experiência com sistemas de busca/recomendação ou com recuperação de informação em produção</li>
+        <li class='list_padding'>Experiência com fine-tuning de modelos de machine learning, incluindo modelos de linguagem em produção</li>
+    </ul>
+</div>
+
+<div class="job-card">
+    <div class="job-header">
         <h2>Desenvolvedor Backend (Python)</h2>
         <span class="job-company">FCxLabs · FerreiraCosta</span>
         <span class="job-seniority">Todas as senioridades</span>
