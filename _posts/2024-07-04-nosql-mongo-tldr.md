@@ -991,3 +991,374 @@ db.command("collMod", "books", validationLevel="moderate")
 - **Moderate**: only new documents and updates to documents that are already
   valid - legacy documents that fail the rules keep accepting other changes
   (useful while migrating a collection)
+
+# Workshop: Vector Search
+
+## Searching for data with MongoDB
+
+| Method           | Description                                                                                  |
+| ---------------- | -------------------------------------------------------------------------------------------- |
+| `.find()`        | Basic query capabilities; great for retrieving a single document, or known criteria.        |
+| Full-text search | Great to find words that aren't grouped; easily add fuzzy matching or autocomplete.          |
+| Vector search    | Search based on meaning; great to retrieve related content or to search for similar topics. |
+
+## Generating embeddings with an Atlas Trigger
+
+Every time a movie is written, an Atlas Trigger calls an Atlas Function that
+sends the `plot` (text) to the Voyage AI embeddings API; on success, the
+returned embedding is written back into the same document.
+
+```txt
+insert/update/replace on movies  ->  Trigger  ->  Function  ->  Voyage AI (/v1/embeddings)
+                                                     |
+                                                     +-> updateOne({_id}, {$set: {plot_embedding}})
+```
+
+### Trigger configuration
+
+| Setting            | Value                                                  |
+| ------------------ | ------------------------------------------------------ |
+| Trigger Type       | Database                                               |
+| Cluster            | `Cluster0`                                             |
+| Database Name      | `sample_mflix`                                         |
+| Collection Name    | `movies`                                               |
+| Operation Type     | Insert Document, Update Document, Replace Document     |
+| Full Document      | On (the function needs `fullDocument.plot`)            |
+| Document Pre-Image | Off                                                    |
+| Event Type         | Function                                               |
+
+- Serverless instances cannot be used as a database trigger source.
+- **Avoid an infinite loop**: the function's own `$set` is an update, which fires
+  the trigger again. Add a match expression so only changes to `plot` fire it:
+
+```json
+{
+  "$or": [
+    { "operationType": { "$in": ["insert", "replace"] } },
+    { "updateDescription.updatedFields.plot": { "$exists": true } }
+  ]
+}
+```
+
+### Function
+
+Store the API key as an App Services Secret, linked to a Value
+(`VOYAGE_API_KEY`), so it never lives in the function code.
+
+```js
+exports = async function (changeEvent) {
+  const doc = changeEvent.fullDocument;
+  if (!doc || !doc.plot) return;
+
+  try {
+    const response = await context.http.post({
+      url: "https://api.voyageai.com/v1/embeddings",
+      headers: {
+        "Content-Type": ["application/json"],
+        Authorization: [`Bearer ${context.values.get("VOYAGE_API_KEY")}`],
+      },
+      body: JSON.stringify({
+        input: [doc.plot],
+        model: "voyage-3",        // 1024 dimensions
+        input_type: "document",   // use "query" when embedding the search text
+      }),
+    });
+
+    let responseData = JSON.parse(response.body.text());
+    if (response.statusCode === 200) {
+      console.log("Successfully received embedding.");
+
+      const embedding = responseData.data[0].embedding;
+
+      // Service name = the linked data source (cluster) name
+      const collection = context.services.get("Cluster0").db("sample_mflix").collection("movies");
+
+      const result = await collection.updateOne(
+        { _id: doc._id },
+        { $set: { plot_embedding: embedding } }
+      );
+      console.log(`Updated ${result.modifiedCount} document(s).`);
+    } else {
+      console.log(`Failed to receive embedding. Status code: ${response.statusCode}`);
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+```
+
+## Skip List (the intuition behind HNSW)
+
+Atlas Vector Search finds approximate nearest neighbors with **HNSW**
+(Hierarchical Navigable Small World), a graph version of a skip list: upper
+layers hold few nodes and take long jumps, lower layers hold more nodes and
+take short ones.
+
+```txt
+Layer 3   A ----------> C ----------------------------------> I
+Layer 2   A ----------> C ----------------------> G --------> I
+Layer 1   A ----------> C ----------> E --------> G --------> I
+Layer 0   A --> B --> C --> D --> E --> F --> G --> H --> I
+```
+
+Search: start at the top layer and move right while the next node is <= the
+target; when it would overshoot, drop one layer and continue.
+
+- **Find 9 (I)**: Layer 3 `A -> C -> I`, 2 hops (Layer 0 alone takes 8)
+- **Find 5 (E)**: Layer 3 `A -> C` (I overshoots, drop) -> Layer 2 `C` (G
+  overshoots, drop) -> Layer 1 `C -> E`
+
+In HNSW the "next node" is the neighbor closest to the query vector, and the
+search stops descending at Layer 0 with the closest candidates found.
+
+## Navigable Small World (NSW) Graph
+
+Vectors have no "left/right" order, so instead of a sorted list each vector is a
+node linked to a few of its nearest neighbors (plus some long links), forming a
+graph where any node is reachable in a few hops.
+
+```txt
+   (A) -------------------------------- (B)
+    | \                              /   |
+    |   \                         /      |
+    |     \                    /         |
+    |       \              /             |
+    |   q     (C) ------                 |
+    |       /    \                       |
+    |     /        \                     |
+   (D) ------------ (E) --------------- (F)
+
+q = query vector
+```
+
+Greedy search for `q`:
+
+1. Start at an entry node (e.g. `B`)
+2. Look at its neighbors and move to the one closest to `q` (`B -> C`)
+3. Repeat until no neighbor is closer than the current node (`C`, or `D`)
+4. That local minimum is the (approximate) nearest neighbor
+
+The result is *approximate*: greedy steps can get stuck in a local minimum.
+Keeping a list of candidates (`numCandidates` in `$vectorSearch`) instead of a
+single node trades speed for recall.
+
+**HNSW = NSW + skip list**: stack NSW graphs in layers - sparse upper layers for
+long jumps toward the right region, the dense Layer 0 for the fine search.
+
+## Configure the index definition
+
+```js
+db.movies.createSearchIndex(
+  "vectorPlotIndex",
+  "vectorSearch",
+  {
+    "fields": [
+      {
+        "type": "vector",
+        "path": "plot_embedding",
+        "numDimensions": 1024,
+        "similarity": "euclidean | cosine | dotProduct"
+      }
+    ]
+  }
+);
+```
+
+- `numDimensions` must match the embedding model (`voyage-3` -> 1024)
+- `similarity`: see [How to choose a similarity function](#how-to-choose-a-similarity-function)
+
+```py
+# PyMongo
+from pymongo.operations import SearchIndexModel
+
+collection.create_search_index(
+    SearchIndexModel(
+        name="vectorPlotIndex",
+        type="vectorSearch",
+        definition={
+            "fields": [
+                {
+                    "type": "vector",
+                    "path": "plot_embedding",
+                    "numDimensions": 1024,
+                    "similarity": "dotProduct",
+                }
+            ]
+        },
+    )
+)
+```
+
+### How to choose a similarity function
+
+- Check the documentation of the embedding model
+- Experiment
+
+```txt
+   Euclidean               Dot product              Cosine
+   ^   dog                 ^   dog                  ^   dog
+   |   *                   |   *                    |   *
+   |    \  <- distance     |  /  .                  |  /
+   |     * cat             | /    * cat             | / ) <- angle
+   |    /                  |/    /                  |/   * cat
+   +---------->            +---------->             +---------->
+```
+
+| Function     | Measures                                   | Formula                         | Use when                                               |
+| ------------ | ------------------------------------------ | ------------------------------- | ------------------------------------------------------ |
+| `euclidean`  | Distance between the vector ends           | `sqrt(sum((a_i - b_i)^2))`      | Magnitude matters (e.g. counts, coordinates)           |
+| `dotProduct` | Projection of one vector onto the other    | `sum(a_i * b_i)`                | Vectors are normalized (fastest; same ranking as cosine) |
+| `cosine`     | Angle between the vectors                  | `a . b / (norm(a) * norm(b))`   | Only direction matters; vectors not normalized         |
+
+`dog [0.243, 0.765, ...]` and `cat [0.243, 0.774, ...]` are close by all three
+measures. For normalized vectors (length 1), the three give the same ranking,
+which is the usual case for text embedding models such as Voyage AI.
+
+## Use the same embedding model to encode the query
+
+The search text must be embedded with the **same model and dimensions** as the
+stored documents, but with `input_type = "query"` (documents use `"document"`).
+
+```java
+public List<Double> getEmbeddings(String text) {
+
+    var request = new EmbeddingsRequest(
+            List.of(text),  // input
+            "voyage-3",     // model
+            "query",        // input_type
+            1024            // output_dimension (must match plot_embedding)
+    );
+
+    var response = client.embed(request);
+
+    return response.data()
+            .getFirst()
+            .embedding();
+}
+```
+
+## Define the parameters of the $vectorSearch
+
+```py
+pipeline = [
+    {
+        "$vectorSearch": {
+            "index": "vectorPlotIndex",
+            "path": "plot_embedding",
+            "queryVector": embedding,
+            "numCandidates": 100,
+            "limit": 10,
+        }
+    },
+    {"$project": {"title": 1, "plot": 1, "score": {"$meta": "vectorSearchScore"}}},
+]
+for doc in collection.aggregate(pipeline):
+    print(doc)
+```
+
+| Parameter       | Description                                                                      |
+| --------------- | -------------------------------------------------------------------------------- |
+| `index`         | Name of the vector search index (`createSearchIndex`)                            |
+| `path`          | Indexed vector field                                                             |
+| `queryVector`   | Query embedding: same model, same `numDimensions`                                |
+| `numCandidates` | Nearest neighbors the HNSW search keeps; more = better recall, slower (10-20x `limit`) |
+| `limit`         | Documents returned; must be <= `numCandidates`                                   |
+
+- `$vectorSearch` must be the **first stage** of the pipeline
+- `exact: true` (instead of `numCandidates`) runs an exact (ENN) search
+- `filter` pre-filters on fields indexed as `"type": "filter"` in the index
+
+## Add the filter with parameters
+
+Filters are **essential**: without them, the nearest neighbors can be
+semantically close but useless (wrong year, language, tenant, out of stock...).
+
+```py
+pipeline = [
+    {
+        "$vectorSearch": {
+            "index": "vectorPlotIndex",
+            "path": "plot_embedding",
+            "queryVector": embedding,
+            "numCandidates": 100,
+            "limit": 10,
+            "filter": {"year": {"$gt": 2010}},
+        }
+    },
+    ...
+]
+```
+
+The filtered field must be declared in the index as `"type": "filter"`:
+
+```js
+db.movies.updateSearchIndex("vectorPlotIndex", {
+  "fields": [
+    { "type": "vector", "path": "plot_embedding", "numDimensions": 1024, "similarity": "dotProduct" },
+    { "type": "filter", "path": "year" }
+  ]
+});
+```
+
+- **Pre-filter** (`filter` inside `$vectorSearch`): applied during the HNSW
+  search, so `limit` results still come back, all matching the filter
+- **Post-filter** (`$match` after `$vectorSearch`): filters only the `limit`
+  results already returned - may end with fewer (or zero) documents
+- Operators: `$eq`, `$ne`, `$gt`, `$gte`, `$lt`, `$lte`, `$in`, `$nin`, `$and`,
+  `$or`, `$not`, `$exists`
+
+## Quantization
+
+### When vector datasets hit physical limits
+
+As datasets grow, the resource demands of high-dimensional vector embeddings
+become a bottleneck:
+
+- Storing millions of vectors in memory for fast retrieval takes a toll on
+  computing resources (HNSW is fast only while the index fits in RAM)
+- On-disk footprint of large vector indexes
+
+```txt
+2M product embeddings x 1536 dims x 4 bytes (float32) = ~12.3 GB of RAM
+```
+
+### Scalar vs Binary
+
+Recommended for collections > 100,000 vectors.
+
+**The vector in the database stays the same; only the index shrinks it.**
+
+```txt
+Document (collection)                    Index (vectorPlotIndex)
+plot_embedding: [0.243, 0.765, ...]  ->  scalar: [31, 97, ...]   (int8)
+float32, untouched                       binary: [1, 1, ...]     (1 bit)
+```
+
+| Quantization | Goal                                                  | Stores each dimension as | Memory footprint |
+| ------------ | ----------------------------------------------------- | ------------------------ | ---------------- |
+| `none`       | Full fidelity                                         | float32 (32 bits)        | 100%             |
+| `scalar`     | Balance memory savings with representational accuracy | int8 (8 bits)            | ~27%             |
+| `binary`     | Maximum scalability for high-dimension models         | 1 bit (sign: > 0 or not) | ~4%              |
+
+```js
+db.movies.createSearchIndex(
+  "vectorPlotIndex",
+  "vectorSearch",
+  {
+    "fields": [
+      {
+        "type": "vector",
+        "path": "plot_embedding",
+        "numDimensions": 1536,
+        "similarity": "cosine",
+        "quantization": "none | scalar | binary",
+      },
+    ]
+  }
+);
+```
+
+- Since the documents keep the full float32 vectors, changing `quantization`
+  is just an index rebuild (no data migration, no re-embedding)
+- The ~27% / ~4% are not exactly 25% / 3.1% (8 / 32 and 1 / 32) because of
+  the graph and metadata overhead
