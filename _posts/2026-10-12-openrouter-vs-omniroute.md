@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "LLM Gateways: OpenRouter vs OmniRoute"
+title: "LLM: OpenRouter vs OmniRoute Gateways"
 author: Carlos Pena
 date: 2026-10-12
 ---
