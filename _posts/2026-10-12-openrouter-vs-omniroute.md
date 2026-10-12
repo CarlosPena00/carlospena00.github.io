@@ -293,7 +293,7 @@ NVIDIA: Nemotron 3 Super (free) -> nvidia/nemotron-3-super-120b-a12b:free
 
 ## Jev Router: let Jev pick the model
 
-[Jev](https://openrouter.ai/~typesafe) is TypeSafe's decision model: it does not write text, it answers typed questions (yes/no, score, choice) with probabilities. On OpenRouter you cannot call Jev itself, only `typesafe/jev-router`, where Jev makes one hidden decision per request:
+[Jev](https://openrouter.ai/~typesafe) is TypeSafe's decision model: it does not write text, it answers typed questions (yes/no, score, choice) with probabilities. OpenRouter offers it in two ways. The first is `typesafe/jev-router`, a chat model where Jev makes one hidden decision per request:
 
 1. Jev reads the prompt and picks the model and reasoning effort.
 2. That model writes the answer.
@@ -315,4 +315,86 @@ Good morning! How can I help you today?
 
 You pay the price of the model Jev picked (the router is listed at `-1`, meaning variable), so it is not free. Note it chose a strong model for a simple greeting; check the Activity page before routing lots of trivial traffic through it.
 
-Jev's own answer only shows up indirectly, in `response.model`. To ask Jev your own questions and get the probabilities back, you need TypeSafe's API (`POST /v1/systemone`) or a gateway that passes it through, such as Vercel AI Gateway. Neither OpenRouter's chat endpoint nor Cheaper Inference offers that.
+Here Jev's own answer only shows up indirectly, in `response.model`.
+
+## Jev decisions: ask Jev directly
+
+The second way calls Jev itself, through a separate (alpha) decisions endpoint instead of chat. You send a `state` and typed `questions`, and get probabilities back instead of text:
+
+- `noul` - yes/no, returns the probability of "true".
+- `choice` - pick one option, returns a probability per option.
+- `score` - position on an ordered rubric, returns the expected score and a probability per level.
+
+```python
+import os
+
+import requests
+
+response = requests.post(
+    "https://openrouter.ai/api/alpha/decisions",
+    headers={
+        "Authorization": f"Bearer {os.environ['OPENROUTER_API_KEY']}",
+        "Content-Type": "application/json",
+    },
+    json={
+        "model": "typesafe/jev-1.13",
+        "state": {
+            "customer_tier": "enterprise",
+            "ticket": "My checkout page shows a blank screen after I click Pay. I have tried two browsers.",
+        },
+        "questions": {
+            "is_bug": {
+                "type": "noul",
+                "instructions": "Is the customer reporting a software defect?",
+                "criteria": {
+                    "true": "The customer describes broken or unexpected product behavior.",
+                    "false": "The customer is asking a question or requesting a feature.",
+                },
+            },
+            "team": {
+                "type": "choice",
+                "instructions": "Which team should own this ticket?",
+                "criteria": {
+                    "payments": "Checkout, billing, or payment processing issues.",
+                    "frontend": "Rendering, layout, or browser compatibility issues.",
+                    "account": "Login, permissions, or profile issues.",
+                },
+            },
+            "urgency": {
+                "type": "score",
+                "instructions": "How urgent is this ticket?",
+                "criteria": [
+                    "Can wait for the next release",
+                    "Should be fixed this week",
+                    "Blocking revenue right now",
+                ],
+            },
+        },
+    },
+)
+
+print(response.json())
+```
+
+```js
+{'model': 'typesafe/jev-1.13-20260917',
+ 'answers': {'is_bug': {'type': 'noul', 'noul': 0.96},
+  'team': {'type': 'choice',
+   'choice': 'payments',
+   'probabilities': {'payments': 0.8, 'frontend': 0.2, 'account': 0},
+   'confidence': 0.7},
+  'urgency': {'type': 'score',
+   'score': 1.99,
+   'legend': {'0': 'Can wait for the next release',
+    '1': 'Should be fixed this week',
+    '2': 'Blocking revenue right now'},
+   'probabilities': {'0': 0, '1': 0.01, '2': 0.99},
+   'confidence': 0.98}},
+ 'usage': {'input_tokens': 476, 'output_tokens': 70, 'cost': 1.9992e-05},
+ 'id': 'gen-dec-1791848249-g8VemRkIFVRDfTjSIm3i',
+ 'provider': 'TypeSafe'}
+```
+
+Three decisions for about $0.00002, and each answer is a dict key, not text to parse: `answers["team"]["choice"]` is `"payments"`. The probabilities are useful as thresholds, for example auto-route only when `confidence` is high and send the rest to a human. The endpoint is `alpha`, so expect it to change.
+
+Cheaper Inference does not offer Jev in either form.
