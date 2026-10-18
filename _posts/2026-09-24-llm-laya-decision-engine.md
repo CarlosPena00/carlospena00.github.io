@@ -54,8 +54,8 @@ questions = {
 
 result = router.predict(state, questions)
 print(result["answers"]["department"]["choice"])  # billing
-print(result["answers"]["churn_risk"]["noul"])     # 0.0-1.0
-print(result["routing"]["model"])                  # english
+print(result["answers"]["churn_risk"]["noul"])  # 0.0-1.0
+print(result["routing"]["model"])  # english
 ```
 
 The three prints only surface three numbers. The full `result`:
@@ -146,8 +146,15 @@ def make_questions(n_options: int) -> dict:
 for n in [2, 4, 8, 16, 32, 64]:
     questions = make_questions(n)
     result = router.predict(MESSAGE, questions)  # warm-up, also reads input_tokens
-    times = timeit.Timer(lambda: router.predict(MESSAGE, questions)).repeat(repeat=7, number=1)
-    print(n, result["usage"]["input_tokens"], statistics.mean(times), statistics.stdev(times))
+    times = timeit.Timer(lambda: router.predict(MESSAGE, questions)).repeat(
+        repeat=7, number=1
+    )
+    print(
+        n,
+        result["usage"]["input_tokens"],
+        statistics.mean(times),
+        statistics.stdev(times),
+    )
 ```
 
 | options | input tokens | Ryzen CPU | M4 Pro CPU | M4 Pro MPS |
@@ -197,7 +204,9 @@ def make_questions(n_questions: int) -> dict:
 for n in [1, 2, 4, 8, 16]:
     questions = make_questions(n)
     result = router.predict(MESSAGE, questions)
-    times = timeit.Timer(lambda: router.predict(MESSAGE, questions)).repeat(repeat=7, number=1)
+    times = timeit.Timer(lambda: router.predict(MESSAGE, questions)).repeat(
+        repeat=7, number=1
+    )
     mean_ms = statistics.mean(times) * 1000
     print(n, result["usage"]["input_tokens"], mean_ms, mean_ms / n)
 ```
@@ -541,9 +550,16 @@ The approach that actually won didn't touch the `noul` question at all:
 BLOCKED = {"sexshop", "drogas", "armas"}
 
 for product_name, true_category in dataset:
-    result = router.predict(product_name, CATEGORY_QUESTIONS)  # section 5's 9-way choice
+    result = router.predict(
+        product_name, CATEGORY_QUESTIONS
+    )  # section 5's 9-way choice
     predicted_category = result["answers"]["category"]["choice"]
     blocked = predicted_category in BLOCKED
 ```
 
 Reusing section 5's categorical classifier and applying the block/allow rule in code afterward beat every `noul`-based attempt: MCC 0.455, and - the number that actually matters for a safety filter - 87.7% recall on the blocked class (342/390 caught), against the best `noul` version's ~73% in section 6. Nine specific categories, each with its own short description, gave the model more to anchor on than one long blocklist crammed into a single yes/no question. It's still not production-grade (56% precision means almost half of what it blocks is a false alarm), but it's the clearest lever found here, and it cost zero additional model calls since section 5's run already had the data sitting in `predictions.csv`.
+
+
+## 8. Images
+
+O

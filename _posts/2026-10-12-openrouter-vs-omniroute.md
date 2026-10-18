@@ -125,9 +125,9 @@ response = client.chat.completions.create(
     messages=[{"role": "user", "content": "Hello!"}],
     max_tokens=1024,
     extra_body={
-        "ranking": "speed",            # "discount" | "speed" | "balance" (default)
-        "min_discount_percent": 10,    # only sources at least 10% below list; Error code: 503 min_discount_unavailable
-        "zdr": True,                   # zero data retention providers only
+        "ranking": "speed",  # "discount" | "speed" | "balance" (default)
+        "min_discount_percent": 10,  # only sources at least 10% below list; Error code: 503 min_discount_unavailable
+        "zdr": True,  # zero data retention providers only
     },
 )
 ```
@@ -159,7 +159,7 @@ response = client.chat.completions.create(
     ],
     max_tokens=1024,
     extra_headers={
-        "x-ci-prompt-cache": "on",               # on | off | passthrough (default); "on" may still be in preview
+        "x-ci-prompt-cache": "on",  # on | off | passthrough (default); "on" may still be in preview
         "x-ci-prompt-cache-session": "chat-42",  # keep a conversation on the same source
     },
 )
@@ -176,8 +176,12 @@ import requests
 BASE = "https://api.cheaperinference.com/v1"
 HEADERS = {"Authorization": f"Bearer {os.environ['CHEAPER_INFERENCE_API_KEY']}"}
 
-requests.get(f"{BASE}/techniques", headers=HEADERS).json()  # what exists, what is enabled
-requests.patch(f"{BASE}/techniques/exact-cache", headers=HEADERS, json={"enabled": True})
+requests.get(
+    f"{BASE}/techniques", headers=HEADERS
+).json()  # what exists, what is enabled
+requests.patch(
+    f"{BASE}/techniques/exact-cache", headers=HEADERS, json={"enabled": True}
+)
 ```
 
 Then send the same request twice, with `temperature=0`. The first call fills the cache, the second should be a hit:
@@ -187,9 +191,9 @@ for _ in range(2):
     raw = client.chat.completions.with_raw_response.create(
         model="aion-3.0-mini",
         messages=[{"role": "user", "content": "Hello!"}],
-        temperature=0, # Necessary
+        temperature=0,  # Necessary
     )
-    print(raw.headers.get("x-ci-cache"))      # "miss", then "hit"
+    print(raw.headers.get("x-ci-cache"))  # "miss", then "hit"
     print(raw.headers.get("x-ci-saved-usd"))  # savings on this call
 response = raw.parse()
 # x-ci-cache miss
@@ -228,9 +232,11 @@ import requests
 BASE = "https://api.cheaperinference.com/v1"
 HEADERS = {"Authorization": f"Bearer {os.environ['CHEAPER_INFERENCE_API_KEY']}"}
 
-requests.get(f"{BASE}/models", headers=HEADERS, params={"zdr": "true"}).json()  # catalog + prices
-requests.get(f"{BASE}/account/balance", headers=HEADERS).json()                 # needs account:read
-requests.get(f"{BASE}/usage/daily", headers=HEADERS).json()                     # spend, cache hit %
+requests.get(
+    f"{BASE}/models", headers=HEADERS, params={"zdr": "true"}
+).json()  # catalog + prices
+requests.get(f"{BASE}/account/balance", headers=HEADERS).json()  # needs account:read
+requests.get(f"{BASE}/usage/daily", headers=HEADERS).json()  # spend, cache hit %
 ```
 
 Keys can be restricted by model, IP range, rate, concurrency and monthly spend, which is handy for giving a key to a side project.
@@ -429,14 +435,18 @@ Jev rejects images outside its limits instead of resizing them: PNG or JPEG, 280
 ```python
 # 280px <= Dim <= 1568px
 
-URL = "ezio.png"
+URL = "jev_ezio.png"
 
 src = cv2.imread(URL, cv2.IMREAD_COLOR)  # BGR, no alpha, applies EXIF rotation
 h, w = src.shape[:2]
 scale = min(1, 1568 / max(h, w))  # only shrink
-src = cv2.resize(src, (round(w * scale), round(h * scale)), interpolation=cv2.INTER_AREA)
+src = cv2.resize(
+    src, (round(w * scale), round(h * scale)), interpolation=cv2.INTER_AREA
+)
 
-ok, jpg = cv2.imencode(".jpg", src, [cv2.IMWRITE_JPEG_QUALITY, 90])  # pixels -> JPEG bytes
+ok, jpg = cv2.imencode(
+    ".jpg", src, [cv2.IMWRITE_JPEG_QUALITY, 90]
+)  # pixels -> JPEG bytes
 
 photo = {
     "type": "image_url",
