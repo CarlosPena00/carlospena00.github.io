@@ -397,4 +397,116 @@ print(response.json())
 
 Three decisions for about $0.00002, and each answer is a dict key, not text to parse: `answers["team"]["choice"]` is `"payments"`. The probabilities are useful as thresholds, for example auto-route only when `confidence` is high and send the rest to a human. The endpoint is `alpha`, so expect it to change.
 
+### Jev with images
+
+Jev 1.14 also reads images. Put the image in `state` as a chat-style `image_url` part with a base64 data URL, and refer to it by name in the questions. The key comes from a `.env` file:
+
+```python
+# uv add requests opencv-python pydantic-settings
+# .env: OPENROUTER_API_KEY=sk-or-v1-...
+import base64
+
+import cv2
+import requests
+from pydantic import SecretStr
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+    openrouter_api_key: SecretStr
+    openrouter_url: str = "https://openrouter.ai/api/alpha/decisions"
+    jev_model: str = "typesafe/jev-1.14"
+
+
+settings = Settings()
+openrouter_api_key = settings.openrouter_api_key.get_secret_value()
+```
+
+Jev rejects images outside its limits instead of resizing them: PNG or JPEG, 280 to 1568 px per side, 16 MiB per file ([full limits](https://docs.typesafe.ai/images#limits)). So shrink the image first and encode it back to JPEG bytes. Encoding the `cv2.imread` array directly sends raw pixels, not a JPEG, and the request fails:
+
+```python
+# 280px <= Dim <= 1568px
+
+URL = "ezio.png"
+
+src = cv2.imread(URL, cv2.IMREAD_COLOR)  # BGR, no alpha, applies EXIF rotation
+h, w = src.shape[:2]
+scale = min(1, 1568 / max(h, w))  # only shrink
+src = cv2.resize(src, (round(w * scale), round(h * scale)), interpolation=cv2.INTER_AREA)
+
+ok, jpg = cv2.imencode(".jpg", src, [cv2.IMWRITE_JPEG_QUALITY, 90])  # pixels -> JPEG bytes
+
+photo = {
+    "type": "image_url",
+    "image_url": {"url": "data:image/jpeg;base64," + base64.b64encode(jpg).decode()},
+}
+```
+
+<img src="../../../assets/images/jev_ezio.jpg" alt="Ezio, the dog in the test photo" width="300">
+
+Three questions about the photo: is it safe for work, which animal is in it, and is it a real photo or artificial:
+
+```python
+response = requests.post(
+    settings.openrouter_url,
+    headers={"Authorization": f"Bearer {openrouter_api_key}"},
+    json={
+        "model": settings.jev_model,
+        "state": {"photo": photo},
+        "questions": {
+            "safe_for_work": {
+                "type": "noul",
+                "instructions": "Is `photo` safe for work?",
+                "criteria": {
+                    "true": "Fine to open at the office: no nudity, sexual content, gore, blood or graphic violence.",
+                    "false": "Shows nudity, sexual content, gore, blood or graphic violence.",
+                },
+            },
+            "animal": {
+                "type": "choice",
+                "instructions": "Which animal is in `photo`?",
+                "criteria": {
+                    "dog": "A dog.",
+                    "cat": "A cat.",
+                    "turtle": "A turtle or tortoise.",
+                    "other_animal": "Some other animal.",
+                    "no_animal": "No animal at all.",
+                },
+            },
+            "style": {
+                "type": "choice",
+                "instructions": "Is `photo` a real photo or artificial?",
+                "criteria": {
+                    "real": "A photo of the real world taken with a camera.",
+                    "artificial": "Drawn, painted, rendered or generated: anime, cartoon, illustration, 3D render or game art.",
+                },
+            },
+        },
+    },
+)
+if not response.ok:
+    print(response.status_code, response.text)
+response.json()["answers"]
+```
+
+```js
+{'safe_for_work': {'type': 'noul', 'noul': 0.98},
+ 'animal': {'type': 'choice',
+  'choice': 'dog',
+  'probabilities': {'dog': 1,
+   'cat': 0,
+   'turtle': 0,
+   'other_animal': 0,
+   'no_animal': 0},
+  'confidence': 1},
+ 'style': {'type': 'choice',
+  'choice': 'real',
+  'probabilities': {'real': 0.92, 'artificial': 0.08},
+  'confidence': 0.84}}
+```
+
+The `no_animal` option is there because a `choice` always picks one of its options; without it, a photo with no animal would be forced into the closest one. The `safe_for_work` answer is a probability, so you pick the threshold, for example accept only above 0.9.
+
 Cheaper Inference does not offer Jev in either form.
