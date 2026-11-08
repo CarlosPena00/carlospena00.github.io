@@ -40,6 +40,12 @@ order: 2
     <li>All of your employees are adults and you must trust them. If you don't trust them, it's better to fire than manage. - ?</li>
     <li>Not everyone is an adult</li>
     <li>You can't be more interested than the interested party.</li>
+    <li>Write programs that do one thing and do it well. - Doug McIlroy (as summarized by Peter H. Salus)</li>
+    <li>A system cannot be successful if it is too strongly influenced by a single person. Once the initial design is complete and fairly robust, the real test begins as people with many different viewpoints undertake their own experiments. - Donald Knuth</li>
+    <li>There should be one-- and preferably only one --obvious way to do it. - Tim Peters (The Zen of Python)</li>
+    <li>Now is better than never. Although never is often better than <em>right</em> now. - Tim Peters (The Zen of Python)</li>
+    <li>If the implementation is hard to explain, it's a bad idea. - Tim Peters (The Zen of Python)</li>
+    <li>When there are competing hypotheses, the one with the fewest assumptions should be selected. - Occam's razor</li>
 
 </ul>
 
